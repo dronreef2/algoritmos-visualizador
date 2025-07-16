@@ -1,14 +1,14 @@
 # 🌐 Streamlit App Completa para Deploy
 
 import streamlit as st
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt  # Removido para compatibilidade Streamlit Cloud
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import time
 import json
-import requests
+# import requests  # Removido temporariamente
 from typing import List, Tuple, Dict, Any
 from collections import deque
 
@@ -300,27 +300,31 @@ elif algoritmo_selecionado == "🔍 Busca Binária":
     if passo_atual < len(passos):
         passo = passos[passo_atual]
         
-        # Criar gráfico
-        fig, ax = plt.subplots(figsize=(14, 8))
-        
+        # Criar gráfico com Plotly
         cores = ['lightgray'] * len(array_ordenado)
         for i in range(passo['esquerda'], passo['direita'] + 1):
             cores[i] = 'lightblue'
         cores[passo['meio']] = 'red' if passo['valor_meio'] != target else 'green'
         
-        bars = ax.bar(range(len(array_ordenado)), array_ordenado, color=cores, 
-                     edgecolor='black', linewidth=1.5)
+        fig = go.Figure()
+        fig.add_bar(
+            x=list(range(len(array_ordenado))),
+            y=array_ordenado,
+            marker_color=cores,
+            text=array_ordenado,
+            textposition='auto',
+            name='Array'
+        )
         
-        for i, val in enumerate(array_ordenado):
-            ax.text(i, val + 1, str(val), ha='center', va='bottom', fontweight='bold')
+        fig.update_layout(
+            title=f"Passo {passo_atual + 1}: Verificando posição {passo['meio']} (valor={passo['valor_meio']})",
+            xaxis_title="Índice",
+            yaxis_title="Valor",
+            showlegend=False,
+            height=400
+        )
         
-        ax.set_title(f"Passo {passo_atual + 1}: Verificando posição {passo['meio']} (valor={passo['valor_meio']})", 
-                    fontsize=16, fontweight='bold')
-        ax.set_xlabel("Índice", fontsize=12)
-        ax.set_ylabel("Valor", fontsize=12)
-        
-        st.pyplot(fig)
-        plt.close()
+        st.plotly_chart(fig, use_container_width=True)
     
     # Resultado
     if resultado != -1:
