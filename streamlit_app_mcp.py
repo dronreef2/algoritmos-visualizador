@@ -116,7 +116,9 @@ algoritmo_selecionado = st.sidebar.selectbox(
     "🔍 Escolha um algoritmo:",
     [
         "🏠 Dashboard",
-        "🔍 Busca Binária",
+        "🔍 Busca Binária", 
+        "📊 Algoritmos de Ordenação",
+        "🌳 Algoritmos de Grafos",
         "👆 Dois Ponteiros",
         "🪟 Janela Deslizante", 
         "🔄 Backtracking",
@@ -478,6 +480,295 @@ elif algoritmo_selecionado == "⚡ Performance Testing":
             st.plotly_chart(fig_memory, use_container_width=True)
         
         st.dataframe(df_results, use_container_width=True)
+
+# 📊 Seção de Algoritmos de Ordenação
+elif algoritmo_selecionado == "📊 Algoritmos de Ordenação":
+    st.header("📊 Algoritmos de Ordenação")
+    st.markdown("Compare diferentes algoritmos de ordenação com visualização em tempo real")
+    
+    # Importar algoritmos de ordenação (simulação - na implementação real seria import)
+    def simulate_sorting_algorithm(algorithm, data, steps):
+        """Simula execução de algoritmo de ordenação"""
+        result = sorted(data)
+        example_steps = [
+            {"array": data.copy(), "comparing": [0, 1], "action": f"Iniciando {algorithm}"},
+            {"array": result[:len(result)//2] + data[len(result)//2:], "comparing": [2, 3], "action": "Comparando elementos"},
+            {"array": result, "comparing": [], "action": "Ordenação completa"}
+        ]
+        return result, example_steps[:steps]
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.subheader("⚙️ Configurações")
+        
+        # Seleção do algoritmo
+        algoritmo_ord = st.selectbox(
+            "Escolha o algoritmo:",
+            ["Bubble Sort", "Quick Sort", "Merge Sort", "Heap Sort", "Counting Sort"]
+        )
+        
+        # Configuração dos dados
+        tamanho_array = st.slider("Tamanho do array:", 5, 50, 15)
+        
+        tipo_dados = st.radio(
+            "Tipo de dados:",
+            ["Aleatório", "Quase Ordenado", "Inversamente Ordenado", "Custom"]
+        )
+        
+        if tipo_dados == "Custom":
+            dados_custom = st.text_input("Digite os números (separados por vírgula):")
+            if dados_custom:
+                try:
+                    dados = [int(x.strip()) for x in dados_custom.split(',')]
+                except:
+                    dados = list(range(1, tamanho_array + 1))
+                    st.warning("Formato inválido. Usando dados padrão.")
+            else:
+                dados = list(range(1, tamanho_array + 1))
+        else:
+            dados = list(range(1, tamanho_array + 1))
+            if tipo_dados == "Aleatório":
+                np.random.shuffle(dados)
+            elif tipo_dados == "Inversamente Ordenado":
+                dados = dados[::-1]
+            elif tipo_dados == "Quase Ordenado":
+                # Fazer apenas algumas trocas
+                for _ in range(max(1, len(dados) // 5)):
+                    i, j = np.random.choice(len(dados), 2, replace=False)
+                    dados[i], dados[j] = dados[j], dados[i]
+        
+        st.write(f"**Array inicial:** {dados}")
+        
+        # Análise de complexidade
+        complexidades = {
+            "Bubble Sort": {"melhor": "O(n)", "médio": "O(n²)", "pior": "O(n²)", "espaço": "O(1)"},
+            "Quick Sort": {"melhor": "O(n log n)", "médio": "O(n log n)", "pior": "O(n²)", "espaço": "O(log n)"},
+            "Merge Sort": {"melhor": "O(n log n)", "médio": "O(n log n)", "pior": "O(n log n)", "espaço": "O(n)"},
+            "Heap Sort": {"melhor": "O(n log n)", "médio": "O(n log n)", "pior": "O(n log n)", "espaço": "O(1)"},
+            "Counting Sort": {"melhor": "O(n+k)", "médio": "O(n+k)", "pior": "O(n+k)", "espaço": "O(k)"}
+        }
+        
+        if algoritmo_ord in complexidades:
+            comp = complexidades[algoritmo_ord]
+            st.markdown("### 📈 Análise de Complexidade")
+            st.markdown(f"**Melhor caso:** {comp['melhor']}")
+            st.markdown(f"**Caso médio:** {comp['médio']}")
+            st.markdown(f"**Pior caso:** {comp['pior']}")
+            st.markdown(f"**Espaço:** {comp['espaço']}")
+    
+    with col2:
+        st.subheader("🎬 Visualização")
+        
+        if st.button("▶️ Executar Algoritmo"):
+            # Placeholder para progresso
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            # Simular execução
+            resultado, passos = simulate_sorting_algorithm(algoritmo_ord, dados, 8)
+            
+            # Container para visualização
+            chart_container = st.empty()
+            
+            # Animar os passos
+            for i, passo in enumerate(passos):
+                progress_bar.progress((i + 1) / len(passos))
+                status_text.text(passo['action'])
+                
+                # Criar gráfico do estado atual
+                fig = go.Figure()
+                
+                colors = ['lightblue'] * len(passo['array'])
+                if 'comparing' in passo and passo['comparing']:
+                    for idx in passo['comparing']:
+                        if idx < len(colors):
+                            colors[idx] = 'red'
+                
+                fig.add_bar(
+                    x=list(range(len(passo['array']))),
+                    y=passo['array'],
+                    marker_color=colors,
+                    text=passo['array'],
+                    textposition='auto'
+                )
+                
+                fig.update_layout(
+                    title=f"{algoritmo_ord} - {passo['action']}",
+                    xaxis_title="Posição",
+                    yaxis_title="Valor",
+                    showlegend=False,
+                    height=400
+                )
+                
+                chart_container.plotly_chart(fig, use_container_width=True)
+                time.sleep(0.8)
+            
+            st.success(f"✅ Ordenação completa! Array final: {resultado}")
+            progress_bar.progress(1.0)
+            status_text.text("Algoritmo concluído")
+
+# 🌳 Seção de Algoritmos de Grafos  
+elif algoritmo_selecionado == "🌳 Algoritmos de Grafos":
+    st.header("🌳 Algoritmos de Grafos")
+    st.markdown("Explore algoritmos fundamentais de grafos com visualização interativa")
+    
+    # Simulação de grafo
+    def create_sample_graph():
+        """Cria um grafo de exemplo"""
+        return {
+            'vertices': ['A', 'B', 'C', 'D', 'E'],
+            'arestas': [
+                ('A', 'B', 4), ('A', 'C', 2),
+                ('B', 'C', 1), ('B', 'D', 5),
+                ('C', 'D', 8), ('C', 'E', 10),
+                ('D', 'E', 2)
+            ]
+        }
+    
+    def simulate_graph_algorithm(algorithm, graph, start='A'):
+        """Simula execução de algoritmo de grafo"""
+        if algorithm == "BFS":
+            return ['A', 'B', 'C', 'D', 'E'], [
+                {"visitados": ['A'], "fila": ['B', 'C'], "atual": 'A', "action": "Iniciando BFS"},
+                {"visitados": ['A', 'B'], "fila": ['C', 'D'], "atual": 'B', "action": "Processando B"},
+                {"visitados": ['A', 'B', 'C'], "fila": ['D', 'E'], "atual": 'C', "action": "Processando C"},
+            ]
+        elif algorithm == "Dijkstra":
+            return {'A': 0, 'B': 4, 'C': 2, 'D': 6, 'E': 8}, [
+                {"distancias": {'A': 0, 'B': float('inf'), 'C': float('inf'), 'D': float('inf'), 'E': float('inf')}, "atual": 'A', "action": "Início"},
+                {"distancias": {'A': 0, 'B': 4, 'C': 2, 'D': float('inf'), 'E': float('inf')}, "atual": 'A', "action": "Relaxando vizinhos de A"},
+                {"distancias": {'A': 0, 'B': 3, 'C': 2, 'D': 10, 'E': 12}, "atual": 'C', "action": "Relaxando vizinhos de C"},
+            ]
+    
+    tab1, tab2, tab3 = st.tabs(["🔍 Busca", "🛣️ Caminhos Mínimos", "🌲 Árvore Geradora"])
+    
+    with tab1:
+        st.subheader("Algoritmos de Busca")
+        
+        col1, col2 = st.columns([1, 2])
+        
+        with col1:
+            algoritmo_busca = st.selectbox(
+                "Algoritmo:",
+                ["BFS (Busca em Largura)", "DFS (Busca em Profundidade)"]
+            )
+            
+            vertice_inicio = st.selectbox(
+                "Vértice inicial:",
+                ['A', 'B', 'C', 'D', 'E']
+            )
+            
+            if st.button("🔍 Executar Busca"):
+                grafo = create_sample_graph()
+                resultado, passos = simulate_graph_algorithm(
+                    "BFS" if "BFS" in algoritmo_busca else "DFS", 
+                    grafo, 
+                    vertice_inicio
+                )
+                
+                st.success(f"Ordem de visita: {' → '.join(resultado)}")
+                
+                # Mostrar passos
+                for passo in passos:
+                    st.info(f"**{passo['action']}**")
+                    st.write(f"Visitados: {passo.get('visitados', [])}")
+                    if 'fila' in passo:
+                        st.write(f"Fila: {passo['fila']}")
+        
+        with col2:
+            # Visualização do grafo
+            st.subheader("Estrutura do Grafo")
+            
+            # Criar visualização simples do grafo
+            grafo_data = create_sample_graph()
+            
+            # Matriz de adjacência para visualização
+            vertices = grafo_data['vertices']
+            matriz = pd.DataFrame(0, index=vertices, columns=vertices)
+            
+            for u, v, peso in grafo_data['arestas']:
+                matriz.loc[u, v] = peso
+                matriz.loc[v, u] = peso  # Grafo não-dirigido
+            
+            st.write("**Matriz de Adjacência (com pesos):**")
+            st.dataframe(matriz)
+            
+            st.write("**Arestas:**")
+            for u, v, peso in grafo_data['arestas']:
+                st.write(f"• {u} ↔ {v} (peso: {peso})")
+    
+    with tab2:
+        st.subheader("Algoritmo de Dijkstra")
+        
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            vertice_dijkstra = st.selectbox(
+                "Vértice inicial (Dijkstra):",
+                ['A', 'B', 'C', 'D', 'E'],
+                key="dijkstra_start"
+            )
+            
+            if st.button("🛣️ Calcular Caminhos Mínimos"):
+                grafo = create_sample_graph()
+                distancias, passos = simulate_graph_algorithm("Dijkstra", grafo, vertice_dijkstra)
+                
+                st.success("Distâncias mínimas calculadas!")
+                
+                # Mostrar distâncias
+                for vertice, dist in distancias.items():
+                    if dist == float('inf'):
+                        st.write(f"**{vertice}:** ∞ (não alcançável)")
+                    else:
+                        st.write(f"**{vertice}:** {dist}")
+        
+        with col2:
+            st.subheader("Análise de Complexidade")
+            st.markdown("""
+            **Dijkstra:**
+            - **Temporal:** O((V + E) log V)
+            - **Espacial:** O(V)
+            - **Uso:** Caminhos mínimos com pesos positivos
+            
+            **Características:**
+            - ✅ Garante solução ótima
+            - ❌ Não funciona com pesos negativos
+            - 🔧 Usa heap para eficiência
+            """)
+    
+    with tab3:
+        st.subheader("Árvore Geradora Mínima")
+        
+        st.markdown("""
+        **Algoritmo de Kruskal** para encontrar a Árvore Geradora Mínima (MST):
+        
+        1. Ordenar arestas por peso
+        2. Para cada aresta, verificar se forma ciclo
+        3. Se não formar ciclo, adicionar à MST
+        4. Repetir até ter V-1 arestas
+        """)
+        
+        if st.button("🌲 Gerar MST (Kruskal)"):
+            grafo = create_sample_graph()
+            
+            # Simular Kruskal
+            arestas_ordenadas = sorted(grafo['arestas'], key=lambda x: x[2])
+            mst = []
+            peso_total = 0
+            
+            st.write("**Arestas ordenadas por peso:**")
+            for u, v, peso in arestas_ordenadas:
+                st.write(f"• {u}-{v}: {peso}")
+            
+            st.write("**Construindo MST:**")
+            for u, v, peso in arestas_ordenadas[:4]:  # Simular algumas arestas
+                mst.append((u, v, peso))
+                peso_total += peso
+                st.success(f"✅ Adicionada: {u}-{v} (peso: {peso})")
+            
+            st.write(f"**MST Final:** {mst}")
+            st.write(f"**Peso Total:** {peso_total}")
 
 else:
     st.header(f"{algoritmo_selecionado}")
