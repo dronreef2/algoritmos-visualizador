@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "algorithm-analyzer": {
+      "command": "python",
+      "args": [
+        "mcp_server.py"
+      ],
+      "cwd": "C:\\Users\\Miranda\\OneDrive\\Área de Trabalho\\Guilherme\\Projetos 2\\algoritimo",
+      "env": {
+        "PYTHONPATH": "C:\\Users\\Miranda\\OneDrive\\Área de Trabalho\\Guilherme\\Projetos 2\\algoritimo"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "mcp.servers": [
+    {
+      "name": "algorithm-analyzer",
+      "description": "Servidor MCP para análise de algoritmos",
+      "url": "http://localhost:8000",
+      "tools": [
+        "analyze_algorithm",
+        "benchmark_performance",
+        "suggest_optimizations",
+        "generate_code",
+        "complexity_calculator",
+        "visualize_execution"
+      ]
+    }
+  ],
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": true,
+    "markdown": true,
+    "python": true
+  },
+  "github.copilot.advanced": {
+    "debug.overrideEngine": "codex",
+    "length": 3000,
+    "temperature": 0.1
+  },
+  "git.ignoreLimitWarning": true
+}
