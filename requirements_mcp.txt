@@ -1,4 +1,5 @@
 # 🌐 Requirements para Streamlit Cloud + MCP
+# Versão atualizada: 2025-07-16
 
 # Streamlit e visualização
 streamlit>=1.28.0
