@@ -4,8 +4,17 @@ import streamlit as st
 # import matplotlib.pyplot as plt  # Removido para compatibilidade Streamlit Cloud
 import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
+
+# Importações condicionais para Plotly
+try:
+    import plotly.express as px
+    import plotly.graph_objects as go
+    PLOTLY_AVAILABLE = True
+except ImportError:
+    PLOTLY_AVAILABLE = False
+    px = None
+    go = None
+
 import time
 import json
 # import requests  # Removido temporariamente
@@ -210,11 +219,17 @@ if algoritmo_selecionado == "🏠 Dashboard":
         'Algoritmos': [7, 2, 0, 0]
     }
     
-    fig = px.bar(progress_data, x='Módulo', y='Progresso', 
-                title="Progresso por Módulo (%)",
-                color='Progresso',
-                color_continuous_scale='Viridis')
-    st.plotly_chart(fig, use_container_width=True)
+    if PLOTLY_AVAILABLE:
+        fig = px.bar(progress_data, x='Módulo', y='Progresso', 
+                    title="Progresso por Módulo (%)",
+                    color='Progresso',
+                    color_continuous_scale='Viridis')
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        # Fallback para tabela simples quando Plotly não está disponível
+        df = pd.DataFrame(progress_data)
+        st.bar_chart(df.set_index('Módulo')['Progresso'])
+        st.dataframe(df, use_container_width=True)
 
 elif algoritmo_selecionado == "🔍 Busca Binária":
     st.header("🔍 Busca Binária com Análise MCP")
@@ -300,31 +315,51 @@ elif algoritmo_selecionado == "🔍 Busca Binária":
     if passo_atual < len(passos):
         passo = passos[passo_atual]
         
-        # Criar gráfico com Plotly
-        cores = ['lightgray'] * len(array_ordenado)
-        for i in range(passo['esquerda'], passo['direita'] + 1):
-            cores[i] = 'lightblue'
-        cores[passo['meio']] = 'red' if passo['valor_meio'] != target else 'green'
-        
-        fig = go.Figure()
-        fig.add_bar(
-            x=list(range(len(array_ordenado))),
-            y=array_ordenado,
-            marker_color=cores,
-            text=array_ordenado,
-            textposition='auto',
-            name='Array'
-        )
-        
-        fig.update_layout(
-            title=f"Passo {passo_atual + 1}: Verificando posição {passo['meio']} (valor={passo['valor_meio']})",
-            xaxis_title="Índice",
-            yaxis_title="Valor",
-            showlegend=False,
-            height=400
-        )
-        
-        st.plotly_chart(fig, use_container_width=True)
+        if PLOTLY_AVAILABLE:
+            # Criar gráfico com Plotly
+            cores = ['lightgray'] * len(array_ordenado)
+            for i in range(passo['esquerda'], passo['direita'] + 1):
+                cores[i] = 'lightblue'
+            cores[passo['meio']] = 'red' if passo['valor_meio'] != target else 'green'
+            
+            fig = go.Figure()
+            fig.add_bar(
+                x=list(range(len(array_ordenado))),
+                y=array_ordenado,
+                marker_color=cores,
+                text=array_ordenado,
+                textposition='auto',
+                name='Array'
+            )
+            
+            fig.update_layout(
+                title=f"Passo {passo_atual + 1}: Verificando posição {passo['meio']} (valor={passo['valor_meio']})",
+                xaxis_title="Índice",
+                yaxis_title="Valor",
+                showlegend=False,
+                height=400
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            # Fallback simples quando Plotly não está disponível
+            st.write(f"**Passo {passo_atual + 1}:** Verificando posição {passo['meio']} (valor={passo['valor_meio']})")
+            
+            # Mostrar array visualmente
+            array_visual = ""
+            for i, val in enumerate(array_ordenado):
+                if i == passo['meio']:
+                    if passo['valor_meio'] == target:
+                        array_visual += f"🎯**{val}** "
+                    else:
+                        array_visual += f"🔍**{val}** "
+                elif passo['esquerda'] <= i <= passo['direita']:
+                    array_visual += f"📍{val} "
+                else:
+                    array_visual += f"⬜{val} "
+            
+            st.write(f"Array: {array_visual}")
+            st.write(f"Área de busca: [{passo['esquerda']}, {passo['direita']}]")
     
     # Resultado
     if resultado != -1:
@@ -474,14 +509,22 @@ elif algoritmo_selecionado == "⚡ Performance Testing":
         col1, col2 = st.columns(2)
         
         with col1:
-            fig_time = px.line(df_results, x="Tamanho", y="Tempo (ms)", 
-                              title=f"Performance: {algoritmo_teste}")
-            st.plotly_chart(fig_time, use_container_width=True)
+            if PLOTLY_AVAILABLE:
+                fig_time = px.line(df_results, x="Tamanho", y="Tempo (ms)", 
+                                  title=f"Performance: {algoritmo_teste}")
+                st.plotly_chart(fig_time, use_container_width=True)
+            else:
+                st.subheader(f"Performance: {algoritmo_teste}")
+                st.line_chart(df_results.set_index("Tamanho")["Tempo (ms)"])
         
         with col2:
-            fig_memory = px.line(df_results, x="Tamanho", y="Memória (KB)", 
-                                title="Uso de Memória")
-            st.plotly_chart(fig_memory, use_container_width=True)
+            if PLOTLY_AVAILABLE:
+                fig_memory = px.line(df_results, x="Tamanho", y="Memória (KB)", 
+                                    title="Uso de Memória")
+                st.plotly_chart(fig_memory, use_container_width=True)
+            else:
+                st.subheader("Uso de Memória")
+                st.line_chart(df_results.set_index("Tamanho")["Memória (KB)"])
         
         st.dataframe(df_results, use_container_width=True)
 
@@ -580,32 +623,45 @@ elif algoritmo_selecionado == "📊 Algoritmos de Ordenação":
                 progress_bar.progress((i + 1) / len(passos))
                 status_text.text(passo['action'])
                 
-                # Criar gráfico do estado atual
-                fig = go.Figure()
+                if PLOTLY_AVAILABLE:
+                    # Criar gráfico do estado atual
+                    fig = go.Figure()
+                    
+                    colors = ['lightblue'] * len(passo['array'])
+                    if 'comparing' in passo and passo['comparing']:
+                        for idx in passo['comparing']:
+                            if idx < len(colors):
+                                colors[idx] = 'red'
+                    
+                    fig.add_bar(
+                        x=list(range(len(passo['array']))),
+                        y=passo['array'],
+                        marker_color=colors,
+                        text=passo['array'],
+                        textposition='auto'
+                    )
+                    
+                    fig.update_layout(
+                        title=f"{algoritmo_ord} - {passo['action']}",
+                        xaxis_title="Posição",
+                        yaxis_title="Valor",
+                        showlegend=False,
+                        height=400
+                    )
+                    
+                    chart_container.plotly_chart(fig, use_container_width=True)
+                else:
+                    # Fallback visual simples
+                    array_visual = ""
+                    for idx, val in enumerate(passo['array']):
+                        if 'comparing' in passo and idx in passo.get('comparing', []):
+                            array_visual += f"🔴**{val}** "
+                        else:
+                            array_visual += f"🔵{val} "
+                    
+                    chart_container.write(f"**{passo['action']}**")
+                    chart_container.write(f"Array: {array_visual}")
                 
-                colors = ['lightblue'] * len(passo['array'])
-                if 'comparing' in passo and passo['comparing']:
-                    for idx in passo['comparing']:
-                        if idx < len(colors):
-                            colors[idx] = 'red'
-                
-                fig.add_bar(
-                    x=list(range(len(passo['array']))),
-                    y=passo['array'],
-                    marker_color=colors,
-                    text=passo['array'],
-                    textposition='auto'
-                )
-                
-                fig.update_layout(
-                    title=f"{algoritmo_ord} - {passo['action']}",
-                    xaxis_title="Posição",
-                    yaxis_title="Valor",
-                    showlegend=False,
-                    height=400
-                )
-                
-                chart_container.plotly_chart(fig, use_container_width=True)
                 time.sleep(0.8)
             
             st.success(f"✅ Ordenação completa! Array final: {resultado}")
