@@ -62,7 +62,7 @@ jobs:
         
         # Teste básico do sistema de logs
         sistema = SistemaBuscaLogs()
-        sistema.adicionar_log(1000, 'INFO', 'Teste')
+        sistema.adicionar_log(1000, 'INFO: Teste')
         resultado = sistema.buscar_logs_periodo(500, 1500)
         assert len(resultado) == 1
         print('✅ Sistema de Logs funcionando')
