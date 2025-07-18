@@ -1,5 +1,7 @@
 https://algoritmos-visualizador.streamlit.app/
 
+https://github.com/algorithm-visualizer/algorithm-visualizer
+
 # 🧮 Algoritmos Visualizador - Streamlit + MCP Integration
 
 [![Python CI](https://github.com/dronreef2/algoritmos-visualizador/actions/workflows/python-ci.yml/badge.svg)](https://github.com/dronreef2/algoritmos-visualizador/actions/workflows/python-ci.yml)
