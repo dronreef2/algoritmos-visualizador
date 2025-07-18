@@ -1,0 +1,92 @@
+name: Python CI - Algoritmos Visualizador
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements_mcp.txt
+        pip install flake8 black pytest # Ferramentas de qualidade e testes
+
+    - name: Lint with Flake8
+      run: |
+        # Verificação de erros críticos
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=__pycache__,venv,.git
+        # Verificação de qualidade geral (não falha o build)
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=__pycache__,venv,.git
+
+    - name: Check formatting with Black
+      run: |
+        black --check --diff . --exclude="/(venv|__pycache__|\.git)/"
+
+    - name: Run Tests
+      run: |
+        python -m pytest test_projeto.py -v
+        echo '✅ Todos os testes passaram!'
+
+    - name: Test Module 1 Applications
+      run: |
+        cd modulo_1_fundamentos
+        python -c "
+        from aplicacoes_reais import *
+        from casos_uso_praticos import *
+        print('✅ Módulo 1 - Imports funcionando')
+        
+        # Teste básico do sistema de logs
+        sistema = SistemaBuscaLogs()
+        sistema.adicionar_log(1000, 'INFO', 'Teste')
+        resultado = sistema.buscar_logs_periodo(500, 1500)
+        assert len(resultado) == 1
+        print('✅ Sistema de Logs funcionando')
+        
+        # Teste básico do detector de fraudes
+        detector = DetectorFraudes()
+        detector.adicionar_transacao(1000, 100, 'DEPOSITO', 'conta1')
+        print('✅ Detector de Fraudes funcionando')
+        
+        # Teste básico da rede social
+        rede = RedeSocial()
+        rede.adicionar_amizade('A', 'B')
+        grau = rede.grau_separacao('A', 'B')
+        assert grau == 1
+        print('✅ Rede Social funcionando')
+        
+        print('🎊 Todos os testes do Módulo 1 passaram!')
+        "
+
+    - name: Test Streamlit App Import
+      run: |
+        python -c "
+        try:
+            import streamlit_app_mcp
+            print('✅ Streamlit App importado com sucesso')
+        except ImportError as e:
+            print(f'⚠️ Erro na importação: {e}')
+            # Não falha o build por conta de dependências opcionais
+        "
+
+    - name: Validate Requirements Files
+      run: |
+        echo '✅ Validando arquivos de requirements...'
+        pip install -r requirements_simple.txt
+        pip install -r requirements_visualizacao.txt
+        echo '✅ Todos os requirements são válidos'

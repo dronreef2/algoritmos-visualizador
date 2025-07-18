@@ -1,0 +1,15 @@
+# 📋 Dependências para Visualização de Algoritmos
+
+# Para interface web interativa
+streamlit>=1.28.0
+matplotlib>=3.7.0
+numpy>=1.24.0
+plotly>=5.15.0
+
+# Para notebooks interativos (opcional)
+jupyter>=1.0.0
+ipywidgets>=8.0.0
+voila>=0.5.0
+
+# Para animações (opcional)
+matplotlib-animation-manager>=1.0.0
