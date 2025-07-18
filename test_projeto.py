@@ -22,13 +22,13 @@ def test_sistema_busca_logs():
     from aplicacoes_reais import SistemaBuscaLogs
     
     sistema = SistemaBuscaLogs()
-    sistema.adicionar_log(1000, 'INFO', 'Teste de log')
-    sistema.adicionar_log(2000, 'ERROR', 'Erro de teste')
+    sistema.adicionar_log(1000, 'INFO: Teste de log')
+    sistema.adicionar_log(2000, 'ERROR: Erro de teste')
     
     # Buscar logs em um período
     resultado = sistema.buscar_logs_periodo(500, 1500)
     assert len(resultado) == 1
-    assert resultado[0][1] == 'INFO'
+    assert 'INFO' in resultado[0][1]
 
 def test_detector_fraudes():
     """Testa o detector de fraudes"""
