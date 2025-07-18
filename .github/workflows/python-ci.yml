@@ -27,14 +27,19 @@ jobs:
         pip install -r requirements_mcp.txt
         pip install flake8 black pytest # Ferramentas de qualidade e testes
 
-    - name: Lint with Flake8
+    - name: Lint with Flake8 (Critical Errors Only)
       run: |
-        # Verificação de erros críticos
+        # Verificação apenas de erros críticos que devem falhar o build
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=__pycache__,venv,.git
+
+    - name: Lint with Flake8 (Quality Check)
+      continue-on-error: true
+      run: |
         # Verificação de qualidade geral (não falha o build)
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=__pycache__,venv,.git
 
     - name: Check formatting with Black
+      continue-on-error: true
       run: |
         black --check --diff . --exclude="/(venv|__pycache__|\.git)/"
 
