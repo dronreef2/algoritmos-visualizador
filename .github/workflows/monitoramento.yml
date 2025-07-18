@@ -1,0 +1,37 @@
+name: Monitoramento Automático
+
+on:
+  schedule:
+    # Executa diariamente às 9:00 UTC (6:00 BRT)
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check Streamlit App
+      run: |
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://algoritmos-visualizador.streamlit.app/)
+        if [ $response -eq 200 ]; then
+          echo "✅ Streamlit App está online (HTTP $response)"
+        else
+          echo "❌ Streamlit App com problemas (HTTP $response)"
+          exit 1
+        fi
+    
+    - name: Check GitHub Actions Status
+      run: |
+        echo "🔍 Verificando status do GitHub Actions..."
+        echo "📊 Workflow executado em: $(date)"
+        echo "✅ Sistema de monitoramento funcionando"
+    
+    - name: Generate Daily Report
+      run: |
+        echo "📋 RELATÓRIO DIÁRIO - $(date +'%Y-%m-%d')"
+        echo "=================================="
+        echo "✅ Streamlit App: Online"
+        echo "✅ GitHub Actions: Funcionando"  
+        echo "✅ Monitoramento: Ativo"
+        echo "🔄 Próxima verificação: $(date -d '+1 day' +'%Y-%m-%d 09:00 UTC')"

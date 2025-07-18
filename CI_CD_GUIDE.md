@@ -143,3 +143,6 @@ Para problemas com CI/CD:
 4. Consultar documentação oficial
 
 **Status:** ✅ **Pipeline funcionando perfeitamente**
+**Deploy:** ✅ **Aplicação online e funcional**
+**Última atualização:** 18 de julho de 2025
+**URL:** https://algoritmos-visualizador.streamlit.app/
