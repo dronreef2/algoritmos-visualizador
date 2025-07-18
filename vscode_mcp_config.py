@@ -15,7 +15,9 @@ vscode_mcp_config = {
             "command": "python",
             "args": ["mcp_server.py"],
             "cwd": str(Path.cwd()),
-            "env": {"PYTHONPATH": str(Path.cwd())},
+            "env": {
+                "PYTHONPATH": str(Path.cwd())
+            }
         }
     }
 }
@@ -29,16 +31,26 @@ vscode_settings = {
             "url": "http://localhost:8000",
             "tools": [
                 "analyze_algorithm",
-                "benchmark_performance",
+                "benchmark_performance", 
                 "suggest_optimizations",
                 "generate_code",
                 "complexity_calculator",
-                "visualize_execution",
-            ],
+                "visualize_execution"
+            ]
         }
     ],
-    "github.copilot.enable": {"*": True, "yaml": True, "plaintext": True, "markdown": True, "python": True},
-    "github.copilot.advanced": {"debug.overrideEngine": "codex", "length": 3000, "temperature": 0.1},
+    "github.copilot.enable": {
+        "*": True,
+        "yaml": True,
+        "plaintext": True,
+        "markdown": True,
+        "python": True
+    },
+    "github.copilot.advanced": {
+        "debug.overrideEngine": "codex",
+        "length": 3000,
+        "temperature": 0.1
+    }
 }
 
 # Instruções customizadas para GitHub Copilot
@@ -82,36 +94,34 @@ Este é um projeto de estudo de algoritmos com integração MCP (Model Context P
 Use essas informações como contexto para sugestões mais precisas e relevantes.
 """
 
-
 def gerar_arquivos_configuracao():
     """Gera arquivos de configuração para VS Code + MCP."""
-
+    
     # Criar diretório .vscode se não existir
-    vscode_dir = Path(".vscode")
+    vscode_dir = Path('.vscode')
     vscode_dir.mkdir(exist_ok=True)
-
+    
     # settings.json
-    with open(vscode_dir / "settings.json", "w", encoding="utf-8") as f:
+    with open(vscode_dir / 'settings.json', 'w', encoding='utf-8') as f:
         json.dump(vscode_settings, f, indent=2, ensure_ascii=False)
-
+    
     # mcp.json (configuração específica MCP)
-    with open(vscode_dir / "mcp.json", "w", encoding="utf-8") as f:
+    with open(vscode_dir / 'mcp.json', 'w', encoding='utf-8') as f:
         json.dump(vscode_mcp_config, f, indent=2, ensure_ascii=False)
-
+    
     # Instruções para Copilot
-    with open(".copilot-instructions.md", "w", encoding="utf-8") as f:
+    with open('.copilot-instructions.md', 'w', encoding='utf-8') as f:
         f.write(copilot_instructions)
-
+    
     print("✅ Arquivos de configuração gerados:")
     print("  - .vscode/settings.json")
-    print("  - .vscode/mcp.json")
+    print("  - .vscode/mcp.json") 
     print("  - .copilot-instructions.md")
-
 
 # Exemplo de integração com GitHub Copilot Chat
 def exemplo_prompt_copilot():
     """Exemplo de como usar prompts customizados com MCP."""
-
+    
     prompts_exemplo = {
         "/analyze-complexity": {
             "description": "Analisa complexidade do código selecionado usando MCP",
@@ -123,8 +133,9 @@ def exemplo_prompt_copilot():
             # 1. Chamar o MCP server para análise
             # 2. Retornar complexidade temporal/espacial
             # 3. Sugerir otimizações se aplicável
-            """,
+            """
         },
+        
         "/optimize-algorithm": {
             "description": "Sugere otimizações usando ferramentas MCP",
             "example": """
@@ -136,8 +147,9 @@ def exemplo_prompt_copilot():
             # - Sugestões de otimização
             # - Algoritmos alternativos
             # - Estimativa de melhoria
-            """,
+            """
         },
+        
         "/generate-visualization": {
             "description": "Cria código para visualizar algoritmo",
             "example": """
@@ -147,8 +159,9 @@ def exemplo_prompt_copilot():
             # - Visualização passo a passo
             # - Gráficos interativos
             # - Integração com Streamlit
-            """,
+            """
         },
+        
         "/benchmark-performance": {
             "description": "Executa benchmark usando MCP",
             "example": """
@@ -159,17 +172,16 @@ def exemplo_prompt_copilot():
             # - Uso de memória
             # - Gráficos de performance
             # - Score de otimização
-            """,
-        },
+            """
+        }
     }
-
+    
     return prompts_exemplo
-
 
 # Workflow de desenvolvimento com MCP
 def workflow_desenvolvimento():
     """Descreve o workflow ideal de desenvolvimento."""
-
+    
     workflow = """
     # 🔄 Workflow de Desenvolvimento com MCP + VS Code
 
@@ -210,28 +222,26 @@ def workflow_desenvolvimento():
     Código → MCP Analysis → Otimização → Visualização → Deploy → Feedback → Repeat
     ```
     """
-
+    
     return workflow
-
 
 if __name__ == "__main__":
     print("🔧 Configurando integração VS Code + MCP...")
-
+    
     # Gerar arquivos de configuração
     gerar_arquivos_configuracao()
-
+    
     # Mostrar exemplos de prompts
     print("\n🤖 Prompts Copilot disponíveis:")
     prompts = exemplo_prompt_copilot()
     for prompt, info in prompts.items():
         print(f"\n{prompt}")
         print(f"  📝 {info['description']}")
-
+    
     # Mostrar workflow
     print("\n" + workflow_desenvolvimento())
-
-    print(
-        """
+    
+    print("""
     🎯 Próximos Passos:
     
     1. ✅ Configuração gerada
@@ -241,5 +251,4 @@ if __name__ == "__main__":
     5. 🌐 Deploy Streamlit app com MCP integration
     
     🎉 Sua configuração MCP + VS Code está pronta!
-    """
-    )
+    """)

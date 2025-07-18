@@ -29,10 +29,6 @@ jobs:
 
     - name: Lint with Flake8 (Critical Errors Only)
       run: |
-        # Remover arquivos temporários problemáticos
-        find . -name "temp_test.py" -delete 2>/dev/null || true
-        find . -name "test_temp.py" -delete 2>/dev/null || true
-        
         # Verificação apenas de erros críticos que devem falhar o build
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=__pycache__,venv,.git
 
@@ -62,7 +58,7 @@ jobs:
         
         # Teste básico do sistema de logs
         sistema = SistemaBuscaLogs()
-        sistema.adicionar_log(1000, 'INFO: Teste')
+        sistema.adicionar_log(1000, 'INFO', 'Teste')
         resultado = sistema.buscar_logs_periodo(500, 1500)
         assert len(resultado) == 1
         print('✅ Sistema de Logs funcionando')
