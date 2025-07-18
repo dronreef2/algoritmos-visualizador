@@ -143,6 +143,8 @@ logs/
 temp/
 *.tmp
 *.bak
+temp_test.py
+test_temp.py
 
 # OS generated files
 .DS_Store
