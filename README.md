@@ -65,6 +65,7 @@ Uma aplicação web interativa para visualização e análise de algoritmos, int
 - **Otimizações Inteligentes:** Sugestões baseadas em contexto
 - **Geração de Código:** Algoritmos otimizados automaticamente
 - **Benchmarks:** Testes de performance em tempo real
+- **🔍 Busca Web Integrada:** MCP Server Tavily para pesquisa contextual
 
 ### 📊 Dashboard Completo
 - **Progresso de Estudo:** Acompanhamento de módulos
@@ -127,6 +128,19 @@ pip install -r requirements_mcp.txt
 
 # Executar aplicação web
 streamlit run streamlit_app_mcp.py
+```
+
+### 🔍 MCP Server Tavily (Busca Web Integrada)
+```bash
+# Verificar configuração
+python mcp_config.py
+
+# Executar exemplo de integração
+python exemplo_integracao_mcp.py
+
+# Usar em seu código
+from mcp_tavily_integration import buscar_web
+resultado = buscar_web("algoritmos python explicação")
 ```
 
 ### MCP Server (Análise com AI)
@@ -293,3 +307,23 @@ Todos os sistemas foram **testados e validados**. Você pode usar essas implemen
 ---
 
 **🚀 Comece sua jornada agora! Vá para o [Módulo 1](modulo_1_fundamentos/) e construa uma base sólida em algoritmos.**
+
+## 📁 Estrutura do Projeto
+
+```
+algoritmos-visualizador/
+├── 📁 mcp-server-tavily/          # 🔍 Servidor MCP para buscas web
+│   ├── src/                       # Código fonte do servidor
+│   ├── .env                       # ⚙️ Configuração da API
+│   ├── run_server.sh             # 🚀 Script de inicialização
+│   └── pyproject.toml             # 📦 Dependências
+├── 📁 modulo_1_fundamentos/       # ✅ Fundamentos completos
+├── 📁 modulo_2_estruturas_dados/  # 🏗️ Estruturas avançadas
+├── 📁 modulo_3_programacao_dinamica/ # 🎯 Programação dinâmica
+├── 📁 modulo_4_entrevistas/       # 💼 Sistema de entrevistas
+├── 📁 streamlit_apps/             # 🌐 Aplicações web
+├── 🔧 mcp_tavily_integration.py   # 🔗 Integração MCP
+├── 📚 exemplo_integracao_mcp.py   # 💡 Exemplos de uso
+├── ⚙️ mcp_config.py               # 🔧 Utilitários de configuração
+└── 📖 MCP_TAVILY_README.md        # 📋 Documentação completa
+```

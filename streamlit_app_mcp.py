@@ -134,7 +134,8 @@ algoritmo_selecionado = st.sidebar.selectbox(
         "🌐 BFS (Busca em Largura)",
         "📊 Análise MCP",
         "🧠 Metodologia 3 Passos",
-        "⚡ Performance Testing"
+        "⚡ Performance Testing",
+        "🔍 Busca Contextual MCP"  # Nova opção adicionada
     ]
 )
 
@@ -830,17 +831,257 @@ elif algoritmo_selecionado == "🌳 Algoritmos de Grafos":
             st.write(f"**MST Final:** {mst}")
             st.write(f"**Peso Total:** {peso_total}")
 
-else:
-    st.header(f"{algoritmo_selecionado}")
-    st.info("🚧 Esta seção demonstra a flexibilidade da arquitetura MCP + Streamlit. Novos algoritmos podem ser adicionados dinamicamente!")
-    
-    # Demonstrar tool discovery dinâmico
-    st.markdown("### 🔍 Dynamic Tool Discovery")
-    st.markdown("Com MCP, novas ferramentas podem ser descobertas automaticamente:")
-    
-    discovered_tools = mcp.discover_tools()
-    for tool in discovered_tools:
-        st.markdown(f"- 🛠️ **{tool}**: Disponível para este contexto")
+# 🔍 Nova seção: Busca Contextual MCP
+elif algoritmo_selecionado == "🔍 Busca Contextual MCP":
+    st.header("🔍 Busca Contextual MCP - Aprendizado Enriquecido")
+    st.markdown("**Pesquise explicações contextuais sobre algoritmos usando MCP Server Tavily**")
+
+    # Importar integração MCP Tavily
+    try:
+        from mcp_tavily_integration import TavilySearchClient, buscar_web
+        MCP_AVAILABLE = True
+    except ImportError:
+        MCP_AVAILABLE = False
+        st.warning("⚠️ Integração MCP Tavily não disponível. Configure primeiro.")
+
+    if MCP_AVAILABLE:
+        # Inicializar cliente MCP
+        client = TavilySearchClient()
+
+        if not client.is_configured():
+            st.error("❌ **Configuração Necessária**")
+            st.markdown("""
+            Para usar a busca contextual, você precisa:
+
+            1. **📝 Obter chave da API Tavily:**
+               - Acesse: https://tavily.com/
+               - Crie conta gratuita
+               - Copie sua chave da API
+
+            2. **⚙️ Configurar ambiente:**
+               - Edite: `mcp-server-tavily/.env`
+               - Substitua `your_tavily_api_key_here` pela sua chave
+
+            3. **🚀 Testar configuração:**
+               - Execute: `python mcp_config.py`
+            """)
+
+            if st.button("🔧 Verificar Configuração"):
+                st.rerun()
+        else:
+            # Interface de busca
+            st.success("✅ **MCP Server configurado e pronto!**")
+
+            # Categorias de busca
+            categorias = {
+                "🎯 Algoritmos Específicos": [
+                    "busca binária explicação completa",
+                    "algoritmo quicksort funcionamento",
+                    "árvore binária de busca conceito",
+                    "algoritmo de Dijkstra explicação",
+                    "programação dinâmica exemplos práticos"
+                ],
+                "📚 Conceitos Fundamentais": [
+                    "complexidade temporal Big O",
+                    "estrutura de dados heap",
+                    "algoritmos de ordenação comparação",
+                    "grafos teoria e aplicações",
+                    "recursão vs iteração vantagens"
+                ],
+                "💼 Preparação para Entrevistas": [
+                    "problemas Two Sum soluções",
+                    "algoritmos de busca eficientes",
+                    "otimização de código técnicas",
+                    "questões de entrevista algoritmos",
+                    "resolução de problemas sistemática"
+                ],
+                "🔧 Implementações Práticas": [
+                    "Python algoritmos eficientes",
+                    "estruturas de dados implementação",
+                    "otimização de performance",
+                    "debugging algoritmos técnicas",
+                    "boas práticas programação"
+                ]
+            }
+
+            # Seleção de categoria
+            categoria_selecionada = st.selectbox(
+                "📂 Escolha uma categoria:",
+                list(categorias.keys())
+            )
+
+            # Busca personalizada
+            col1, col2 = st.columns([2, 1])
+
+            with col1:
+                query_personalizada = st.text_input(
+                    "🔍 Ou digite sua própria busca:",
+                    placeholder="Ex: algoritmo de ordenação merge sort explicação"
+                )
+
+            with col2:
+                profundidade = st.selectbox(
+                    "🎯 Profundidade:",
+                    ["basic", "advanced"],
+                    help="Basic: busca rápida | Advanced: busca mais profunda"
+                )
+
+            # Sugestões baseadas na categoria
+            if categoria_selecionada:
+                st.markdown(f"### 💡 Sugestões para **{categoria_selecionada}**")
+                cols = st.columns(2)
+
+                for i, sugestao in enumerate(categorias[categoria_selecionada]):
+                    with cols[i % 2]:
+                        if st.button(f"🔍 {sugestao}", key=f"sugestao_{i}"):
+                            query_personalizada = sugestao
+                            st.rerun()
+
+            # Inicializar variável resultado
+            resultado = None
+
+            # Botão de busca
+            query_final = query_personalizada.strip()
+
+            if st.button("🚀 Realizar Busca", type="primary", disabled=not query_final):
+                if query_final:
+                    with st.spinner("🔄 Buscando informações contextuais..."):
+                        # Realizar busca
+                        resultado = buscar_web(query_final, profundidade)
+
+                        if "error" in resultado:
+                            st.error(f"❌ Erro na busca: {resultado['error']}")
+                            if "message" in resultado:
+                                st.info(resultado["message"])
+                        else:
+                            # Exibir resultados
+                            st.success(f"✅ Busca realizada com sucesso!")
+
+                            # Informações da busca
+                            col1, col2, col3 = st.columns(3)
+                            with col1:
+                                st.metric("🔍 Query", resultado.get('query', 'N/A'))
+                            with col2:
+                                st.metric("🎯 Profundidade", resultado.get('search_depth', 'N/A'))
+                            with col3:
+                                st.metric("📊 Resultados", len(resultado.get('results', [])))
+
+                            # Resultados detalhados
+                            if "results" in resultado and resultado["results"]:
+                                st.markdown("### 📋 Resultados Encontrados")
+
+                                for i, item in enumerate(resultado["results"], 1):
+                                    with st.expander(f"📄 Resultado {i}: {item.get('title', 'Título não disponível')[:60]}..."):
+                                        st.markdown(f"**🔗 URL:** {item.get('url', 'Não disponível')}")
+
+                                        if "snippet" in item:
+                                            st.markdown("**📝 Conteúdo:**")
+                                            st.info(item["snippet"])
+
+                                        # Botão para nova busca relacionada
+                                        if st.button(f"🔍 Buscar mais sobre '{item.get('title', '')[:30]}...'",
+                                                   key=f"related_{i}"):
+                                            nova_query = f"{item.get('title', '')} explicação detalhada"
+                                            st.session_state.related_search = nova_query
+                                            st.rerun()
+                            else:
+                                st.warning("⚠️ Nenhum resultado encontrado. Tente reformular a busca.")
+
+            # Busca relacionada (se solicitada)
+            if hasattr(st.session_state, 'related_search') and st.session_state.related_search:
+                st.markdown("---")
+                st.markdown("### 🔗 Busca Relacionada")
+                st.info(f"Buscando: {st.session_state.related_search}")
+
+                with st.spinner("🔄 Buscando informações relacionadas..."):
+                    resultado_relacionado = buscar_web(st.session_state.related_search, "basic")
+
+                    if "results" in resultado_relacionado and resultado_relacionado["results"]:
+                        st.success("📚 Informações relacionadas encontradas!")
+
+                        # Mostrar primeiro resultado relacionado
+                        primeiro = resultado_relacionado["results"][0]
+                        st.markdown(f"**{primeiro.get('title', 'Título não disponível')}**")
+                        st.markdown(f"🔗 {primeiro.get('url', 'URL não disponível')}")
+
+                        if "snippet" in primeiro:
+                            st.info(primeiro["snippet"])
+
+                    # Limpar busca relacionada
+                    del st.session_state.related_search
+
+            # Dicas de uso
+            st.markdown("---")
+            st.markdown("### 💡 Dicas para Buscas Eficazes")
+
+            dicas_col1, dicas_col2 = st.columns(2)
+
+            with dicas_col1:
+                st.markdown("""
+                **🎯 Para Algoritmos Específicos:**
+                - "busca binária implementação Python"
+                - "quicksort complexidade análise"
+                - "árvore AVL rotação explicação"
+
+                **📊 Para Conceitos:**
+                - "Big O notation exemplos práticos"
+                - "recursão vantagens desvantagens"
+                - "hash table colisões resolução"
+                """)
+
+            with dicas_col2:
+                st.markdown("""
+                **💼 Para Entrevistas:**
+                - "Two Sum problema soluções múltiplas"
+                - "árvore binária travessia tipos"
+                - "grafos representação matriz vs lista"
+
+                **🔧 Para Implementações:**
+                - "Python deque vs list performance"
+                - "ordenar lista objetos custom key"
+                - "fibonacci memoização implementação"
+                """)
+
+            # Histórico de buscas (simulado)
+            if "search_history" not in st.session_state:
+                st.session_state.search_history = []
+
+            if query_final and resultado and "results" in resultado:
+                st.session_state.search_history.append({
+                    "query": query_final,
+                    "timestamp": time.time(),
+                    "results_count": len(resultado.get("results", []))
+                })
+
+                # Manter apenas últimas 5 buscas
+                st.session_state.search_history = st.session_state.search_history[-5:]
+
+            # Mostrar histórico
+            if st.session_state.search_history:
+                st.markdown("### 📚 Histórico de Buscas")
+                for i, busca in enumerate(reversed(st.session_state.search_history)):
+                    with st.expander(f"🔍 {busca['query'][:50]}... ({busca['results_count']} resultados)"):
+                        st.write(f"⏰ Realizada há {int(time.time() - busca['timestamp'])} segundos")
+
+    else:
+        st.error("❌ **Integração MCP não disponível**")
+        st.markdown("""
+        Para habilitar a busca contextual:
+
+        1. **📦 Instalar dependências MCP:**
+           ```bash
+           cd mcp-server-tavily
+           pip install -e .
+           ```
+
+        2. **⚙️ Configurar API:**
+           - Obter chave gratuita do Tavily
+           - Editar arquivo `.env`
+
+        3. **🔄 Reiniciar aplicação**
+
+        **📖 Ver documentação completa:** `MCP_TAVILY_README.md`
+        """)
 
 # Footer com informações MCP
 st.markdown("---")
