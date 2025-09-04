@@ -192,7 +192,7 @@ def demo_modulo_3():
     # Mostrar alguns passos
     print("\nPrimeiros 5 passos:")
     for i, passo in enumerate(passos_lcs[:5]):
-        print(f"  {i+1}. {passo['acao']}")
+        print(f"  {i+1}. {passo['action']}")
 
 def demo_modulo_4():
     """Demonstra o módulo 4 - Entrevistas."""
