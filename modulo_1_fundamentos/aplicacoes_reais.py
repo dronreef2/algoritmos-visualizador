@@ -36,11 +36,17 @@ class SistemaBuscaLogs:
     def __init__(self):
         self.logs = []  # Lista de (timestamp, mensagem)
     
-    def adicionar_log(self, timestamp: float, mensagem: str):
+    def adicionar_log(self, timestamp: float, mensagem: str, nivel: str = None):
         """Adiciona log mantendo ordem cronológica."""
+        # Se nivel for fornecido e a mensagem não incluir o nível, adicionar
+        if nivel and not any(level in mensagem.upper() for level in ['INFO:', 'ERROR:', 'DEBUG:', 'WARN:', 'FATAL:']):
+            mensagem_completa = f"{nivel.upper()}: {mensagem}"
+        else:
+            mensagem_completa = mensagem
+        
         # Inserção ordenada usando busca binária
         pos = bisect.bisect_left(self.logs, (timestamp, ""))
-        self.logs.insert(pos, (timestamp, mensagem))
+        self.logs.insert(pos, (timestamp, mensagem_completa))
     
     def buscar_logs_periodo(self, inicio: float, fim: float) -> List[Tuple[float, str]]:
         """
