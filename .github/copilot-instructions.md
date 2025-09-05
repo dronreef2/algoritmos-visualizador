@@ -35,3 +35,5 @@
 - Forneça análise de complexidade quando relevante
 - Sugira otimizações alternativas quando aplicável
 - Inclua exemplos de uso prático
+
+# Teste de workflow - commit automático para verificar deploy
