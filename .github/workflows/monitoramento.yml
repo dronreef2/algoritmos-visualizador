@@ -11,27 +11,47 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Check Streamlit App
-      run: |
-        response=$(curl -s -o /dev/null -w "%{http_code}" -L https://algoritmos-visualizador.streamlit.app/)
-        if [ $response -eq 200 ]; then
-          echo "✅ Streamlit App está online (HTTP $response)"
-        else
-          echo "❌ Streamlit App com problemas (HTTP $response)"
-          exit 1
-        fi
+    - name: Checkout código
+      uses: actions/checkout@v4
     
-    - name: Check GitHub Actions Status
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
       run: |
-        echo "🔍 Verificando status do GitHub Actions..."
-        echo "📊 Workflow executado em: $(date)"
-        echo "✅ Sistema de monitoramento funcionando"
+        python -m pip install --upgrade pip
+        pip install requests
+    
+    - name: Executar Monitoramento Completo
+      run: |
+        echo "🔍 Iniciando monitoramento automático..."
+        python monitor.py
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
+    
+    - name: Verificação de Fallback - Streamlit App
+      if: failure()
+      run: |
+        echo "🔄 Executando verificação de fallback..."
+        response=$(curl -s -o /dev/null -w "%{http_code}" -L --connect-timeout 10 --max-time 30 https://algoritmos-visualizador.streamlit.app/ || echo "000")
+        echo "📊 Response code: $response"
+        if [ "$response" = "200" ]; then
+          echo "✅ Streamlit App está online (HTTP $response)"
+        elif [ "$response" = "000" ]; then
+          echo "⚠️ Streamlit App: Problema de conectividade (não pode resolver DNS ou conectar)"
+        else
+          echo "⚠️ Streamlit App: Resposta inesperada (HTTP $response)"
+        fi
+        echo "ℹ️ Nota: Este é um fallback - o monitoramento principal usa retry logic"
     
     - name: Generate Daily Report
+      if: always()
       run: |
         echo "📋 RELATÓRIO DIÁRIO - $(date +'%Y-%m-%d')"
         echo "=================================="
-        echo "✅ Streamlit App: Online"
-        echo "✅ GitHub Actions: Funcionando"  
-        echo "✅ Monitoramento: Ativo"
+        echo "✅ Monitoramento automático executado"
         echo "🔄 Próxima verificação: $(date -d '+1 day' +'%Y-%m-%d 09:00 UTC')"
+        echo "📊 Para detalhes completos, consulte os logs acima"
