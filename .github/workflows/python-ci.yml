@@ -95,3 +95,32 @@ jobs:
         pip install -r requirements_simple.txt
         pip install -r requirements_visualizacao.txt
         echo '✅ Todos os requirements são válidos'
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Test Streamlit App Locally
+      run: |
+        streamlit run streamlit_app.py --server.headless true --server.port 8501 &
+        sleep 10
+        curl -f http://localhost:8501 || (echo "❌ Falha no teste local do app" && exit 1)
+        echo "✅ App Streamlit funcionando localmente"
+    
+    - name: Notify Deployment
+      run: |
+        echo "🚀 Deploy automático será feito pelo Streamlit Sharing se o repositório estiver conectado."
+        echo "Verifique em https://share.streamlit.io para conectar o repositório se necessário."
+        echo "Após conectar, pushes para main farão deploy automático."

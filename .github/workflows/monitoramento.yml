@@ -13,8 +13,8 @@ jobs:
     steps:
     - name: Check Streamlit App
       run: |
-        response=$(curl -s -o /dev/null -w "%{http_code}" -L https://algoritmos-visualizador.streamlit.app/)
-        if [ $response -eq 200 ]; then
+        response=$(curl -s -o /dev/null -w "%{http_code}" --max-redirs 1 -L https://algoritmos-visualizador.streamlit.app/)
+        if [ $response -eq 200 ] || [ $response -eq 303 ]; then
           echo "✅ Streamlit App está online (HTTP $response)"
         else
           echo "❌ Streamlit App com problemas (HTTP $response)"

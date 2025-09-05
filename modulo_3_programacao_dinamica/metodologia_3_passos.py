@@ -663,3 +663,70 @@ if __name__ == "__main__":
         print(f"{approach.title()}: {results['tempo']:.6f}s, {results['passos']} passos, {results['complexidade']}")
     
     print("\n✅ Todos os testes completados!")
+
+class Metodologia3Passos:
+    """
+    Classe wrapper para a metodologia dos 3 passos de programação dinâmica.
+    """
+    
+    def __init__(self):
+        """Inicializa a classe de metodologia."""
+        self.problemas_disponiveis = {
+            'fibonacci': {
+                'forca_bruta': fibonacci_forca_bruta_com_passos,
+                'memoizacao': fibonacci_memoizacao_com_passos,
+                'tabulacao': fibonacci_tabulacao_com_passos
+            },
+            'knapsack': {
+                'forca_bruta': knapsack_forca_bruta_com_passos,
+                'tabulacao': knapsack_tabulacao_com_passos
+            },
+            'lcs': {
+                'tabulacao': lcs_tabulacao_com_passos
+            },
+            'coin_change': {
+                'tabulacao': coin_change_tabulacao_com_passos
+            }
+        }
+    
+    def resolver_problema(self, problema: str, abordagem: str, *args, **kwargs):
+        """
+        Resolve um problema usando uma abordagem específica.
+        
+        Args:
+            problema: Nome do problema ('fibonacci', 'knapsack', etc.)
+            abordagem: Abordagem ('forca_bruta', 'memoizacao', 'tabulacao')
+            *args, **kwargs: Argumentos específicos do problema
+            
+        Returns:
+            Tuple com resultado e passos
+        """
+        if problema not in self.problemas_disponiveis:
+            raise ValueError(f"Problema '{problema}' não encontrado")
+        
+        if abordagem not in self.problemas_disponiveis[problema]:
+            raise ValueError(f"Abordagem '{abordagem}' não encontrada para o problema '{problema}'")
+        
+        funcao = self.problemas_disponiveis[problema][abordagem]
+        return funcao(*args, **kwargs)
+    
+    def listar_problemas(self):
+        """Retorna lista de problemas disponíveis."""
+        return list(self.problemas_disponiveis.keys())
+    
+    def listar_abordagens(self, problema: str):
+        """Retorna lista de abordagens disponíveis para um problema."""
+        if problema not in self.problemas_disponiveis:
+            return []
+        return list(self.problemas_disponiveis[problema].keys())
+
+# Teste da classe
+if __name__ == "__main__":
+    metodologia = Metodologia3Passos()
+    
+    # Teste Fibonacci
+    resultado, passos = metodologia.resolver_problema('fibonacci', 'tabulacao', 10)
+    print(f"Fibonacci(10) = {resultado}")
+    print(f"Passos: {len(passos)}")
+    
+    print("✅ Classe Metodologia3Passos funcionando!")

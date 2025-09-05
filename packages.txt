@@ -1,0 +1,18 @@
+# packages.txt - Dependências do sistema para Streamlit Sharing
+# Este arquivo especifica pacotes do sistema que precisam ser instalados
+
+# Para matplotlib e gráficos
+libglib2.0-0
+libsm6
+libxext6
+libxrender-dev
+libgomp1
+libgthread-2.0-0
+
+# Para processamento de texto e dados
+libxml2-dev
+libxslt-dev
+
+# Utilitários básicos
+curl
+git

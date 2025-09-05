@@ -202,3 +202,69 @@ if __name__ == "__main__":
     print(f"Array vazio: {busca_binaria_basica([], 5)}")      # Esperado: -1
     print(f"Um elemento (encontrado): {busca_binaria_basica([5], 5)}")  # Esperado: 0
     print(f"Um elemento (não encontrado): {busca_binaria_basica([5], 3)}")  # Esperado: -1
+
+class BuscaBinaria:
+    """
+    Classe wrapper para busca binária com interface unificada.
+    """
+    
+    def __init__(self):
+        """Inicializa a classe de busca binária."""
+        pass
+    
+    def buscar(self, arr, target):
+        """
+        Método principal para busca binária.
+        
+        Args:
+            arr: Lista ordenada
+            target: Elemento a ser encontrado
+            
+        Returns:
+            int: Índice do elemento ou -1 se não encontrado
+        """
+        return busca_binaria_basica(arr, target)
+    
+    def buscar_com_passos(self, arr, target):
+        """
+        Busca binária que retorna os passos intermediários.
+        
+        Args:
+            arr: Lista ordenada
+            target: Elemento a ser encontrado
+            
+        Returns:
+            tuple: (índice, lista de passos)
+        """
+        if not arr:
+            return -1, []
+        
+        esquerda, direita = 0, len(arr) - 1
+        passos = []
+        
+        while esquerda <= direita:
+            meio = esquerda + (direita - esquerda) // 2
+            passos.append({
+                'esquerda': esquerda,
+                'direita': direita,
+                'meio': meio,
+                'valor_meio': arr[meio]
+            })
+            
+            if arr[meio] == target:
+                return meio, passos
+            elif arr[meio] < target:
+                esquerda = meio + 1
+            else:
+                direita = meio - 1
+        
+        return -1, passos
+
+# Teste da classe
+if __name__ == "__main__":
+    busca = BuscaBinaria()
+    arr = [1, 3, 5, 7, 9, 11, 13, 15]
+    alvo = 7
+    
+    resultado = busca.buscar(arr, alvo)
+    print(f"Resultado da busca: {resultado}")  # Esperado: 3
