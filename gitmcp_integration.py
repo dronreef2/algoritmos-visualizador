@@ -31,10 +31,25 @@ class GitHubDocsClient:
             'Accept': 'application/vnd.github.v3+json'
         })
 
+        # Prioriza st.secrets (Streamlit Cloud), depois parâmetro, depois variável de ambiente
+        token = None
         if github_token:
-            self.session.headers['Authorization'] = f'token {github_token}'
-        elif os.getenv('GITHUB_TOKEN'):
-            self.session.headers['Authorization'] = f'token {os.getenv("GITHUB_TOKEN")}'
+            token = github_token
+        else:
+            # Tenta carregar do st.secrets (Streamlit Cloud)
+            try:
+                import streamlit as st
+                if hasattr(st, 'secrets') and 'GITHUB_TOKEN' in st.secrets:
+                    token = st.secrets['GITHUB_TOKEN']
+            except ImportError:
+                pass
+
+            # Fallback para variável de ambiente
+            if not token:
+                token = os.getenv('GITHUB_TOKEN')
+
+        if token:
+            self.session.headers['Authorization'] = f'token {token}'
 
     def is_available(self) -> bool:
         """

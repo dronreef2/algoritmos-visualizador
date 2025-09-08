@@ -32,7 +32,16 @@ class TavilySearchClient:
                 self.client = None
 
     def _load_api_key(self) -> Optional[str]:
-        """Carrega a chave da API do arquivo .env"""
+        """Carrega a chave da API do arquivo .env ou st.secrets"""
+        # Primeiro tenta carregar do st.secrets (Streamlit Cloud)
+        try:
+            import streamlit as st
+            if hasattr(st, 'secrets') and 'TAVILY_API_KEY' in st.secrets:
+                return st.secrets['TAVILY_API_KEY']
+        except ImportError:
+            pass
+
+        # Fallback para arquivo .env (desenvolvimento local)
         env_file = os.path.join(os.path.dirname(__file__), 'mcp-server-tavily', '.env')
         if os.path.exists(env_file):
             with open(env_file, 'r', encoding='utf-8') as f:
