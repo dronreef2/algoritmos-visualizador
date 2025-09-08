@@ -605,6 +605,33 @@ class InterviewSession:
         self.session_start_time = time.time()
         return self.current_problem
     
+    def get_random_problem(self, difficulty: str = "Medium", category: str = "Array"):
+        """
+        Retorna um problema aleatório baseado na dificuldade e categoria.
+        
+        Args:
+            difficulty: Nível de dificuldade ("Easy", "Medium", "Hard")
+            category: Categoria do problema
+            
+        Returns:
+            Problema selecionado aleatoriamente
+        """
+        # Mapeamento de dificuldade para os problemas disponíveis
+        difficulty_map = {
+            "Easy": ["two_sum"],
+            "Medium": ["two_sum", "valid_parentheses"],
+            "Hard": ["reverse_linked_list"]
+        }
+        
+        # Filtrar problemas por dificuldade
+        available_problems = difficulty_map.get(difficulty, ["two_sum"])
+        
+        # Selecionar problema aleatório
+        import random
+        problem_id = random.choice(available_problems)
+        
+        return self.problems.get(problem_id)
+    
     def submit_solution(self, user_code: str) -> Dict[str, Any]:
         """
         Submete uma solução e retorna feedback completo.

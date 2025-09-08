@@ -35,6 +35,20 @@ sys.path.append(str(project_root / "modulo_2_estruturas_dados"))
 sys.path.append(str(project_root / "modulo_3_programacao_dinamica"))
 sys.path.append(str(project_root / "modulo_4_entrevistas"))
 
+# Importar sistema de aprendizado contextualizado
+try:
+    from aprendizado_contextual_ui import render_aprendizado_contextual
+    APRENDIZADO_CONTEXTUAL_DISPONIVEL = True
+except ImportError:
+    APRENDIZADO_CONTEXTUAL_DISPONIVEL = False
+
+# Importar sistema de exercícios práticos
+try:
+    from exercicios_praticos_ui import render_exercicios_praticos
+    EXERCICIOS_PRATICOS_DISPONIVEL = True
+except ImportError:
+    EXERCICIOS_PRATICOS_DISPONIVEL = False
+
 # ============================================================================
 # 📋 CONFIGURAÇÃO PRINCIPAL
 # ============================================================================
@@ -114,6 +128,133 @@ def setup_page_config():
     </style>
     """, unsafe_allow_html=True)
 
+def render_mcp_search():
+    """Renderiza a interface de busca MCP com Tavily."""
+    st.markdown("## 🔍 Busca Inteligente com MCP (Tavily)")
+    
+    st.markdown("""
+    ### 🤖 Busca Contextual com IA
+    
+    Use o poder da busca inteligente para encontrar informações relevantes sobre algoritmos,
+    estruturas de dados e problemas de programação.
+    """)
+    
+    # Verificar se o MCP está configurado
+    try:
+        from mcp_tavily_integration import TavilySearchClient
+        
+        # Inicializar cliente MCP
+        if 'mcp_client' not in st.session_state:
+            st.session_state.mcp_client = TavilySearchClient()
+        
+        client = st.session_state.mcp_client
+        
+        # Status da configuração
+        if client.is_configured():
+            st.success("✅ MCP Server Tavily configurado e pronto!")
+        else:
+            st.warning("⚠️ MCP Server precisa ser configurado. Verifique o arquivo .env")
+            st.info("Para configurar: Edite `mcp-server-tavily/.env` e adicione sua chave da API Tavily")
+            return
+        
+        # Interface de busca
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            query = st.text_input(
+                "Digite sua consulta:",
+                placeholder="Ex: 'como funciona o algoritmo de Dijkstra?'",
+                help="Faça perguntas sobre algoritmos, estruturas de dados ou problemas de programação"
+            )
+        
+        with col2:
+            search_type = st.selectbox(
+                "Tipo de busca:",
+                ["basic", "advanced"],
+                help="Basic: busca rápida, Advanced: busca detalhada com mais contexto"
+            )
+            
+            include_answer = st.checkbox(
+                "Incluir resposta da IA",
+                value=False,
+                help="Gera uma resposta contextualizada usando IA baseada nos resultados"
+            )
+            
+            max_results = st.slider(
+                "Máximo de resultados:",
+                min_value=1,
+                max_value=10,
+                value=5,
+                help="Número máximo de resultados a retornar"
+            )
+        
+        if st.button("🔍 Buscar", type="primary", use_container_width=True):
+            if query.strip():
+                with st.spinner("🔄 Buscando informações com IA..."):
+                    try:
+                        # Realizar busca
+                        result = client.search(
+                            query, 
+                            search_depth=search_type,
+                            include_answer=include_answer,
+                            max_results=max_results
+                        )
+                        
+                        if result and "results" in result:
+                            st.success(f"✅ Encontrados {len(result['results'])} resultados!")
+                            
+                            # Exibir resposta da IA se disponível
+                            if result.get("answer") and include_answer:
+                                st.markdown("### 🤖 Resposta da IA")
+                                st.info(result["answer"])
+                                st.markdown("---")
+                            
+                            # Exibir resultados
+                            for i, item in enumerate(result["results"], 1):
+                                with st.expander(f"📄 Resultado {i}: {item.get('title', 'Sem título')[:50]}..."):
+                                    st.markdown(f"**URL:** {item.get('url', 'N/A')}")
+                                    st.markdown(f"**Conteúdo:** {item.get('snippet', 'N/A')}")
+                                    
+                                    if item.get('content'):
+                                        st.markdown("**Conteúdo completo:**")
+                                        st.text_area(
+                                            "Conteúdo",
+                                            item['content'],
+                                            height=150,
+                                            key=f"content_{i}"
+                                        )
+                        else:
+                            st.warning("Nenhum resultado encontrado. Tente reformular sua consulta.")
+                            
+                    except Exception as e:
+                        st.error(f"Erro na busca: {str(e)}")
+                        st.info("Verifique se o servidor MCP está rodando e configurado corretamente.")
+            else:
+                st.warning("Por favor, digite uma consulta para buscar.")
+        
+        # Exemplos de consultas
+        with st.expander("💡 Exemplos de Consultas"):
+            st.markdown("""
+            **Algoritmos:**
+            - "como funciona o algoritmo de busca binária?"
+            - "explicação do algoritmo de Dijkstra"
+            - "diferença entre BFS e DFS"
+            
+            **Estruturas de Dados:**
+            - "como implementar uma árvore binária de busca?"
+            - "vantagens da tabela hash"
+            - "quando usar lista ligada vs array?"
+            
+            **Programação Dinâmica:**
+            - "problema da mochila 0/1 explicado"
+            - "longest common subsequence algorithm"
+            - "metodologia dos 3 passos em DP"
+            """)
+            
+    except ImportError as e:
+        st.error(f"Erro ao importar MCP: {e}")
+        st.info("Certifique-se de que o módulo `mcp_tavily_integration.py` está disponível.")
+
 def main():
     """Função principal da aplicação."""
     setup_page_config()
@@ -133,16 +274,29 @@ def main():
         "Selecione o Módulo",
         [
             "🏠 Home",
+            "🎯 Aprendizado Contextualizado",
+            "🎯 Exercícios Práticos",
             "📚 Módulo 1: Fundamentos",
             "🏗️ Módulo 2: Estruturas de Dados",
             "🎯 Módulo 3: Programação Dinâmica",
-            "💼 Módulo 4: Entrevistas"
+            "💼 Módulo 4: Entrevistas",
+            "🔍 Busca MCP (Tavily)"
         ]
     )
     
     # Roteamento baseado na seleção
     if module == "🏠 Home":
         render_home_page()
+    elif module == "🎯 Aprendizado Contextualizado":
+        if APRENDIZADO_CONTEXTUAL_DISPONIVEL:
+            render_aprendizado_contextual()
+        else:
+            st.error("Sistema de aprendizado contextualizado não disponível.")
+    elif module == "🎯 Exercícios Práticos":
+        if EXERCICIOS_PRATICOS_DISPONIVEL:
+            render_exercicios_praticos()
+        else:
+            st.error("Sistema de exercícios práticos não disponível.")
     elif module == "📚 Módulo 1: Fundamentos":
         render_module_1()
     elif module == "🏗️ Módulo 2: Estruturas de Dados":
@@ -151,30 +305,67 @@ def main():
         render_module_3()
     elif module == "💼 Módulo 4: Entrevistas":
         render_module_4()
+    elif module == "🔍 Busca MCP (Tavily)":
+        render_mcp_search()
 
 def render_home_page():
     """Renderiza a página inicial."""
     st.markdown("""
     ## 🎉 Bem-vindo ao Algoritmos Visualizador!
-    
-    Uma plataforma interativa para aprender algoritmos e estruturas de dados
-    através de visualizações dinâmicas e exercícios práticos.
+
+    ### Uma experiência completa de aprendizado contextualizado
+
+    Explore algoritmos e estruturas de dados através de **jornadas temáticas**,
+    entenda o **contexto histórico**, veja **aplicações reais** e acompanhe seu
+    **progresso personalizado** com visualizações interativas.
     """)
-    
+
+    # Destaque especial para exercícios práticos
+    if EXERCICIOS_PRATICOS_DISPONIVEL:
+        st.markdown("""
+        <div style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid #ff6b6b;
+        ">
+        <h3 style="color: white; margin-top: 0;">🎯 🆕 Exercícios Práticos Interativos</h3>
+        <p style="margin-bottom: 0.5rem;">
+            <strong>Agora disponível!</strong> Pratique com exercícios reais, receba feedback imediato
+            e acompanhe seu progresso com estatísticas detalhadas.
+        </p>
+        <ul style="margin-bottom: 0;">
+            <li>✅ Múltipla escolha, verdadeiro/falso, ordenação</li>
+            <li>✅ Análise de complexidade, debugging de código</li>
+            <li>✅ Sistema de conquistas e gamificação</li>
+            <li>✅ Dashboard de performance e progresso</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Destaque para aprendizado contextualizado
+    if APRENDIZADO_CONTEXTUAL_DISPONIVEL:
+        st.info("🎯 **Novo:** Sistema de Aprendizado Contextualizado disponível! Explore jornadas temáticas e conexões entre conceitos.")
+
     # Métricas gerais
-    col1, col2, col3, col4 = st.columns(4)
-    
+    col1, col2, col3, col4, col5 = st.columns(5)
+
     with col1:
         st.metric("📚 Módulos", "4", "Completos")
-    
+
     with col2:
         st.metric("🎯 Algoritmos", "50+", "Implementados")
-    
+
     with col3:
         st.metric("🏗️ Estruturas", "15+", "Visualizadas")
-    
+
     with col4:
         st.metric("💼 Problemas", "25+", "de Entrevista")
+
+    with col5:
+        st.metric("🎯 Exercícios", "30+", "Interativos")
     
     # Cards dos módulos
     st.markdown("### 📋 Módulos Disponíveis")
@@ -235,6 +426,46 @@ def render_home_page():
             </ul>
         </div>
         """, unsafe_allow_html=True)
+    
+    # Card especial para exercícios práticos
+    st.markdown("### 🎯 Sistema de Exercícios Práticos")
+    
+    st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        border: 2px solid #ff6b6b;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    ">
+    <h3 style="color: #d32f2f; margin-top: 0;">🎯 Exercícios Práticos Interativos</h3>
+    <p style="margin-bottom: 1rem; color: #333;">
+        <strong>Pratique de verdade!</strong> Resolva exercícios reais com validação automática,
+        feedback imediato e acompanhamento de progresso.
+    </p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+            <h4 style="color: #d32f2f; margin-bottom: 0.5rem;">📝 Tipos de Exercício</h4>
+            <ul style="margin: 0; color: #555;">
+                <li>Múltipla escolha</li>
+                <li>Verdadeiro/Falso</li>
+                <li>Ordenação de passos</li>
+                <li>Análise de complexidade</li>
+            </ul>
+        </div>
+        <div>
+            <h4 style="color: #d32f2f; margin-bottom: 0.5rem;">🏆 Recursos</h4>
+            <ul style="margin: 0; color: #555;">
+                <li>Feedback instantâneo</li>
+                <li>Dashboard de progresso</li>
+                <li>Sistema de conquistas</li>
+                <li>Estatísticas detalhadas</li>
+            </ul>
+        </div>
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Seção de recursos
     st.markdown("### ⚡ Recursos Principais")

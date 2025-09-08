@@ -1,41 +1,39 @@
 #!/usr/bin/env python3
 """
-Módulo de integração com MCP Server Tavily
-Permite fazer buscas na web usando o servidor MCP
+Módulo de integração com Tavily API
+Permite fazer buscas na web usando o SDK oficial do Tavily
 """
 
 import os
 import sys
-import asyncio
-import subprocess
 from typing import Dict, List, Optional, Any
-import json
-import time
+from tavily import TavilyClient
 
 class TavilySearchClient:
     """
-    Cliente para interagir com o MCP Server Tavily
+    Cliente para interagir com a API Tavily
     """
 
     def __init__(self, server_path: str = None):
         """
-        Inicializa o cliente
+        Inicializa o cliente Tavily
 
         Args:
-            server_path: Caminho para o diretório do servidor MCP
+            server_path: Caminho para o diretório do servidor (mantido para compatibilidade)
         """
-        if server_path is None:
-            # Caminho padrão relativo ao projeto
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            server_path = os.path.join(current_dir, '..', 'mcp-server-tavily')
-
-        self.server_path = os.path.abspath(server_path)
-        self.server_process = None
         self.api_key = self._load_api_key()
+        self.client = None
+        
+        if self.api_key:
+            try:
+                self.client = TavilyClient(api_key=self.api_key)
+            except Exception as e:
+                print(f"Erro ao inicializar cliente Tavily: {e}")
+                self.client = None
 
     def _load_api_key(self) -> Optional[str]:
         """Carrega a chave da API do arquivo .env"""
-        env_file = os.path.join(self.server_path, '.env')
+        env_file = os.path.join(os.path.dirname(__file__), 'mcp-server-tavily', '.env')
         if os.path.exists(env_file):
             with open(env_file, 'r', encoding='utf-8') as f:
                 for line in f:
@@ -45,170 +43,116 @@ class TavilySearchClient:
         return None
 
     def is_configured(self) -> bool:
-        """Verifica se o servidor está configurado corretamente"""
-        return self.api_key is not None and self.api_key != 'your_tavily_api_key_here'
+        """Verifica se o cliente está configurado corretamente"""
+        return self.client is not None and self.api_key is not None
 
-    def start_server(self) -> bool:
+    def search(self, query: str, search_depth: str = "basic", **kwargs) -> Dict[str, Any]:
         """
-        Inicia o servidor MCP em background
-
-        Returns:
-            bool: True se iniciou com sucesso
-        """
-        if not self.is_configured():
-            print("❌ Servidor não configurado. Configure TAVILY_API_KEY no arquivo .env")
-            return False
-
-        try:
-            # Mata processos anteriores se existirem
-            self.stop_server()
-
-            # Inicia o servidor
-            script_path = os.path.join(self.server_path, 'run_server.sh')
-            self.server_process = subprocess.Popen(
-                [script_path],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                cwd=self.server_path,
-                env=dict(os.environ, PYTHONIOENCODING='utf-8')
-            )
-
-            # Aguarda um pouco para o servidor inicializar
-            time.sleep(2)
-
-            # Verifica se o processo está rodando
-            if self.server_process.poll() is None:
-                print("✅ Servidor MCP Tavily iniciado com sucesso")
-                return True
-            else:
-                stdout, stderr = self.server_process.communicate()
-                print(f"❌ Erro ao iniciar servidor: {stderr.decode()}")
-                return False
-
-        except Exception as e:
-            print(f"❌ Erro ao iniciar servidor: {e}")
-            return False
-
-    def stop_server(self):
-        """Para o servidor MCP"""
-        if self.server_process:
-            try:
-                self.server_process.terminate()
-                self.server_process.wait(timeout=5)
-                print("✅ Servidor MCP parado")
-            except subprocess.TimeoutExpired:
-                self.server_process.kill()
-                print("⚠️ Servidor MCP forçado a parar")
-            finally:
-                self.server_process = None
-
-    def search(self, query: str, search_depth: str = "basic") -> Dict[str, Any]:
-        """
-        Realiza uma busca usando o MCP server
+        Realiza uma busca usando a API Tavily
 
         Args:
             query: Termo de busca
             search_depth: Profundidade da busca ("basic" ou "advanced")
+            **kwargs: Parâmetros adicionais para a busca
 
         Returns:
             Dict com resultados da busca
         """
         if not self.is_configured():
             return {
-                "error": "Servidor não configurado",
+                "error": "Cliente não configurado",
                 "message": "Configure TAVILY_API_KEY no arquivo .env"
             }
 
-        if not self.server_process or self.server_process.poll() is not None:
-            if not self.start_server():
-                return {
-                    "error": "Servidor não pôde ser iniciado",
-                    "message": "Verifique a configuração e tente novamente"
-                }
-
         try:
-            # Aqui seria implementada a comunicação com o servidor MCP
-            # Por enquanto, retorna uma estrutura de exemplo
+            # Configurar parâmetros da busca
+            search_params = {
+                "query": query,
+                "search_depth": search_depth,
+                "max_results": kwargs.get("max_results", 5),
+                "include_answer": kwargs.get("include_answer", False),
+                "include_raw_content": kwargs.get("include_raw_content", False),
+                "include_images": kwargs.get("include_images", False),
+            }
+            
+            # Adicionar parâmetros adicionais se fornecidos
+            if "topic" in kwargs:
+                search_params["topic"] = kwargs["topic"]
+            if "include_domains" in kwargs:
+                search_params["include_domains"] = kwargs["include_domains"]
+            if "exclude_domains" in kwargs:
+                search_params["exclude_domains"] = kwargs["exclude_domains"]
+
+            # Realizar a busca
+            response = self.client.search(**search_params)
+            
+            # Formatar resposta para compatibilidade
+            formatted_results = []
+            for result in response.get("results", []):
+                formatted_results.append({
+                    "title": result.get("title", "Sem título"),
+                    "url": result.get("url", ""),
+                    "snippet": result.get("content", ""),
+                    "content": result.get("raw_content", ""),
+                    "score": result.get("score", 0.0)
+                })
+            
             return {
                 "query": query,
                 "search_depth": search_depth,
                 "status": "success",
-                "results": [
-                    {
-                        "title": f"Resultado de exemplo para: {query}",
-                        "url": f"https://example.com/search?q={query.replace(' ', '+')}",
-                        "snippet": f"Este é um resultado de exemplo para a busca: {query}"
-                    }
-                ],
-                "note": "Integração completa será implementada quando o protocolo MCP for estabelecido"
+                "results": formatted_results,
+                "answer": response.get("answer"),
+                "response_time": response.get("response_time", 0.0),
+                "total_results": len(formatted_results)
             }
 
         except Exception as e:
             return {
                 "error": "Erro na busca",
-                "message": str(e)
+                "message": str(e),
+                "query": query,
+                "search_depth": search_depth
             }
 
-    def __enter__(self):
-        """Context manager entry"""
-        self.start_server()
-        return self
+    def extract(self, urls: List[str], **kwargs) -> Dict[str, Any]:
+        """
+        Extrai conteúdo de URLs usando Tavily Extract
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """Context manager exit"""
-        self.stop_server()
+        Args:
+            urls: Lista de URLs para extrair
+            **kwargs: Parâmetros adicionais
 
+        Returns:
+            Dict com conteúdo extraído
+        """
+        if not self.is_configured():
+            return {
+                "error": "Cliente não configurado",
+                "message": "Configure TAVILY_API_KEY no arquivo .env"
+            }
 
-# Função de conveniência para uso direto
-def buscar_web(query: str, search_depth: str = "basic") -> Dict[str, Any]:
-    """
-    Função de conveniência para buscar na web
-
-    Args:
-        query: Termo de busca
-        search_depth: Profundidade da busca
-
-    Returns:
-        Resultados da busca
-    """
-    with TavilySearchClient() as client:
-        return client.search(query, search_depth)
-
-
-# Demonstração de uso
-def demonstrar_integracao():
-    """Demonstra como usar a integração com MCP Tavily"""
-    print("🔍 Demonstração da Integração MCP Tavily")
-    print("=" * 50)
-
-    # Cria cliente
-    client = TavilySearchClient()
-
-    # Verifica configuração
-    if not client.is_configured():
-        print("❌ Configuração necessária:")
-        print("   1. Obtenha uma chave da API Tavily em: https://tavily.com/")
-        print("   2. Edite o arquivo mcp-server-tavily/.env")
-        print("   3. Substitua 'your_tavily_api_key_here' pela sua chave real")
-        return
-
-    # Exemplo de busca
-    print("\n📝 Fazendo busca de exemplo...")
-    resultados = client.search("Python programming tutorial", "basic")
-
-    if "error" in resultados:
-        print(f"❌ Erro: {resultados['error']}")
-        print(f"   {resultados.get('message', '')}")
-    else:
-        print("✅ Busca realizada com sucesso!")
-        print(f"   Query: {resultados.get('query', 'N/A')}")
-        print(f"   Profundidade: {resultados.get('search_depth', 'N/A')}")
-
-        if "results" in resultados:
-            print(f"   Resultados encontrados: {len(resultados['results'])}")
-            for i, result in enumerate(resultados['results'][:3], 1):
-                print(f"   {i}. {result.get('title', 'Título não disponível')}")
-
-
-if __name__ == "__main__":
-    demonstrar_integracao()
+        try:
+            response = self.client.extract(urls=urls, **kwargs)
+            
+            # Formatar resposta
+            formatted_results = []
+            for result in response.get("results", []):
+                formatted_results.append({
+                    "url": result.get("url", ""),
+                    "content": result.get("raw_content", ""),
+                    "images": result.get("images", [])
+                })
+            
+            return {
+                "status": "success",
+                "results": formatted_results,
+                "failed_results": response.get("failed_results", []),
+                "response_time": response.get("response_time", 0.0)
+            }
+            
+        except Exception as e:
+            return {
+                "error": "Erro na extração",
+                "message": str(e)
+            }
