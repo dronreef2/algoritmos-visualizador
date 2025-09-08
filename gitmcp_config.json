@@ -1,0 +1,11 @@
+{
+  "gitmcp_base_url": "https://gitmcp.io",
+  "default_repositories": [
+    "TheAlgorithms/Python",
+    "keon/algorithms",
+    "networkx/networkx"
+  ],
+  "cache_enabled": true,
+  "max_results": 5,
+  "timeout": 10
+}
