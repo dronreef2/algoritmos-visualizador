@@ -17,5 +17,3 @@ voila>=0.5.0
 gitpython>=3.1.0
 PyGithub>=2.1.0
 tavily-python>=0.3.0
-mcp>=0.1.0
-asyncio-mcp-server>=0.1.0
