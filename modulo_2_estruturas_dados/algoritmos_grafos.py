@@ -320,6 +320,122 @@ def kruskal_com_passos(grafo):
     return mst, peso_total, passos
 
 
+def a_star_com_passos(grafo, inicio, objetivo, heuristicas=None):
+    """
+    Algoritmo A* com tracking de passos
+    
+    Complexidade: O((V + E) log V) com heap
+    Espaço: O(V)
+    
+    Args:
+        grafo: Instância da classe Grafo
+        inicio: Vértice inicial
+        objetivo: Vértice objetivo
+        heuristicas: Dicionário com heurísticas para cada vértice (opcional)
+    """
+    if heuristicas is None:
+        # Heurística padrão: 0 para todos (torna-se Dijkstra)
+        heuristicas = {v: 0 for v in grafo.vertices}
+    
+    passos = []
+    fila_prioridade = []
+    heapq.heappush(fila_prioridade, (0, inicio))  # (f_score, vértice)
+    
+    g_score = {v: float('inf') for v in grafo.vertices}
+    g_score[inicio] = 0
+    
+    f_score = {v: float('inf') for v in grafo.vertices}
+    f_score[inicio] = heuristicas.get(inicio, 0)
+    
+    predecessores = {v: None for v in grafo.vertices}
+    
+    passos.append({
+        'fila': [inicio],
+        'g_scores': g_score.copy(),
+        'f_scores': f_score.copy(),
+        'action': f'Inicialização: início={inicio}, objetivo={objetivo}'
+    })
+    
+    while fila_prioridade:
+        _, atual = heapq.heappop(fila_prioridade)
+        
+        passos.append({
+            'atual': atual,
+            'fila': [v for _, v in fila_prioridade],
+            'g_scores': g_score.copy(),
+            'f_scores': f_score.copy(),
+            'action': f'Explorando vértice {atual}'
+        })
+        
+        if atual == objetivo:
+            # Reconstruir caminho
+            caminho = []
+            atual_caminho = objetivo
+            while atual_caminho is not None:
+                caminho.append(atual_caminho)
+                atual_caminho = predecessores[atual_caminho]
+            caminho.reverse()
+            
+            passos.append({
+                'caminho_encontrado': caminho,
+                'custo_total': g_score[objetivo],
+                'action': f'Caminho encontrado: {caminho} (custo: {g_score[objetivo]})'
+            })
+            
+            return caminho, g_score[objetivo], passos
+        
+        for vizinho in grafo.obter_vizinhos(atual):
+            peso_aresta = grafo.obter_peso(atual, vizinho)
+            g_tentativa = g_score[atual] + peso_aresta
+            
+            if g_tentativa < g_score[vizinho]:
+                predecessores[vizinho] = atual
+                g_score[vizinho] = g_tentativa
+                f_score[vizinho] = g_tentativa + heuristicas.get(vizinho, 0)
+                
+                # Verificar se vizinho já está na fila
+                na_fila = any(v == vizinho for _, v in fila_prioridade)
+                if not na_fila:
+                    heapq.heappush(fila_prioridade, (f_score[vizinho], vizinho))
+                
+                passos.append({
+                    'vizinho': vizinho,
+                    'g_tentativa': g_tentativa,
+                    'f_score': f_score[vizinho],
+                    'predecessores': predecessores.copy(),
+                    'action': f'Atualizou {vizinho}: g={g_tentativa}, f={f_score[vizinho]}'
+                })
+    
+    # Não encontrou caminho
+    passos.append({
+        'caminho_nao_encontrado': True,
+        'action': f'Não foi possível encontrar caminho de {inicio} para {objetivo}'
+    })
+    
+    return [], float('inf'), passos
+
+
+def heuristica_euclidiana(posicoes):
+    """
+    Calcula heurísticas euclidianas para A*
+    
+    Args:
+        posicoes: Dicionário {vértice: (x, y)}
+    
+    Returns:
+        Dicionário com heurísticas para cada vértice
+    """
+    objetivo = max(posicoes.keys())  # Último vértice como objetivo
+    obj_x, obj_y = posicoes[objetivo]
+    
+    heuristicas = {}
+    for v, (x, y) in posicoes.items():
+        distancia = ((x - obj_x) ** 2 + (y - obj_y) ** 2) ** 0.5
+        heuristicas[v] = distancia
+    
+    return heuristicas
+
+
 def detectar_ciclo_com_passos(grafo):
     """
     Detecção de ciclo usando DFS com tracking de passos

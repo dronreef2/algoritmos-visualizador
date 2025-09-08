@@ -5,6 +5,7 @@ import time
 import random
 import matplotlib.pyplot as plt
 import numpy as np
+from functools import lru_cache
 
 def bubble_sort_com_passos(arr):
     """
@@ -93,6 +94,47 @@ def quick_sort_com_passos(arr, start=0, end=None):
     quick_sort_recursive(arr_copy, start, end, passos)
     
     return arr_copy, passos
+
+
+@lru_cache(maxsize=None)
+def quick_sort_steps(arr_tuple):
+    """
+    Quick Sort otimizado com cache para subarrays
+    
+    Complexidade: O(n log n) médio, O(n²) pior caso
+    Cache evita recalculações para subarrays idênticos
+    """
+    arr = list(arr_tuple)
+    if len(arr) <= 1:
+        return tuple(arr), []
+    
+    passos = []
+    pivot = arr[-1]
+    left = []
+    right = []
+    
+    for x in arr[:-1]:
+        if x <= pivot:
+            left.append(x)
+        else:
+            right.append(x)
+    
+    # Recursão com cache
+    left_sorted, left_passos = quick_sort_steps(tuple(left))
+    right_sorted, right_passos = quick_sort_steps(tuple(right))
+    
+    resultado = list(left_sorted) + [pivot] + list(right_sorted)
+    
+    passos.extend(left_passos)
+    passos.append({
+        'pivot': pivot,
+        'left': list(left_sorted),
+        'right': list(right_sorted),
+        'action': f'Pivot {pivot} aplicado'
+    })
+    passos.extend(right_passos)
+    
+    return tuple(resultado), passos
 
 
 def merge_sort_com_passos(arr):
