@@ -107,9 +107,14 @@ def render_pratica_exercicios():
         exercicio_selecionado = exercicios_filtrados[exercicio_idx]
 
     # Iniciar sessão se necessário
-    if 'sessao_atual' not in st.session_state or \
-       st.session_state.sessao_atual.exercicio_id != exercicio_selecionado.id:
+    iniciar_nova_sessao = (
+        'sessao_atual' not in st.session_state or
+        not hasattr(st.session_state, 'sessao_atual') or
+        st.session_state.sessao_atual is None or
+        getattr(st.session_state.sessao_atual, 'exercicio_id', None) != exercicio_selecionado.id
+    )
 
+    if iniciar_nova_sessao:
         sessao = sistema_exercicios.iniciar_sessao_exercicio(exercicio_selecionado.id)
         if sessao:
             st.session_state.sessao_atual = sessao
@@ -175,12 +180,16 @@ def render_exercicio_interativo(exercicio: Exercicio):
             key=f"submit_{exercicio.id}"
         ):
             # Validar resposta
-            feedback = sistema_exercicios.validar_resposta(
-                st.session_state.sessao_atual.exercicio_id,
-                resposta_usuario
-            )
-            st.session_state.feedback = feedback
-            st.session_state.resposta_submetida = True
+            if 'sessao_atual' in st.session_state and st.session_state.sessao_atual:
+                feedback = sistema_exercicios.validar_resposta(
+                    st.session_state.sessao_atual.exercicio_id,
+                    resposta_usuario
+                )
+                st.session_state.feedback = feedback
+                st.session_state.resposta_submetida = True
+            else:
+                st.error("❌ Erro: Sessão de exercício não encontrada.")
+                return
 
     # Exibir feedback
     if st.session_state.get('feedback'):
@@ -252,22 +261,40 @@ def render_interface_exercicio(exercicio: Exercicio) -> Any:
 def render_feedback(feedback: Dict[str, Any], exercicio: Exercicio):
     """Renderiza o feedback da resposta"""
 
+    # Verificar se o feedback é válido e tem as chaves necessárias
+    if not isinstance(feedback, dict):
+        st.error("❌ Erro: Feedback inválido.")
+        return
+
+    if "correta" not in feedback:
+        st.error("❌ Erro: Feedback incompleto (falta chave 'correta').")
+        return
+
     if feedback["correta"]:
         st.success("🎉 **Correto!** Parabéns!")
 
         # Exibir explicação
         with st.expander("📖 Ver Explicação"):
-            st.write(feedback["explicacao"])
+            explicacao = feedback.get("explicacao", "Explicação não disponível.")
+            st.write(explicacao)
 
         # Estatísticas
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Tentativas", feedback["tentativas"])
+            tentativas = feedback.get("tentativas", 0)
+            st.metric("Tentativas", tentativas)
         with col2:
-            st.metric("Pontos", feedback["pontos"])
+            pontos = feedback.get("pontos", 0)
+            st.metric("Pontos", pontos)
         with col3:
-            tempo = st.session_state.sessao_atual.tempo_fim - st.session_state.sessao_atual.tempo_inicio
-            st.metric("Tempo", ".1f")
+            if 'sessao_atual' in st.session_state and st.session_state.sessao_atual:
+                try:
+                    tempo = st.session_state.sessao_atual.tempo_fim - st.session_state.sessao_atual.tempo_inicio
+                    st.metric("Tempo", ".1f")
+                except (AttributeError, TypeError):
+                    st.metric("Tempo", "N/A")
+            else:
+                st.metric("Tempo", "N/A")
 
         # Próximo exercício sugerido
         if st.button("🎯 Próximo Exercício", key=f"proximo_{exercicio.id}"):
