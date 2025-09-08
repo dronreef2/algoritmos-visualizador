@@ -70,46 +70,34 @@ def render_exemplos_reais():
     if st.button("🔍 Buscar Exemplos Reais", key="buscar_exemplos"):
         with st.spinner("Buscando exemplos no GitHub..."):
             try:
-                # Buscar repositórios relacionados
-                repos = git_client.search_repositories(
-                    f"{conceito_selecionado} algorithm",
-                    language="python",
-                    min_stars=50
+                # Buscar exemplos de código relacionados
+                exemplos = git_client.obter_exemplos_codigo(
+                    conceito_selecionado,
+                    "python"
                 )
 
-                if repos:
-                    st.success(f"Encontrados {len(repos)} repositórios!")
+                if exemplos and exemplos.get("exemplos"):
+                    st.success(f"Encontrados {len(exemplos['exemplos'])} exemplos!")
 
-                    for repo in repos[:5]:  # Limitar a 5 primeiros
-                        with st.expander(f"📦 {repo['name']} ({repo['stars']} ⭐)", expanded=False):
-                            st.markdown(f"**Descrição:** {repo['description']}")
-                            st.markdown(f"**Linguagem:** {repo['language']}")
-                            st.markdown(f"**URL:** [{repo['url']}]({repo['url']})")
+                    for exemplo in exemplos["exemplos"][:5]:  # Limitar a 5 primeiros
+                        with st.expander(f"📦 {exemplo['repositorio']} - {exemplo['arquivo']}", expanded=False):
+                            st.markdown(f"**Repositório:** {exemplo['repositorio']}")
+                            st.markdown(f"**Arquivo:** {exemplo['arquivo']}")
+                            st.markdown(f"**URL:** [{exemplo['url']}]({exemplo['url']})")
 
-                            # Tentar buscar README
+                            # Exibir conteúdo do código
+                            with st.expander("� Código", expanded=False):
+                                st.code(exemplo['conteudo'], language="python")
+
+                            # Tentar buscar README do repositório
                             try:
-                                readme = git_client.get_repository_readme(repo['full_name'])
-                                if readme:
-                                    with st.expander("📖 README", expanded=False):
-                                        st.markdown(readme[:1000] + "..." if len(readme) > 1000 else readme)
+                                owner, repo = exemplo['repositorio'].split('/', 1)
+                                readme = git_client.client.get_readme(owner, repo)
+                                if readme and readme["status"] == "success":
+                                    with st.expander("� README", expanded=False):
+                                        st.markdown(readme["content"][:1000] + "..." if len(readme["content"]) > 1000 else readme["content"])
                             except:
                                 st.info("README não disponível")
-
-                            # Buscar arquivos de código relacionados
-                            try:
-                                code_files = git_client.search_code_in_repo(
-                                    repo['full_name'],
-                                    conceito_selecionado,
-                                    extension=".py"
-                                )
-
-                                if code_files:
-                                    with st.expander("💻 Arquivos Relacionados", expanded=False):
-                                        for file_info in code_files[:3]:
-                                            st.code(file_info['content'][:500] + "..." if len(file_info['content']) > 500 else file_info['content'],
-                                                   language="python")
-                            except:
-                                st.info("Arquivos de código não encontrados")
 
                 else:
                     st.warning("Nenhum repositório encontrado.")
@@ -238,36 +226,37 @@ def render_explorar_repositorios():
 
     if st.button("🔍 Buscar Repositórios", key="buscar_repos"):
         with st.spinner("Buscando repositórios..."):
-            repos = git_client.search_repositories(
-                query,
-                language=linguagem,
-                min_stars=min_stars,
-                sort="stars"
+            # Usar busca de documentação que inclui repositórios conhecidos
+            documentacao = git_client.buscar_documentacao_algoritmo(
+                topico.replace("-", "_"),
+                linguagem
             )
 
-            if repos:
-                st.success(f"Encontrados {len(repos)} repositórios!")
+            if documentacao and documentacao.get("resultados"):
+                st.success(f"Encontrados {len(documentacao['resultados'])} repositórios!")
 
-                for i, repo in enumerate(repos[:10]):
-                    with st.expander(f"{i+1}. ⭐ {repo['stars']} - {repo['name']}", expanded=False):
-                        col1, col2 = st.columns([3, 1])
+                for i, resultado in enumerate(documentacao["resultados"][:10]):
+                    repo_info = resultado.get("info", {})
+                    if repo_info.get("status") == "success":
+                        with st.expander(f"{i+1}. ⭐ {repo_info.get('stars', 0)} - {repo_info.get('name', 'N/A')}", expanded=False):
+                            col1, col2 = st.columns([3, 1])
 
-                        with col1:
-                            st.markdown(f"**{repo['description']}**")
-                            st.markdown(f"📅 Atualizado: {repo['updated_at']}")
-                            st.markdown(f"👥 Issues: {repo['issues']}")
+                            with col1:
+                                st.markdown(f"**{repo_info.get('description', 'Sem descrição')}**")
+                                st.markdown(f"📅 Atualizado: {repo_info.get('updated_at', 'N/A')}")
+                                st.markdown(f"👥 Linguagem: {repo_info.get('language', 'N/A')}")
 
-                        with col2:
-                            st.markdown(f"**[Ver no GitHub]({repo['url']})**")
+                            with col2:
+                                st.markdown(f"**[Ver no GitHub]({repo_info.get('html_url', '#')})**")
 
-                            if st.button(f"📖 Ver README", key=f"readme_{repo['full_name']}"):
-                                try:
-                                    readme = git_client.get_repository_readme(repo['full_name'])
-                                    if readme:
-                                        st.markdown("---")
-                                        st.markdown(readme[:1500] + "..." if len(readme) > 1500 else readme)
-                                except:
-                                    st.error("Erro ao carregar README")
+                                if st.button(f"📖 Ver README", key=f"readme_{resultado.get('repositorio', f'repo_{i}')}"):
+                                    try:
+                                        readme = resultado.get("readme")
+                                        if readme and readme.get("status") == "success":
+                                            st.markdown("---")
+                                            st.markdown(readme["content"][:1500] + "..." if len(readme["content"]) > 1500 else readme["content"])
+                                    except:
+                                        st.error("Erro ao carregar README")
 
             else:
                 st.info("Nenhum repositório encontrado com os critérios especificados.")
@@ -276,56 +265,80 @@ def gerar_exercicio_github(tipo: str) -> Optional[Dict[str, Any]]:
     """Gera um exercício baseado em código real do GitHub"""
 
     try:
-        # Buscar repositórios de algoritmos
-        repos = git_client.search_repositories("algorithms python", min_stars=100)
-
-        if not repos:
-            return None
+        # Usar repositórios conhecidos de algoritmos
+        repos_conhecidos = ["TheAlgorithms/Python", "keon/algorithms"]
 
         # Selecionar repositório aleatório
-        repo = random.choice(repos[:10])
+        repo_full = random.choice(repos_conhecidos)
+        owner, repo = repo_full.split("/", 1)
 
-        # Buscar arquivos de código
-        code_files = git_client.search_code_in_repo(
-            repo['full_name'],
-            "def.*sort|def.*search|def.*graph",
-            extension=".py"
-        )
-
-        if not code_files:
+        # Buscar arquivos de código usando search_code com query mais genérica
+        queries = [
+            "def sort", "def search", "def graph", "class.*Sort", "class.*Search",
+            "def bubble", "def quick", "def merge", "def binary"
+        ]
+        
+        code_results = []
+        for query in queries:
+            try:
+                code_search = git_client.client.search_code(
+                    owner, repo, query,
+                    language="python", max_results=3
+                )
+                if code_search["status"] == "success" and code_search.get("results"):
+                    code_results.extend(code_search["results"])
+                    if len(code_results) >= 5:  # Já temos resultados suficientes
+                        break
+            except:
+                continue
+        
+        if not code_results:
             return None
 
         # Selecionar arquivo aleatório
-        code_file = random.choice(code_files[:5])
+        code_file = random.choice(code_results[:5])
+
+        # Obter conteúdo completo do arquivo
+        file_content = git_client.client.get_file_content(owner, repo, code_file["path"])
+        if file_content["status"] != "success":
+            return None
+
+        # Criar objeto similar ao esperado
+        code_file_data = {
+            "content": file_content["content"],
+            "name": code_file["name"],
+            "path": code_file["path"],
+            "url": code_file["url"]
+        }
 
         # Gerar exercício baseado no tipo
         if tipo == "debugging":
-            return gerar_exercicio_debugging(code_file, repo)
+            return gerar_exercicio_debugging(code_file_data, repo_full)
         elif tipo == "otimizacao":
-            return gerar_exercicio_otimizacao(code_file, repo)
+            return gerar_exercicio_otimizacao(code_file_data, repo_full)
         elif tipo == "analise_complexidade":
-            return gerar_exercicio_complexidade(code_file, repo)
+            return gerar_exercicio_complexidade(code_file_data, repo_full)
         elif tipo == "comparacao_abordagens":
-            return gerar_exercicio_comparacao(code_file, repo)
+            return gerar_exercicio_comparacao(code_file_data, repo_full)
 
     except Exception as e:
         st.error(f"Erro ao gerar exercício: {str(e)}")
         return None
 
-def gerar_exercicio_debugging(code_file: Dict, repo: Dict) -> Dict[str, Any]:
+def gerar_exercicio_debugging(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de debugging"""
 
     return {
         'titulo': "Debugging: Encontre o Erro",
-        'enunciado': f"Analise o código abaixo do repositório '{repo['name']}' e identifique o problema:",
+        'enunciado': f"Analise o código abaixo do repositório '{repo_name}' e identifique o problema:",
         'codigo': code_file['content'],
         'tipo': 'debugging',
         'dificuldade': 'Médio',
-        'repositorio': repo['name'],
+        'repositorio': repo_name,
         'solucao_esperada': 'Identificar bug no código'
     }
 
-def gerar_exercicio_otimizacao(code_file: Dict, repo: Dict) -> Dict[str, Any]:
+def gerar_exercicio_otimizacao(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de otimização"""
 
     return {
@@ -334,11 +347,11 @@ def gerar_exercicio_otimizacao(code_file: Dict, repo: Dict) -> Dict[str, Any]:
         'codigo': code_file['content'],
         'tipo': 'otimizacao',
         'dificuldade': 'Difícil',
-        'repositorio': repo['name'],
+        'repositorio': repo_name,
         'solucao_esperada': 'Sugerir otimizações'
     }
 
-def gerar_exercicio_complexidade(code_file: Dict, repo: Dict) -> Dict[str, Any]:
+def gerar_exercicio_complexidade(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de análise de complexidade"""
 
     return {
@@ -347,11 +360,11 @@ def gerar_exercicio_complexidade(code_file: Dict, repo: Dict) -> Dict[str, Any]:
         'codigo': code_file['content'],
         'tipo': 'complexidade',
         'dificuldade': 'Médio',
-        'repositorio': repo['name'],
+        'repositorio': repo_name,
         'solucao_esperada': 'O(n log n), O(n), etc.'
     }
 
-def gerar_exercicio_comparacao(code_file: Dict, repo: Dict) -> Dict[str, Any]:
+def gerar_exercicio_comparacao(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de comparação de abordagens"""
 
     return {
@@ -360,7 +373,7 @@ def gerar_exercicio_comparacao(code_file: Dict, repo: Dict) -> Dict[str, Any]:
         'codigo': code_file['content'],
         'tipo': 'comparacao',
         'dificuldade': 'Difícil',
-        'repositorio': repo['name'],
+        'repositorio': repo_name,
         'solucao_esperada': 'Comparar vantagens e desvantagens'
     }
 
@@ -433,34 +446,8 @@ def comparar_implementacoes_github(algoritmo: str) -> Optional[Dict[str, Any]]:
     """Compara diferentes implementações do mesmo algoritmo"""
 
     try:
-        # Buscar múltiplas implementações
-        repos = git_client.search_repositories(f"{algoritmo} algorithm python", min_stars=50)
-
-        if len(repos) < 2:
-            return None
-
-        implementacoes = []
-
-        for repo in repos[:3]:
-            # Simulação de análise de implementação
-            implementacao = {
-                'repositorio': repo['name'],
-                'estrelas': repo['stars'],
-                'complexidade_estimada': random.choice(['O(n log n)', 'O(n²)', 'O(n)']),
-                'linguagem': 'Python',
-                'abordagem': random.choice(['Recursiva', 'Iterativa', 'Dinâmica'])
-            }
-            implementacoes.append(implementacao)
-
-        return {
-            'implementacoes': implementacoes,
-            'insights': [
-                "Implementações recursivas geralmente têm melhor legibilidade",
-                "Abordagens iterativas consomem menos memória",
-                "A escolha depende dos requisitos específicos do problema"
-            ]
-        }
-
+        # Usar método de comparação da integração
+        return git_client.comparar_implementacoes(algoritmo)
     except Exception as e:
         st.error(f"Erro na comparação: {str(e)}")
         return None
@@ -548,7 +535,7 @@ def gerar_relatorio_aprendizado_github(exercicio: Dict) -> str:
     try:
         # Buscar repositórios relacionados ao conceito do exercício
         conceito = exercicio.get('conceito_relacionado', 'algorithms')
-        repos = git_client.search_repositories(f"{conceito} python", min_stars=10)
+        documentacao = git_client.buscar_documentacao_algoritmo(conceito, "python")
 
         relatorio = f"""
 # 📊 Relatório de Aprendizado - {exercicio['titulo']}
@@ -559,19 +546,21 @@ def gerar_relatorio_aprendizado_github(exercicio: Dict) -> str:
 ## 📚 Exemplos Reais Encontrados
 """
 
-        if repos:
-            for repo in repos[:3]:
-                relatorio += f"""
-### ⭐ {repo['name']} ({repo['stars']} estrelas)
-- **Descrição:** {repo['description']}
-- **URL:** {repo['url']}
+        if documentacao and documentacao.get("resultados"):
+            for resultado in documentacao["resultados"][:3]:
+                repo_info = resultado.get("info", {})
+                if repo_info.get("status") == "success":
+                    relatorio += f"""
+### ⭐ {repo_info.get('name', 'N/A')} ({repo_info.get('stars', 0)} estrelas)
+- **Descrição:** {repo_info.get('description', 'Sem descrição')}
+- **URL:** {repo_info.get('html_url', '#')}
 """
 
         relatorio += f"""
 
 ## 💡 Insights de Aprendizado
 - Este conceito é amplamente utilizado em projetos reais
-- Existem {len(repos)} repositórios relacionados no GitHub
+- Existem {len(documentacao.get('resultados', []))} repositórios relacionados no GitHub
 - A implementação prática é fundamental para o entendimento
 
 ## 🎯 Recomendações
