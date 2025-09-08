@@ -136,7 +136,9 @@ dmypy.json
 !.vscode/extensions.json
 
 # Streamlit
-.streamlit/
+.streamlit/secrets.toml
+!.streamlit/config.toml
+!.streamlit/secrets.toml.example
 
 # Project specific
 logs/
