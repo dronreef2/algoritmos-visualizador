@@ -563,3 +563,8 @@ algoritmos-visualizador/
 ├── ⚙️ mcp_config.py               # 🔧 Utilitários de configuração
 └── 📖 MCP_TAVILY_README.md        # 📋 Documentação completa
 ```
+
+Integração com o sistema de exercícios práticos
+Adição de cache inteligente para performance
+Expansão para outras linguagens de programação
+Interface web para exploração interativa

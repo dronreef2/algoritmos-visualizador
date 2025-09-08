@@ -846,7 +846,17 @@ def render_exercicios_praticos():
     """Renderiza o sistema de exercícios práticos."""
     try:
         from exercicios_praticos_ui import render_exercicios_praticos
-        render_exercicios_praticos()
+        from integracao_gitmcp_exercicios import render_exercicios_gitmcp
+
+        # Abas para exercícios tradicionais e integração GitHub
+        tab1, tab2 = st.tabs(["📝 Exercícios Tradicionais", "🔗 Exercícios com GitHub"])
+
+        with tab1:
+            render_exercicios_praticos()
+
+        with tab2:
+            render_exercicios_gitmcp()
+
     except ImportError:
         st.error("Sistema de exercícios práticos não disponível.")
         st.info("Verifique se o arquivo `exercicios_praticos_ui.py` está presente.")
