@@ -6,7 +6,25 @@
 
 ## 🚀 **APLICAÇÃO INTEGRADA COMPLETA - VERSÃO 2.0**
 
-Uma plataforma abrangente e integrada para aprendizado de algoritmos e estruturas de dados, combinando todos os módulos em uma experiência unificada com visualizações interativas, exercícios práticos e integração com IA.
+Uma plataforma abrangente e integr```
+algoritmos-visualizador/
+├── 📁 mcp-server-tavily/          # 🔍 Servidor MCP para buscas web
+│   ├── src/                       # Código fonte do servidor
+│   ├── .env                       # ⚙️ Configuração da API
+│   ├── run_server.sh             # 🚀 Script de inicialização
+│   └── pyproject.toml             # 📦 Dependências
+├── 📁 modulo_1_fundamentos/       # ✅ Fundamentos completos
+├── 📁 modulo_2_estruturas_dados/  # 🏗️ Estruturas avançadas
+├── 📁 modulo_3_programacao_dinamica/ # 🎯 Programação dinâmica
+├── 📁 modulo_4_entrevistas/       # 💼 Sistema de entrevistas
+├── 📁 streamlit_apps/             # 🌐 Aplicações web
+├── 🔧 mcp_tavily_integration.py   # 🔗 Integração MCP
+├── 📚 exemplo_integracao_mcp.py   # 💡 Exemplos de uso
+├── ⚙️ mcp_config.py               # 🔧 Utilitários de configuração
+├── 🚀 cache_inteligente.py        # 🆕 Sistema de cache inteligente ⭐ NOVO!
+├── 📊 demo_cache_inteligente.py   # 🎯 Demonstração do cache ⭐ NOVO!
+├── 📖 MCP_TAVILY_README.md        # 📋 Documentação completa
+```ado de algoritmos e estruturas de dados, combinando todos os módulos em uma experiência unificada com visualizações interativas, exercícios práticos e integração com IA.
 
 ---
 
@@ -303,6 +321,15 @@ streamlit run app_integrada.py
 - **Benchmarks:** Testes de performance em tempo real
 - **🔍 Busca Web Integrada:** MCP Server Tavily para pesquisa contextual
 
+### 🚀 Sistema de Cache Inteligente ⭐ **NOVO!**
+- **Cache de Visualizações:** Gráficos matplotlib/plotly cacheados automaticamente
+- **Cache de Algoritmos:** Resultados de algoritmos computacionalmente intensos
+- **Cache MCP:** Consultas de busca web com cache inteligente
+- **Compressão Automática:** Dados grandes são comprimidos para economizar memória
+- **Métricas em Tempo Real:** Acompanhe hits, misses e performance
+- **Interface Integrada:** Controles no sidebar da aplicação principal
+- **TTL Configurável:** Tempo de vida customizável por tipo de cache
+
 ### 📊 Dashboard Completo
 - **Progresso de Estudo:** Acompanhamento de módulos
 - **Comparação de Performance:** Gráficos dinâmicos
@@ -345,17 +372,44 @@ python demo_completa.py
 python teste_integrado.py
 ```
 
-### 🔧 Módulos Individuais (NOVO!)
+### 🔧 Sistema de Cache Inteligente (NOVO!)
 ```bash
-# Módulo 2: Estruturas de Dados
-python modulo_2_estruturas_dados/estruturas_avancadas.py
-
-# Módulo 3: Programação Dinâmica
-python modulo_3_programacao_dinamica/metodologia_3_passos.py
-
-# Módulo 4: Entrevistas Técnicas
-python modulo_4_entrevistas/problem_playground.py
+# Executar demonstração completa do sistema de cache
+streamlit run demo_cache_inteligente.py
 ```
+
+#### 🎯 Funcionalidades do Cache
+- **Cache de Visualizações:** Gráficos complexos são gerados apenas uma vez
+- **Cache de Algoritmos:** Resultados computacionalmente intensos são armazenados
+- **Cache MCP:** Consultas de busca são cacheadas por 30 minutos
+- **Compressão:** Dados grandes são automaticamente comprimidos
+- **Métricas:** Acompanhe performance em tempo real no sidebar
+
+#### 💡 Como Usar Decoradores
+```python
+from cache_inteligente import cache_visualizacao, cache_algoritmo, cache_mcp
+
+@cache_visualizacao(ttl_seconds=1800)  # 30 minutos
+def criar_grafico_complexo(dados):
+    # Seu código de visualização aqui
+    return fig
+
+@cache_algoritmo(ttl_seconds=3600)  # 1 hora
+def algoritmo_intensivo(parametros):
+    # Seu algoritmo aqui
+    return resultado
+
+@cache_mcp(ttl_seconds=1800)  # 30 minutos
+def buscar_web(query):
+    # Sua consulta MCP aqui
+    return resultado
+```
+
+#### 📊 Monitoramento
+- **Taxa de Acerto:** Porcentagem de hits no cache
+- **Tempo Economizado:** Segundos salvos por cache hits
+- **Uso de Memória:** MB utilizados pelo cache
+- **Controle Total:** Botões para limpar cache e ver estatísticas
 
 ### Streamlit App (Interface Web Original)
 ```bash

@@ -35,6 +35,20 @@ import plotly.graph_objects as go
 import plotly.express as px
 from typing import Dict, List, Optional, Any, Tuple
 
+# Importar sistema de cache inteligente
+try:
+    from cache_inteligente import (
+        CacheInteligente,
+        cache_visualizacao,
+        cache_algoritmo,
+        cache_mcp,
+        obter_cache_stats,
+        mostrar_estatisticas_cache
+    )
+    CACHE_AVAILABLE = True
+except ImportError:
+    CACHE_AVAILABLE = False
+
 # Configuração da página
 st.set_page_config(
     page_title="🎯 Algoritmos Visualizador Integrado",
@@ -66,6 +80,24 @@ sys.path.extend([
     str(project_root / "modulo_3_programacao_dinamica"),
     str(project_root / "modulo_4_entrevistas"),
 ])
+
+# Importar módulos integrados
+try:
+    from modulos_integrados import ModulosEducacionaisIntegrados
+    modulos_integrados = ModulosEducacionaisIntegrados()
+    MODULOS_INTEGRADOS_AVAILABLE = True
+except ImportError:
+    modulos_integrados = None
+    MODULOS_INTEGRADOS_AVAILABLE = False
+
+# Inicializar sistema de cache inteligente
+if CACHE_AVAILABLE:
+    if 'cache_instance' not in st.session_state:
+        st.session_state.cache_instance = CacheInteligente(
+            max_memory_mb=200,  # 200MB máximo
+            ttl_seconds=3600    # 1 hora TTL padrão
+        )
+        print("🚀 Sistema de Cache Inteligente inicializado!")
 
 # ============================================================================
 # 🎨 CSS CUSTOMIZADO PARA INTERFACE MODERNA
@@ -472,7 +504,8 @@ def render_sidebar():
             "🎯 Aprendizado Contextualizado",
             "🎯 Exercícios Práticos",
             "🔍 Busca MCP (Tavily)",
-            "📊 Dashboard de Progresso",
+            "� Explorar Módulos",
+            "�📊 Dashboard de Progresso",
             "🏆 Conquistas",
             "⚙️ Configurações"
         ]
@@ -486,6 +519,35 @@ def render_sidebar():
 
         st.session_state.current_module = selected_option
 
+        # Separador
+        st.markdown("---")
+
+        # Sistema de Cache Inteligente
+        if CACHE_AVAILABLE:
+            st.markdown("### 🚀 Cache Inteligente")
+
+            # Botão para mostrar estatísticas
+            if st.button("📊 Ver Estatísticas", key="cache_stats"):
+                with st.expander("📈 Estatísticas do Cache", expanded=True):
+                    mostrar_estatisticas_cache()
+
+            # Botão para limpar cache
+            if st.button("🧹 Limpar Cache", key="clear_cache"):
+                from cache_inteligente import limpar_cache
+                limpar_cache()
+                st.success("✅ Cache limpo com sucesso!")
+                st.rerun()
+
+            # Status do cache
+            cache_stats = obter_cache_stats()
+            hit_rate = cache_stats.get('hit_rate', 0) * 100
+
+            if hit_rate > 50:
+                st.success(".1f")
+            elif hit_rate > 20:
+                st.warning(".1f")
+            else:
+                st.info(".1f")
         # Separador
         st.markdown("---")
 
@@ -922,12 +984,18 @@ def render_busca_mcp():
                 if query.strip():
                     with st.spinner("🔄 Buscando informações com IA..."):
                         try:
-                            result = client.search(
-                                query,
-                                search_depth=search_type,
-                                include_answer=include_answer,
-                                max_results=max_results
-                            )
+                            # Usar cache para buscas MCP
+                            if CACHE_AVAILABLE:
+                                result = executar_busca_mcp_com_cache(
+                                    client, query, search_type, include_answer, max_results
+                                )
+                            else:
+                                result = client.search(
+                                    query,
+                                    search_depth=search_type,
+                                    include_answer=include_answer,
+                                    max_results=max_results
+                                )
 
                             if result and 'results' in result:
                                 st.success(f"✅ Encontrados {len(result['results'])} resultados!")
@@ -1168,7 +1236,152 @@ def render_configuracoes():
             )
 
 # ============================================================================
-# 🔍 VISUALIZADORES INDIVIDUAIS (IMPLEMENTAÇÕES BÁSICAS)
+# � EXPLORAR MÓDULOS - INTEGRAÇÃO COMPLETA
+# ============================================================================
+
+def render_explorar_modulos():
+    """Renderiza interface para explorar todos os módulos educacionais integrados."""
+    st.markdown("## 📚 Explorar Módulos Educacionais")
+
+    if not MODULOS_INTEGRADOS_AVAILABLE:
+        st.error("❌ Módulos integrados não disponíveis. Verifique a instalação.")
+        return
+
+    st.markdown("""
+    <div class="module-card">
+        <h3>🔍 Exploração Completa dos Módulos</h3>
+        <p>Explore todo o conteúdo educacional organizado por módulos, com acesso direto aos arquivos fonte e documentação.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Seleção de módulo
+    modulos_disponiveis = {
+        0: "📚 Módulo 1: Fundamentos",
+        1: "🏗️ Módulo 2: Estruturas de Dados",
+        2: "🎯 Módulo 3: Programação Dinâmica",
+        3: "💼 Módulo 4: Entrevistas"
+    }
+
+    col1, col2 = st.columns([1, 2])
+
+    with col1:
+        modulo_selecionado = st.selectbox(
+            "Selecione um módulo:",
+            options=list(modulos_disponiveis.keys()),
+            format_func=lambda x: modulos_disponiveis[x],
+            key="modulo_explorar"
+        )
+
+    with col2:
+        if st.button("🔍 Explorar Módulo", key="explorar_modulo"):
+            with st.spinner("Carregando conteúdo do módulo..."):
+                conteudo = modulos_integrados.carregar_conteudo_modulo(modulo_selecionado)
+
+                if "erro" in conteudo:
+                    st.error(f"Erro ao carregar módulo: {conteudo['erro']}")
+                    return
+
+                # Exibir informações do módulo
+                st.markdown(f"### {conteudo['nome']}")
+
+                # README
+                if conteudo.get("readme"):
+                    with st.expander("📖 Documentação (README)", expanded=True):
+                        st.markdown(conteudo["readme"])
+
+                # Arquivos
+                if conteudo.get("arquivos"):
+                    st.markdown("### 📁 Arquivos do Módulo")
+
+                    for nome_arquivo, info_arquivo in conteudo["arquivos"].items():
+                        with st.expander(f"📄 {nome_arquivo}", expanded=False):
+                            if "erro" in info_arquivo:
+                                st.error(f"Erro ao carregar arquivo: {info_arquivo['erro']}")
+                            else:
+                                # Cabeçalho com estatísticas
+                                col1, col2, col3 = st.columns(3)
+                                with col1:
+                                    st.metric("Linhas", info_arquivo.get("linhas", 0))
+                                with col2:
+                                    st.metric("Tamanho", f"{info_arquivo.get('tamanho', 0)} bytes")
+                                with col3:
+                                    st.metric("Status", "Carregado")
+
+                                # Conteúdo do arquivo
+                                st.code(info_arquivo["conteudo"], language="python")
+
+                                # Download
+                                st.download_button(
+                                    label="📥 Baixar Arquivo",
+                                    data=info_arquivo["conteudo"],
+                                    file_name=nome_arquivo,
+                                    mime="text/plain",
+                                    key=f"download_{nome_arquivo}"
+                                )
+
+    # Visão geral de todos os módulos
+    st.markdown("---")
+    st.markdown("## 🎯 Visão Geral dos Módulos")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>📚 Módulo 1: Fundamentos</h4>
+            <p>Algoritmos essenciais e técnicas básicas</p>
+            <ul>
+                <li>🔍 Busca Binária</li>
+                <li>👥 Dois Ponteiros</li>
+                <li>🪟 Janela Deslizante</li>
+                <li>🔙 Backtracking</li>
+                <li>🔍 BFS/DFS</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="feature-card">
+            <h4>🏗️ Módulo 2: Estruturas de Dados</h4>
+            <p>Estruturas avançadas e algoritmos associados</p>
+            <ul>
+                <li>🔢 Algoritmos de Ordenação</li>
+                <li>🕸️ Algoritmos de Grafos</li>
+                <li>🏗️ Estruturas Avançadas</li>
+                <li>📊 Visualização Interativa</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>🎯 Módulo 3: Programação Dinâmica</h4>
+            <p>Técnicas avançadas de otimização</p>
+            <ul>
+                <li>📈 Metodologia 3 Passos</li>
+                <li>💰 Problemas de Otimização</li>
+                <li>🎯 Estratégias Avançadas</li>
+                <li>📊 Análise de Complexidade</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="feature-card">
+            <h4>💼 Módulo 4: Entrevistas</h4>
+            <p>Preparação para entrevistas técnicas</p>
+            <ul>
+                <li>🎯 Simulação Completa</li>
+                <li>🔍 Problemas Clássicos</li>
+                <li>💡 Playground Interativo</li>
+                <li>📈 Acompanhamento de Progresso</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ============================================================================
+# �🔍 VISUALIZADORES INDIVIDUAIS (IMPLEMENTAÇÕES BÁSICAS)
 # ============================================================================
 
 def render_busca_binaria():
@@ -1176,35 +1389,92 @@ def render_busca_binaria():
     st.markdown("### 🔍 Busca Binária Interativa")
 
     # Controles
-    tamanho = st.slider("Tamanho do array:", 5, 20, 10)
+    tamanho = st.slider("Tamanho do array:", 5, 20, 10, key="busca_binaria_tamanho")
     array = sorted(np.random.randint(1, 100, tamanho))
-    target = st.selectbox("Valor a procurar:", array)
+    target = st.selectbox("Valor a procurar:", array, key="busca_binaria_target")
 
     st.write(f"Array: {array}")
     st.write(f"Procurando: {target}")
 
     # Simulação
     if st.button("Executar Busca", key="busca_binaria_executar"):
-        esquerda, direita = 0, len(array) - 1
-        passos = []
+        # Usar cache para busca binária
+        if CACHE_AVAILABLE:
+            resultado = executar_busca_binaria_com_cache(array, target)
+        else:
+            resultado = executar_busca_binaria_sem_cache(array, target)
 
-        while esquerda <= direita:
-            meio = (esquerda + direita) // 2
-            passos.append((esquerda, direita, meio, array[meio]))
-
-            if array[meio] == target:
-                st.success(f"✅ Encontrado na posição {meio}!")
-                break
-            elif array[meio] < target:
-                esquerda = meio + 1
-            else:
-                direita = meio - 1
+        if resultado['encontrado']:
+            st.success(f"✅ Encontrado na posição {resultado['posicao']}!")
         else:
             st.error("❌ Valor não encontrado!")
 
         # Mostrar passos
-        for i, (esq, dir, meio, valor) in enumerate(passos):
-            st.write(f"Passo {i+1}: esquerda={esq}, direita={dir}, meio={meio}, valor={valor}")
+        for i, passo in enumerate(resultado['passos']):
+            st.write(f"Passo {i+1}: esquerda={passo['esquerda']}, direita={passo['direita']}, meio={passo['meio']}, valor={passo['valor']}")
+
+@cache_algoritmo(ttl_seconds=1800)
+def executar_busca_binaria_com_cache(array, target):
+    """Executa busca binária com cache inteligente."""
+    esquerda, direita = 0, len(array) - 1
+    passos = []
+
+    while esquerda <= direita:
+        meio = (esquerda + direita) // 2
+        passos.append({
+            'esquerda': esquerda,
+            'direita': direita,
+            'meio': meio,
+            'valor': array[meio]
+        })
+
+        if array[meio] == target:
+            return {
+                'encontrado': True,
+                'posicao': meio,
+                'passos': passos
+            }
+        elif array[meio] < target:
+            esquerda = meio + 1
+        else:
+            direita = meio - 1
+
+    return {
+        'encontrado': False,
+        'posicao': -1,
+        'passos': passos
+    }
+
+def executar_busca_binaria_sem_cache(array, target):
+    """Executa busca binária sem cache (fallback)."""
+    esquerda, direita = 0, len(array) - 1
+    passos = []
+
+    while esquerda <= direita:
+        meio = (esquerda + direita) // 2
+        passos.append({
+            'esquerda': esquerda,
+            'direita': direita,
+            'meio': meio,
+            'valor': array[meio]
+        })
+
+        if array[meio] == target:
+            return {
+                'encontrado': True,
+                'posicao': meio,
+                'passos': passos
+            }
+        elif array[meio] < target:
+            esquerda = meio + 1
+        else:
+            direita = meio - 1
+
+    return {
+        'encontrado': False,
+        'posicao': -1,
+        'passos': passos
+    }
 
 def render_dois_ponteiros():
     """Renderiza demonstração dos dois ponteiros."""
@@ -1236,13 +1506,48 @@ def render_dois_ponteiros():
 
         st.success(f"Área máxima: {max_area}")
 
-        # Visualização simples
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.bar(range(len(alturas)), alturas, color='skyblue')
-        ax.set_title("Container With Most Water")
-        ax.set_xlabel("Posição")
-        ax.set_ylabel("Altura")
+        # Visualização com cache inteligente
+        if CACHE_AVAILABLE:
+            fig = criar_visualizacao_container(alturas, max_area)
+        else:
+            fig = criar_visualizacao_container_sem_cache(alturas, max_area)
+
         st.pyplot(fig)
+
+@cache_visualizacao(ttl_seconds=1800)
+def criar_visualizacao_container(alturas, max_area):
+    """Cria visualização do Container With Most Water com cache."""
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(range(len(alturas)), alturas, color='skyblue')
+    ax.set_title(f"Container With Most Water - Área Máxima: {max_area}")
+    ax.set_xlabel("Posição")
+    ax.set_ylabel("Altura")
+
+    # Adicionar linhas para mostrar a área máxima
+    ax.axhline(y=max_area/10, color='red', linestyle='--', alpha=0.7,
+               label=f'Área Máxima: {max_area}')
+    ax.legend()
+
+    return fig
+
+def criar_visualizacao_container_sem_cache(alturas, max_area):
+    """Cria visualização sem cache (fallback)."""
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(range(len(alturas)), alturas, color='skyblue')
+    ax.set_title(f"Container With Most Water - Área Máxima: {max_area}")
+    ax.set_xlabel("Posição")
+    ax.set_ylabel("Altura")
+    return fig
+
+@cache_mcp(ttl_seconds=1800)
+def executar_busca_mcp_com_cache(client, query, search_type, include_answer, max_results):
+    """Executa busca MCP com cache inteligente."""
+    return client.search(
+        query,
+        search_depth=search_type,
+        include_answer=include_answer,
+        max_results=max_results
+    )
 
 def render_janela_deslizante():
     """Renderiza demonstração da janela deslizante."""
@@ -1315,21 +1620,70 @@ def render_heap():
 
     st.markdown("**Exemplo: Heap Mínimo**")
 
-    valores = st.text_input("Valores (separados por vírgula):", "3,1,4,1,5,9,2,6")
+    valores = st.text_input("Valores (separados por vírgula):", "3,1,4,1,5,9,2,6", key="heap_input")
     valores = [int(x.strip()) for x in valores.split(",")]
 
     if st.button("Criar Heap", key="heap_criar"):
-        heap = valores[:]
-        heapq.heapify(heap)
+        # Usar cache para operações de heap
+        if CACHE_AVAILABLE:
+            resultado = processar_heap_com_cache(valores)
+        else:
+            resultado = processar_heap_sem_cache(valores)
 
         st.write("**Array original:**", valores)
-        st.write("**Heap resultante:**", heap)
+        st.write("**Heap resultante:**", resultado['heap'])
 
         # Operações
-        if heap:
-            menor = heapq.heappop(heap)
-            st.write(f"**Menor elemento removido:** {menor}")
-            st.write("**Heap após remoção:**", heap)
+        if resultado['heap']:
+            st.write(f"**Menor elemento removido:** {resultado['menor']}")
+            st.write("**Heap após remoção:**", resultado['heap_final'])
+
+@cache_algoritmo(ttl_seconds=3600)
+def processar_heap_com_cache(valores):
+    """Processa operações de heap com cache inteligente."""
+    import heapq
+
+    heap = valores[:]
+    heapq.heapify(heap)
+
+    # Operações
+    heap_copia = heap[:]
+    if heap_copia:
+        menor = heapq.heappop(heap_copia)
+        return {
+            'heap': heap,
+            'menor': menor,
+            'heap_final': heap_copia
+        }
+    else:
+        return {
+            'heap': heap,
+            'menor': None,
+            'heap_final': heap
+        }
+
+def processar_heap_sem_cache(valores):
+    """Processa operações de heap sem cache (fallback)."""
+    import heapq
+
+    heap = valores[:]
+    heapq.heapify(heap)
+
+    # Operações
+    heap_copia = heap[:]
+    if heap_copia:
+        menor = heapq.heappop(heap_copia)
+        return {
+            'heap': heap,
+            'menor': menor,
+            'heap_final': heap_copia
+        }
+    else:
+        return {
+            'heap': heap,
+            'menor': None,
+            'heap_final': heap
+        }
 
 def render_trie():
     """Renderiza demonstração de Trie."""
@@ -1845,7 +2199,9 @@ def main():
         render_exercicios_praticos()
     elif selected_module == "🔍 Busca MCP (Tavily)":
         render_busca_mcp()
-    elif selected_module == "📊 Dashboard de Progresso":
+    elif selected_module == "� Explorar Módulos":
+        render_explorar_modulos()
+    elif selected_module == "�📊 Dashboard de Progresso":
         render_dashboard_progresso()
     elif selected_module == "🏆 Conquistas":
         render_conquistas()
