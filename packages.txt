@@ -3,7 +3,6 @@ libsm6
 libxext6
 libxrender-dev
 libgomp1
-libgthread-2.0-0
 libxml2-dev
 libxslt-dev
 curl
