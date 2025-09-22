@@ -81,6 +81,7 @@ sys.path.extend(
         str(project_root / "modulo_2_estruturas_dados"),
         str(project_root / "modulo_3_programacao_dinamica"),
         str(project_root / "modulo_4_entrevistas"),
+        str(project_root / "modulo_5_redes_neurais"),
     ]
 )
 
@@ -490,6 +491,28 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "Pensamento algorítmico",
             ],
         },
+        "🧠 Módulo 5: Redes Neurais": {
+            "title": "Otimização em Redes Neurais",
+            "description": "Explore visualmente como algoritmos de otimização ajustam parâmetros de redes neurais para minimizar funções de perda.",
+            "topics": [
+                "📉 Gradiente Descendente",
+                "🔄 Stochastic GD (SGD)",
+                "🎯 Adam Optimizer",
+                "🗻 Visualização 3D de Curvas de Erro",
+                "🎬 Animações de Otimização",
+                "💻 Exercícios Interativos",
+                "📚 Exemplos do GitHub",
+            ],
+            "difficulty": "Intermediário",
+            "estimated_time": "16-20 horas",
+            "applications": [
+                "Treinamento de modelos de IA",
+                "Otimização de hiperparâmetros",
+                "Debugging de redes neurais",
+                "Entendimento de algoritmos de ML",
+                "Desenvolvimento de otimizadores customizados",
+            ],
+        },
     }
 
     return modules_info.get(module_key, {})
@@ -515,6 +538,7 @@ def render_sidebar():
             "🏗️ Módulo 2: Estruturas de Dados",
             "🎯 Módulo 3: Programação Dinâmica",
             "💼 Módulo 4: Entrevistas",
+            "🧠 Módulo 5: Redes Neurais",
             "🎯 Aprendizado Contextualizado",
             "🎯 Exercícios Práticos",
             "🔍 Busca MCP (Tavily)",
@@ -979,6 +1003,38 @@ def render_module_4():
 
     with tab3:
         render_feedback_entrevista()
+
+
+def render_module_5():
+    """Renderiza o Módulo 5: Redes Neurais."""
+    st.markdown(
+        """
+    <div class="main-header">
+        <h1>🧠 Módulo 5: Redes Neurais</h1>
+        <p>Explore visualmente como algoritmos de otimização ajustam parâmetros de redes neurais</p>
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+
+    # Importar e renderizar o módulo de redes neurais
+    try:
+        from modulo_5_redes_neurais.interface import criar_modulo_redes_neurais
+
+        modulo_rn = criar_modulo_redes_neurais()
+        modulo_rn.mostrar_interface_principal()
+
+    except ImportError as e:
+        st.error(f"Erro ao carregar o módulo de redes neurais: {e}")
+        st.info("Verifique se todos os arquivos do módulo estão presentes.")
+        st.code("""
+# Para instalar dependências necessárias:
+pip install numpy matplotlib plotly streamlit
+        """)
+
+    except Exception as e:
+        st.error(f"Erro inesperado no módulo de redes neurais: {e}")
+        st.info("Tente recarregar a página ou entre em contato com o suporte.")
 
 
 # ============================================================================
@@ -2395,6 +2451,8 @@ def main():
         render_module_3()
     elif selected_module == "💼 Módulo 4: Entrevistas":
         render_module_4()
+    elif selected_module == "🧠 Módulo 5: Redes Neurais":
+        render_module_5()
     elif selected_module == "🎯 Aprendizado Contextualizado":
         render_aprendizado_contextualizado()
     elif selected_module == "🎯 Exercícios Práticos":
