@@ -12,6 +12,12 @@ plotly>=5.15.0
 seaborn>=0.12.0
 scipy>=1.10.0
 networkx>=3.1
+netron>=7.0.0
+
+# PyTorch para redes neurais
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
 
 # Utilitários
 requests>=2.31.0

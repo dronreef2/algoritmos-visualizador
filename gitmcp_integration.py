@@ -385,8 +385,186 @@ class GitMCPIntegration:
 
         return {"algoritmo": algoritmo, "comparacoes": comparacoes, "linguagens": list(comparacoes.keys())}
 
+    def buscar_modelos_ml(self, query: str = "", formato: str = None, max_results: int = 10) -> Dict[str, Any]:
+        """
+        Busca modelos de machine learning no GitHub
 
-# Instância global para uso no projeto
+        Args:
+            query: Termo de busca (ex: "resnet", "yolo", etc.)
+            formato: Formato específico (.onnx, .tflite, .h5, .pt, .pth, .mlmodel)
+            max_results: Número máximo de resultados
+
+        Returns:
+            Dict com modelos encontrados
+        """
+        print(f"🤖 Buscando modelos ML: {query} (formato: {formato})")
+
+        # Extensões suportadas pelo Netron
+        extensoes_suportadas = {
+            "onnx": [".onnx"],
+            "tflite": [".tflite"],
+            "keras": [".h5", ".keras"],
+            "pytorch": [".pt", ".pth", ".pkl"],
+            "coreml": [".mlmodel"],
+            "darknet": [".cfg", ".weights"],
+            "tensorflow": [".pb", ".meta"],
+            "caffe": [".caffemodel", ".prototxt"],
+            "todos": [".onnx", ".tflite", ".h5", ".keras", ".pt", ".pth", ".pkl", ".mlmodel", ".cfg", ".weights", ".pb", ".meta", ".caffemodel", ".prototxt"]
+        }
+
+        # Define extensões a buscar
+        if formato and formato in extensoes_suportadas:
+            extensoes = extensoes_suportadas[formato]
+        else:
+            extensoes = extensoes_suportadas["todos"]
+
+        modelos = []
+
+        # Busca em repositórios populares de ML
+        repos_populares = [
+            "onnx/models",
+            "tensorflow/models",
+            "pytorch/vision",
+            "keras-team/keras-applications",
+            "microsoft/onnxruntime",
+            "tensorflow/tfhub.dev",
+            "google/mediapipe",
+            "apple/coremltools",
+            "ultralytics/yolov5",
+            "facebookresearch/detectron2"
+        ]
+
+        # Também faz busca geral no GitHub
+        try:
+            # Constrói query para busca geral
+            search_query = f"{query} " if query else ""
+            search_query += " OR ".join([f"extension:{ext[1:]}" for ext in extensoes])  # Remove o ponto
+            search_query += " size:>1000"  # Arquivos maiores que 1KB (modelos são grandes)
+
+            url = f"{self.client.base_url}/search/code"
+            params = {
+                "q": search_query,
+                "per_page": min(max_results * 2, 100),  # Busca mais para filtrar depois
+                "sort": "indexed",
+                "order": "desc"
+            }
+
+            response = self.client.session.get(url, params=params, timeout=15)
+            response.raise_for_status()
+
+            data = response.json()
+            items = data.get("items", [])
+
+            # Processa resultados
+            for item in items[:max_results]:
+                repo_full = item.get("repository", {}).get("full_name", "")
+                filename = item.get("name", "")
+                path = item.get("path", "")
+
+                # Verifica se é uma extensão suportada
+                if any(filename.endswith(ext) for ext in extensoes):
+                    # Obtém informações do repositório
+                    if "/" in repo_full:
+                        owner, repo = repo_full.split("/", 1)
+                        repo_info = self.client.get_repository_info(owner, repo)
+
+                        modelos.append({
+                            "nome": filename,
+                            "caminho": path,
+                            "repositorio": repo_full,
+                            "url": item.get("html_url", ""),
+                            "download_url": f"https://raw.githubusercontent.com/{repo_full}/main/{path}",
+                            "formato": self._identificar_formato(filename),
+                            "tamanho_kb": "Desconhecido",  # API não retorna tamanho diretamente
+                            "stars": repo_info.get("stars", 0) if repo_info.get("status") == "success" else 0,
+                            "descricao": repo_info.get("description", "") if repo_info.get("status") == "success" else "",
+                        })
+
+        except requests.exceptions.RequestException as e:
+            print(f"Erro na busca geral: {e}")
+
+        # Busca específica nos repositórios populares
+        for repo_full in repos_populares[:5]:  # Limita para não demorar muito
+            try:
+                if "/" in repo_full:
+                    owner, repo = repo_full.split("/", 1)
+
+                    # Busca arquivos por extensão
+                    for ext in extensoes[:3]:  # Limita extensões para performance
+                        search_term = f"extension:{ext[1:]}"  # Remove o ponto
+                        if query:
+                            search_term += f" {query}"
+
+                        code_search = self.client.search_code(owner, repo, search_term, max_results=3)
+
+                        if code_search.get("status") == "success":
+                            for result in code_search.get("results", []):
+                                filename = result.get("name", "")
+                                if not any(m["nome"] == filename and m["repositorio"] == repo_full for m in modelos):
+                                    modelos.append({
+                                        "nome": filename,
+                                        "caminho": result.get("path", ""),
+                                        "repositorio": repo_full,
+                                        "url": result.get("url", ""),
+                                        "download_url": f"https://raw.githubusercontent.com/{repo_full}/main/{result.get('path', '')}",
+                                        "formato": self._identificar_formato(filename),
+                                        "tamanho_kb": "Desconhecido",
+                                        "stars": 0,  # Já sabemos que são repos populares
+                                        "descricao": f"Modelo de {repo_full}",
+                                    })
+
+            except Exception as e:
+                print(f"Erro ao buscar em {repo_full}: {e}")
+                continue
+
+        # Remove duplicatas e limita resultados
+        modelos_unicos = []
+        seen = set()
+        for modelo in modelos:
+            key = (modelo["nome"], modelo["repositorio"])
+            if key not in seen:
+                modelos_unicos.append(modelo)
+                seen.add(key)
+
+        return {
+            "status": "success",
+            "query": query,
+            "formato": formato,
+            "modelos": modelos_unicos[:max_results],
+            "total_encontrados": len(modelos_unicos),
+            "formatos_suportados": list(extensoes_suportadas.keys())
+        }
+
+    def _identificar_formato(self, filename: str) -> str:
+        """
+        Identifica o formato do modelo baseado na extensão do arquivo
+
+        Args:
+            filename: Nome do arquivo
+
+        Returns:
+            str: Formato identificado
+        """
+        extensao = filename.lower().split(".")[-1]
+
+        formatos = {
+            "onnx": "ONNX",
+            "tflite": "TensorFlow Lite",
+            "h5": "Keras",
+            "keras": "Keras",
+            "pt": "PyTorch",
+            "pth": "PyTorch",
+            "pkl": "PyTorch",
+            "mlmodel": "Core ML",
+            "cfg": "Darknet",
+            "weights": "Darknet",
+            "pb": "TensorFlow",
+            "meta": "TensorFlow",
+            "caffemodel": "Caffe",
+            "prototxt": "Caffe"
+        }
+
+        return formatos.get(extensao, "Desconhecido")
 github_client = GitHubDocsClient()
 github_integration = GitMCPIntegration()
 
