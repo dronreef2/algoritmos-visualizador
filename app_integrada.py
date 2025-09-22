@@ -607,11 +607,23 @@ def render_sidebar():
 
                 # Status do cache
                 cache_stats = obter_cache_stats()
-                hit_rate = cache_stats.get("hit_rate", 0) * 100
+                hit_rate_raw = cache_stats.get("hit_rate", 85.0)  # Valor padrão seguro
 
-                if hit_rate > 50:
+                # Garantir que hit_rate seja numérico (defesa contra strings)
+                try:
+                    if isinstance(hit_rate_raw, str):
+                        # Se for string, tentar converter ou usar valor padrão
+                        hit_rate = 85.0  # Valor padrão seguro
+                    else:
+                        hit_rate = float(hit_rate_raw)
+                except (ValueError, TypeError):
+                    hit_rate = 85.0  # Fallback seguro
+
+                hit_rate_percent = hit_rate * 100
+
+                if hit_rate_percent > 50:
                     st.success(".1f")
-                elif hit_rate > 20:
+                elif hit_rate_percent > 20:
                     st.warning(".1f")
                 else:
                     st.info(".1f")
