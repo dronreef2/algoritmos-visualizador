@@ -37,7 +37,7 @@ from typing import Dict, List, Optional, Any, Tuple
 
 # Importar sistema de cache inteligente
 try:
-    from cache_inteligente import (
+    from cache_inteligente_moderno import (
         CacheInteligente,
         cache_visualizacao,
         cache_algoritmo,
@@ -526,28 +526,56 @@ def render_sidebar():
         if CACHE_AVAILABLE:
             st.markdown("### 🚀 Cache Inteligente")
 
-            # Botão para mostrar estatísticas
-            if st.button("📊 Ver Estatísticas", key="cache_stats"):
-                with st.expander("📈 Estatísticas do Cache", expanded=True):
-                    mostrar_estatisticas_cache()
+            # Fragment para estatísticas do cache (isolado)
+            @st.fragment
+            def mostrar_estatisticas_cache_fragment():
+                # Botão para mostrar estatísticas
+                if st.button("📊 Ver Estatísticas", key="cache_stats"):
+                    with st.expander("📈 Estatísticas do Cache", expanded=True):
+                        mostrar_estatisticas_cache()
 
-            # Botão para limpar cache
-            if st.button("🧹 Limpar Cache", key="clear_cache"):
-                from cache_inteligente import limpar_cache
-                limpar_cache()
-                st.success("✅ Cache limpo com sucesso!")
-                st.rerun()
+                # Botão para limpar cache com confirmação
+                if st.button("🧹 Limpar Cache", key="clear_cache"):
+                    @st.dialog("🧹 Confirmar Limpeza de Cache")
+                    def confirmar_limpeza_cache():
+                        st.warning("⚠️ **Atenção:** Esta ação irá limpar todo o cache do sistema!")
+                        st.markdown("""
+                        Isso significa que:
+                        - 🔄 Visualizações serão recalculadas
+                        - 📊 Algoritmos serão executados novamente
+                        - 🌐 Consultas MCP serão refeitas
+                        - ⏱️ Pode causar lentidão temporária
+                        """)
 
-            # Status do cache
-            cache_stats = obter_cache_stats()
-            hit_rate = cache_stats.get('hit_rate', 0) * 100
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            if st.button("❌ Cancelar", type="secondary", use_container_width=True):
+                                st.rerun()
 
-            if hit_rate > 50:
-                st.success(".1f")
-            elif hit_rate > 20:
-                st.warning(".1f")
-            else:
-                st.info(".1f")
+                        with col2:
+                            if st.button("🧹 Confirmar Limpeza", type="primary", use_container_width=True):
+                                from cache_inteligente_moderno import limpar_cache
+                                limpar_cache()
+                                st.success("✅ Cache limpo com sucesso!")
+                                st.balloons()
+                                time.sleep(2)  # Dar tempo para ver o sucesso
+                                st.rerun()
+
+                    confirmar_limpeza_cache()
+
+                # Status do cache
+                cache_stats = obter_cache_stats()
+                hit_rate = cache_stats.get('hit_rate', 0) * 100
+
+                if hit_rate > 50:
+                    st.success(".1f")
+                elif hit_rate > 20:
+                    st.warning(".1f")
+                else:
+                    st.info(".1f")
+
+            # Executar o fragment
+            mostrar_estatisticas_cache_fragment()
         # Separador
         st.markdown("---")
 
@@ -904,6 +932,7 @@ def render_aprendizado_contextualizado():
 # 🎯 EXERCÍCIOS PRÁTICOS
 # ============================================================================
 
+@st.fragment
 def render_exercicios_praticos():
     """Renderiza o sistema de exercícios práticos."""
     try:
@@ -927,6 +956,7 @@ def render_exercicios_praticos():
 # 🔍 BUSCA MCP
 # ============================================================================
 
+@st.fragment
 def render_busca_mcp():
     """Renderiza a interface de busca MCP com Tavily."""
     st.markdown("""
@@ -949,76 +979,89 @@ def render_busca_mcp():
         if client.is_configured():
             st.success("✅ MCP Server Tavily configurado e pronto!")
 
-            # Interface de busca
-            col1, col2 = st.columns([3, 1])
+            # Interface de busca com formulário
+            with st.form("form_busca_mcp"):
+                st.markdown("### 🔍 Busca Inteligente com MCP")
 
-            with col1:
-                query = st.text_input(
-                    "Digite sua consulta:",
-                    placeholder="Ex: 'como funciona o algoritmo de Dijkstra?'",
-                    help="Faça perguntas sobre algoritmos, estruturas de dados ou problemas de programação"
-                )
+                col1, col2 = st.columns([3, 1])
 
-            with col2:
-                search_type = st.selectbox(
-                    "Tipo de busca:",
-                    ["basic", "advanced"],
-                    help="Basic: busca rápida, Advanced: busca detalhada"
-                )
+                with col1:
+                    query = st.text_input(
+                        "Digite sua consulta:",
+                        placeholder="Ex: 'como funciona o algoritmo de Dijkstra?'",
+                        help="Faça perguntas sobre algoritmos, estruturas de dados ou problemas de programação"
+                    )
 
-                include_answer = st.checkbox(
-                    "Incluir resposta da IA",
-                    value=False,
-                    help="Gera resposta contextualizada usando IA"
-                )
+                with col2:
+                    search_type = st.selectbox(
+                        "Tipo de busca:",
+                        ["basic", "advanced"],
+                        help="Basic: busca rápida, Advanced: busca detalhada"
+                    )
 
-                max_results = st.slider(
-                    "Máximo de resultados:",
-                    min_value=1,
-                    max_value=10,
-                    value=5,
-                    help="Número máximo de resultados"
-                )
+                    include_answer = st.checkbox(
+                        "Incluir resposta da IA",
+                        value=False,
+                        help="Gera resposta contextualizada usando IA"
+                    )
 
-            if st.button("🔍 Buscar", type="primary", use_container_width=True):
-                if query.strip():
-                    with st.spinner("🔄 Buscando informações com IA..."):
-                        try:
-                            # Usar cache para buscas MCP
-                            if CACHE_AVAILABLE:
-                                result = executar_busca_mcp_com_cache(
-                                    client, query, search_type, include_answer, max_results
-                                )
-                            else:
-                                result = client.search(
-                                    query,
-                                    search_depth=search_type,
-                                    include_answer=include_answer,
-                                    max_results=max_results
-                                )
+                    max_results = st.slider(
+                        "Máximo de resultados:",
+                        min_value=1,
+                        max_value=10,
+                        value=5,
+                        help="Número máximo de resultados"
+                    )
 
-                            if result and 'results' in result:
-                                st.success(f"✅ Encontrados {len(result['results'])} resultados!")
+                # Botão de submit do formulário
+                submitted_busca = st.form_submit_button("🔍 Buscar", type="primary", use_container_width=True)
 
-                                # Exibir resultados
-                                for i, item in enumerate(result['results'], 1):
-                                    with st.expander(f"📄 Resultado {i}: {item.get('title', 'Sem título')}"):
-                                        st.markdown(f"**URL:** {item.get('url', 'N/A')}")
-                                        st.markdown(f"**Conteúdo:** {item.get('snippet', 'N/A')}")
+            # Executar busca apenas quando formulário for submetido
+            if submitted_busca and query.strip():
+                # Usar st.status para progresso detalhado
+                with st.status("� Buscando informações com IA...", expanded=True) as status:
+                    st.write("📡 Conectando ao servidor MCP...")
+                    try:
+                        # Usar cache para buscas MCP
+                        if CACHE_AVAILABLE:
+                            st.write("💾 Verificando cache...")
+                            result = executar_busca_mcp_com_cache(
+                                client, query, search_type, include_answer, max_results
+                            )
+                        else:
+                            st.write("🌐 Fazendo consulta externa...")
+                            result = client.search(
+                                query,
+                                search_depth=search_type,
+                                include_answer=include_answer,
+                                max_results=max_results
+                            )
 
-                                # Resposta da IA se solicitada
-                                if include_answer and 'answer' in result:
-                                    st.markdown("---")
-                                    st.markdown("### 🧠 Resposta da IA")
-                                    st.info(result['answer'])
+                        st.write("📊 Processando resultados...")
+                        if result and 'results' in result:
+                            status.update(label=f"✅ Encontrados {len(result['results'])} resultados!", state="complete")
 
-                            else:
-                                st.warning("Nenhum resultado encontrado.")
+                            # Exibir resultados
+                            for i, item in enumerate(result['results'], 1):
+                                with st.expander(f"📄 Resultado {i}: {item.get('title', 'Sem título')}"):
+                                    st.markdown(f"**URL:** {item.get('url', 'N/A')}")
+                                    st.markdown(f"**Conteúdo:** {item.get('snippet', 'N/A')}")
 
-                        except Exception as e:
-                            st.error(f"Erro na busca: {str(e)}")
-                else:
-                    st.warning("Por favor, digite uma consulta.")
+                            # Resposta da IA se solicitada
+                            if include_answer and 'answer' in result:
+                                st.markdown("---")
+                                st.markdown("### 🧠 Resposta da IA")
+                                st.info(result['answer'])
+
+                        else:
+                            status.update(label="⚠️ Nenhum resultado encontrado", state="complete")
+                            st.warning("Nenhum resultado encontrado.")
+
+                    except Exception as e:
+                        status.update(label=f"❌ Erro na busca: {str(e)}", state="error")
+                        st.error(f"Erro na busca: {str(e)}")
+            elif submitted_busca:
+                st.warning("Por favor, digite uma consulta.")
         else:
             st.warning("⚠️ MCP Server precisa ser configurado.")
             st.info("Para configurar: Edite `mcp-server-tavily/.env` e adicione sua chave da API Tavily")
@@ -1203,29 +1246,101 @@ def render_configuracoes():
 
     with tab1:
         st.markdown("### 👤 Configurações do Perfil")
-        st.text_input("Nome", value="Estudante", help="Seu nome para personalizar a experiência")
-        st.selectbox("Nível de Experiência", ["Iniciante", "Intermediário", "Avançado"], index=0)
-        st.multiselect("Interesses", ["Algoritmos", "Estruturas de Dados", "Programação Dinâmica", "Entrevistas"], default=["Algoritmos"])
+
+        # Formulário para configurações do perfil
+        with st.form("form_perfil"):
+            col1, col2 = st.columns(2)
+            with col1:
+                nome = st.text_input("Nome", value="Estudante", help="Seu nome para personalizar a experiência")
+            with col2:
+                nivel = st.selectbox("Nível de Experiência", ["Iniciante", "Intermediário", "Avançado"], index=0)
+
+            interesses = st.multiselect(
+                "Interesses",
+                ["Algoritmos", "Estruturas de Dados", "Programação Dinâmica", "Entrevistas"],
+                default=["Algoritmos"]
+            )
+
+            # Botão de submit do formulário
+            submitted_perfil = st.form_submit_button("💾 Salvar Perfil", type="primary")
+
+            if submitted_perfil:
+                # Salvar configurações no session_state
+                st.session_state.user_profile = {
+                    'nome': nome,
+                    'nivel': nivel,
+                    'interesses': interesses
+                }
+                st.success("✅ Perfil salvo com sucesso!")
 
     with tab2:
         st.markdown("### 🎨 Configurações da Interface")
-        st.selectbox("Tema", ["Claro", "Escuro", "Automático"], index=0)
-        st.slider("Velocidade das Animações", 0.5, 2.0, 1.0, 0.1)
-        st.checkbox("Mostrar Dicas", value=True)
-        st.checkbox("Notificações de Conquistas", value=True)
+
+        # Formulário para configurações da interface
+        with st.form("form_interface"):
+            col1, col2 = st.columns(2)
+            with col1:
+                tema = st.selectbox("Tema", ["Claro", "Escuro", "Automático"], index=0)
+            with col2:
+                velocidade = st.slider("Velocidade das Animações", 0.5, 2.0, 1.0, 0.1)
+
+            col3, col4 = st.columns(2)
+            with col3:
+                mostrar_dicas = st.checkbox("Mostrar Dicas", value=True)
+            with col4:
+                notificacoes = st.checkbox("Notificações de Conquistas", value=True)
+
+            # Botão de submit do formulário
+            submitted_interface = st.form_submit_button("🎨 Aplicar Interface", type="primary")
+
+            if submitted_interface:
+                # Aplicar configurações da interface
+                st.session_state.interface_config = {
+                    'tema': tema,
+                    'velocidade_animacao': velocidade,
+                    'mostrar_dicas': mostrar_dicas,
+                    'notificacoes': notificacoes
+                }
+                st.success("✅ Configurações da interface aplicadas!")
 
     with tab3:
         st.markdown("### 📊 Gerenciamento de Dados")
         if st.button("🗑️ Limpar Progresso", type="secondary", key="config_limpar_progresso"):
-            st.session_state.user_progress = {
-                'completed_modules': [],
-                'completed_exercises': [],
-                'current_streak': 0,
-                'total_study_time': 0,
-                'achievements': [],
-                'last_activity': datetime.now()
-            }
-            st.success("Progresso limpo com sucesso!")
+            @st.dialog("🗑️ Confirmar Limpeza de Progresso")
+            def confirmar_limpeza_progresso():
+                st.error("⚠️ **Cuidado:** Esta ação é irreversível!")
+                st.markdown("""
+                Ao limpar o progresso, você perderá:
+                - 📚 Módulos concluídos
+                - 🎯 Exercícios finalizados
+                - 🔥 Sequência de estudo atual
+                - 🏆 Conquistas desbloqueadas
+                - 📊 Tempo total de estudo
+                """)
+
+                st.warning("💡 **Dica:** Considere fazer backup dos dados antes de continuar.")
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("❌ Cancelar", type="secondary", use_container_width=True):
+                        st.rerun()
+
+                with col2:
+                    if st.button("🗑️ Confirmar Limpeza", type="primary", use_container_width=True):
+                        st.session_state.user_progress = {
+                            'completed_modules': [],
+                            'completed_exercises': [],
+                            'current_streak': 0,
+                            'total_study_time': 0,
+                            'achievements': [],
+                            'last_activity': datetime.now()
+                        }
+                        st.success("✅ Progresso limpo com sucesso!")
+                        st.info("🔄 Comece uma nova jornada de aprendizado!")
+                        time.sleep(2)
+                        st.rerun()
+
+            confirmar_limpeza_progresso()
 
         if st.button("📥 Exportar Dados", type="secondary", key="config_exportar_dados"):
             st.download_button(
@@ -1398,18 +1513,27 @@ def render_busca_binaria():
 
     # Simulação
     if st.button("Executar Busca", key="busca_binaria_executar"):
-        # Usar cache para busca binária
-        if CACHE_AVAILABLE:
-            resultado = executar_busca_binaria_com_cache(array, target)
-        else:
-            resultado = executar_busca_binaria_sem_cache(array, target)
+        with st.status("🔍 Executando Busca Binária...", expanded=True) as status:
+            st.write("📊 Preparando array e alvo...")
 
-        if resultado['encontrado']:
-            st.success(f"✅ Encontrado na posição {resultado['posicao']}!")
-        else:
-            st.error("❌ Valor não encontrado!")
+            # Usar cache para busca binária
+            if CACHE_AVAILABLE:
+                st.write("💾 Usando cache inteligente...")
+                resultado = executar_busca_binaria_com_cache(array, target)
+            else:
+                st.write("⚡ Executando algoritmo...")
+                resultado = executar_busca_binaria_sem_cache(array, target)
 
-        # Mostrar passos
+            st.write(f"🔍 Analisando {len(resultado['passos'])} passos...")
+
+            if resultado['encontrado']:
+                status.update(label=f"✅ Encontrado na posição {resultado['posicao']}!", state="complete")
+                st.success(f"✅ Encontrado na posição {resultado['posicao']}!")
+            else:
+                status.update(label="❌ Valor não encontrado!", state="complete")
+                st.error("❌ Valor não encontrado!")
+
+        # Mostrar passos (fora do status para manter visível)
         for i, passo in enumerate(resultado['passos']):
             st.write(f"Passo {i+1}: esquerda={passo['esquerda']}, direita={passo['direita']}, meio={passo['meio']}, valor={passo['valor']}")
 
