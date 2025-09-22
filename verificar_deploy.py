@@ -15,21 +15,14 @@ import importlib
 import subprocess
 from pathlib import Path
 
+
 def verificar_arquivos_obrigatorios():
     """Verifica se todos os arquivos obrigatórios estão presentes."""
     print("📁 Verificando arquivos obrigatórios...")
 
-    arquivos_obrigatorios = [
-        "app_integrada.py",
-        "requirements.txt",
-        "packages.txt",
-        ".streamlit/config.toml"
-    ]
+    arquivos_obrigatorios = ["app_integrada.py", "requirements.txt", "packages.txt", ".streamlit/config.toml"]
 
-    arquivos_opcionais = [
-        ".streamlit/secrets.toml",
-        "STREAMLIT_DEPLOY_GUIDE.md"
-    ]
+    arquivos_opcionais = [".streamlit/secrets.toml", "STREAMLIT_DEPLOY_GUIDE.md"]
 
     todos_presentes = True
 
@@ -49,24 +42,14 @@ def verificar_arquivos_obrigatorios():
 
     return todos_presentes
 
+
 def verificar_modulos():
     """Verifica se os módulos principais podem ser importados."""
     print("\n📚 Verificando módulos principais...")
 
-    modulos_para_testar = [
-        "streamlit",
-        "numpy",
-        "matplotlib",
-        "pandas",
-        "plotly",
-        "requests"
-    ]
+    modulos_para_testar = ["streamlit", "numpy", "matplotlib", "pandas", "plotly", "requests"]
 
-    modulos_opcionais = [
-        "tavily",
-        "github",
-        "git"
-    ]
+    modulos_opcionais = ["tavily", "github", "git"]
 
     print("📦 Módulos obrigatórios:")
     for modulo in modulos_para_testar:
@@ -84,6 +67,7 @@ def verificar_modulos():
         except ImportError:
             print(f"  ⚠️  {modulo} - Módulo opcional não encontrado")
 
+
 def verificar_estrutura_diretorios():
     """Verifica se a estrutura de diretórios está correta."""
     print("\n🏗️  Verificando estrutura de diretórios...")
@@ -93,7 +77,7 @@ def verificar_estrutura_diretorios():
         "modulo_2_estruturas_dados",
         "modulo_3_programacao_dinamica",
         "modulo_4_entrevistas",
-        ".streamlit"
+        ".streamlit",
     ]
 
     for diretorio in diretorios_esperados:
@@ -101,6 +85,7 @@ def verificar_estrutura_diretorios():
             print(f"  ✅ {diretorio}/")
         else:
             print(f"  ❌ {diretorio}/ - Diretório faltando")
+
 
 def verificar_configuracao_streamlit():
     """Verifica se a configuração do Streamlit está adequada."""
@@ -111,14 +96,10 @@ def verificar_configuracao_streamlit():
         print("  ✅ Arquivo config.toml encontrado")
 
         # Verificar configurações importantes
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             config_content = f.read()
 
-        configuracoes_importantes = [
-            ("address", "0.0.0.0"),
-            ("headless", "true"),
-            ("developmentMode", "false")
-        ]
+        configuracoes_importantes = [("address", "0.0.0.0"), ("headless", "true"), ("developmentMode", "false")]
 
         for config, valor_esperado in configuracoes_importantes:
             if valor_esperado in config_content:
@@ -128,6 +109,7 @@ def verificar_configuracao_streamlit():
     else:
         print("  ❌ Arquivo config.toml não encontrado")
 
+
 def verificar_dependencias():
     """Verifica se as dependências no requirements.txt estão corretas."""
     print("\n📦 Verificando dependências...")
@@ -136,13 +118,7 @@ def verificar_dependencias():
         with open("requirements.txt", "r") as f:
             requirements = f.read()
 
-        dependencias_importantes = [
-            "streamlit",
-            "numpy",
-            "matplotlib",
-            "pandas",
-            "plotly"
-        ]
+        dependencias_importantes = ["streamlit", "numpy", "matplotlib", "pandas", "plotly"]
 
         for dep in dependencias_importantes:
             if dep in requirements:
@@ -151,6 +127,7 @@ def verificar_dependencias():
                 print(f"  ❌ {dep} não encontrado no requirements.txt")
     else:
         print("  ❌ requirements.txt não encontrado")
+
 
 def verificar_secrets():
     """Verifica configuração de secrets."""
@@ -169,17 +146,20 @@ def verificar_secrets():
         print("  ❌ Nenhum arquivo de secrets encontrado")
         print("  📝 Crie .streamlit/secrets.toml com suas chaves de API")
 
+
 def executar_teste_basico():
     """Executa um teste básico da aplicação."""
     print("\n🧪 Executando teste básico...")
 
     try:
         # Tentar importar a aplicação
-        sys.path.append('.')
+        sys.path.append(".")
         import app_integrada
+
         print("  ✅ app_integrada.py pode ser importado")
     except Exception as e:
         print(f"  ❌ Erro ao importar app_integrada.py: {e}")
+
 
 def main():
     """Função principal do verificador."""
@@ -210,6 +190,7 @@ def main():
         print("🔧 Status: CORRIJA OS PROBLEMAS ANTES DO DEPLOY")
 
     print("\n📖 Para mais detalhes, consulte: STREAMLIT_DEPLOY_GUIDE.md")
+
 
 if __name__ == "__main__":
     main()

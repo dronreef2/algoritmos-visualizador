@@ -44,9 +44,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Get Help': 'https://github.com/dronreef2/algoritmos-visualizador',
-        'Report a bug': 'https://github.com/dronreef2/algoritmos-visualizador/issues',
-        'About': '''
+        "Get Help": "https://github.com/dronreef2/algoritmos-visualizador",
+        "Report a bug": "https://github.com/dronreef2/algoritmos-visualizador/issues",
+        "About": """
         ### 🎯 Algoritmos Visualizador
 
         Uma plataforma completa para aprendizado de algoritmos e estruturas de dados
@@ -55,27 +55,31 @@ st.set_page_config(
         **Versão:** 2.0 - Simplificada para Deploy
         **Autor:** GitHub Copilot
         **Data:** 2025
-        '''
-    }
+        """,
+    },
 )
 
 # Adicionar caminhos dos módulos ao sys.path
 project_root = Path(__file__).parent
-sys.path.extend([
-    str(project_root),
-    str(project_root / "modulo_1_fundamentos"),
-    str(project_root / "modulo_2_estruturas_dados"),
-    str(project_root / "modulo_3_programacao_dinamica"),
-    str(project_root / "modulo_4_entrevistas"),
-])
+sys.path.extend(
+    [
+        str(project_root),
+        str(project_root / "modulo_1_fundamentos"),
+        str(project_root / "modulo_2_estruturas_dados"),
+        str(project_root / "modulo_3_programacao_dinamica"),
+        str(project_root / "modulo_4_entrevistas"),
+    ]
+)
 
 # ============================================================================
 # 🎨 CSS CUSTOMIZADO PARA INTERFACE MODERNA
 # ============================================================================
 
+
 def load_css():
     """Carrega estilos CSS customizados para interface moderna."""
-    st.markdown("""
+    st.markdown(
+        """
     <style>
     /* Reset e variáveis CSS */
     :root {
@@ -178,11 +182,15 @@ def load_css():
         background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 # ============================================================================
 # 📊 FUNÇÕES UTILITÁRIAS
 # ============================================================================
+
 
 def create_metric_card(title: str, value: str, delta: str = None):
     """Cria um card de métrica customizado."""
@@ -190,6 +198,7 @@ def create_metric_card(title: str, value: str, delta: str = None):
         st.metric(title, value, delta)
     else:
         st.metric(title, value)
+
 
 def show_algorithm_complexity(time_complexity: str, space_complexity: str):
     """Exibe informações de complexidade do algoritmo."""
@@ -199,9 +208,11 @@ def show_algorithm_complexity(time_complexity: str, space_complexity: str):
     with col2:
         st.info(f"💾 **Complexidade Espacial:** {space_complexity}")
 
+
 # ============================================================================
 # 🎯 MÓDULO 1: FUNDAMENTOS
 # ============================================================================
+
 
 def render_fundamentos():
     """Renderiza o módulo de fundamentos."""
@@ -213,7 +224,7 @@ def render_fundamentos():
         "👆 Dois Ponteiros": "render_dois_ponteiros",
         "🪟 Janela Deslizante": "render_janela_deslizante",
         "🔄 Operações de Bits": "render_bits",
-        "📊 Otimização de Arrays": "render_arrays"
+        "📊 Otimização de Arrays": "render_arrays",
     }
 
     selected_alg = st.selectbox("Escolha um algoritmo:", list(algoritmos.keys()))
@@ -229,6 +240,7 @@ def render_fundamentos():
         render_bits()
     elif selected_alg == "📊 Otimização de Arrays":
         render_arrays()
+
 
 def render_busca_binaria():
     """Demonstração interativa da busca binária."""
@@ -263,15 +275,15 @@ def render_busca_binaria():
                 direita = meio - 1
 
         # Plot
-        passo_atual = st.slider("Passo:", 0, len(passos)-1, 0)
+        passo_atual = st.slider("Passo:", 0, len(passos) - 1, 0)
 
         if passo_atual < len(passos):
             esq, dir, meio = passos[passo_atual]
 
-            colors = ['lightgray'] * len(array)
+            colors = ["lightgray"] * len(array)
             for i in range(esq, dir + 1):
-                colors[i] = 'lightblue'
-            colors[meio] = 'red'
+                colors[i] = "lightblue"
+            colors[meio] = "red"
 
             bars = ax.bar(range(len(array)), array, color=colors, alpha=0.7)
             ax.set_title(f"Busca Binária - Passo {passo_atual + 1}")
@@ -280,24 +292,28 @@ def render_busca_binaria():
 
             # Adicionar valores nas barras
             for i, (bar, valor) in enumerate(zip(bars, array)):
-                ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
-                       str(valor), ha='center', va='bottom')
+                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1, str(valor), ha="center", va="bottom")
 
         st.pyplot(fig)
 
     with col2:
         st.markdown("### 📝 Como funciona:")
-        st.markdown("""
+        st.markdown(
+            """
         1. **Divide e conquista**: Array sempre ordenado
         2. **Meio**: Verifica elemento do meio
         3. **Decisão**: Esquerda ou direita
         4. **Repete**: Até encontrar ou acabar
-        """)
+        """
+        )
 
         if passos:
             esq, dir, meio = passos[passo_atual]
             st.markdown(f"**Passo atual:** esquerda={esq}, direita={dir}, meio={meio}")
-            st.markdown(f"**Comparação:** {array[meio]} {'==' if array[meio] == target else ('<' if array[meio] < target else '>')} {target}")
+            st.markdown(
+                f"**Comparação:** {array[meio]} {'==' if array[meio] == target else ('<' if array[meio] < target else '>')} {target}"
+            )
+
 
 def render_dois_ponteiros():
     """Demonstração dos dois ponteiros."""
@@ -332,16 +348,16 @@ def render_dois_ponteiros():
             direita -= 1
 
     # Visualização
-    passo_atual = st.slider("Passo:", 0, len(passos)-1, 0) if passos else 0
+    passo_atual = st.slider("Passo:", 0, len(passos) - 1, 0) if passos else 0
 
     if passos:
-        esq, dir, soma = passos[min(passo_atual, len(passos)-1)]
+        esq, dir, soma = passos[min(passo_atual, len(passos) - 1)]
 
         fig, ax = plt.subplots(figsize=(12, 4))
 
-        colors = ['lightgray'] * len(nums)
-        colors[esq] = 'red'
-        colors[dir] = 'blue'
+        colors = ["lightgray"] * len(nums)
+        colors[esq] = "red"
+        colors[dir] = "blue"
 
         bars = ax.bar(range(len(nums)), nums, color=colors, alpha=0.7)
         ax.set_title(f"Dois Ponteiros - Soma = {soma}")
@@ -349,8 +365,8 @@ def render_dois_ponteiros():
         ax.set_ylabel("Valor")
 
         # Linhas dos ponteiros
-        ax.axvline(x=esq, color='red', linestyle='--', alpha=0.7, label='Esquerda')
-        ax.axvline(x=dir, color='blue', linestyle='--', alpha=0.7, label='Direita')
+        ax.axvline(x=esq, color="red", linestyle="--", alpha=0.7, label="Esquerda")
+        ax.axvline(x=dir, color="blue", linestyle="--", alpha=0.7, label="Direita")
 
         ax.legend()
 
@@ -360,6 +376,7 @@ def render_dois_ponteiros():
             st.success(f"✅ Encontrado! {nums[esq]} + {nums[dir]} = {target}")
         else:
             st.info("Nenhuma combinação encontrada para esta soma")
+
 
 def render_janela_deslizante():
     """Demonstração da janela deslizante."""
@@ -380,20 +397,20 @@ def render_janela_deslizante():
     if len(nums) >= k:
         maximos = []
         for i in range(len(nums) - k + 1):
-            janela = nums[i:i+k]
+            janela = nums[i : i + k]
             maximos.append(max(janela))
 
         # Visualização
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
 
         # Gráfico superior: array completo
-        ax1.bar(range(len(nums)), nums, alpha=0.7, color='lightblue')
+        ax1.bar(range(len(nums)), nums, alpha=0.7, color="lightblue")
         ax1.set_title("Array Original")
         ax1.set_xlabel("Índice")
         ax1.set_ylabel("Valor")
 
         # Gráfico inferior: máximos das janelas
-        ax2.bar(range(len(maximos)), maximos, color='orange', alpha=0.7)
+        ax2.bar(range(len(maximos)), maximos, color="orange", alpha=0.7)
         ax2.set_title(f"Máximo em cada janela de tamanho {k}")
         ax2.set_xlabel("Posição da janela")
         ax2.set_ylabel("Máximo")
@@ -403,6 +420,7 @@ def render_janela_deslizante():
         st.markdown("### 📈 Resultado:")
         for i, max_val in enumerate(maximos):
             st.write(f"Janela {i+1} (índices {i} a {i+k-1}): Máximo = {max_val}")
+
 
 def render_bits():
     """Demonstração de operações de bits."""
@@ -435,11 +453,12 @@ def render_bits():
             "A ^ B (XOR)": a ^ b,
             "A << 1 (Shift Left)": a << 1,
             "A >> 1 (Shift Right)": a >> 1,
-            "~A (NOT)": ~a & 15  # Máscara para 4 bits
+            "~A (NOT)": ~a & 15,  # Máscara para 4 bits
         }
 
         for op, resultado in operacoes.items():
             st.write(f"{op} = {resultado} ({bin(resultado)[2:].zfill(4)})")
+
 
 def render_arrays():
     """Demonstração de otimização de arrays."""
@@ -459,7 +478,7 @@ def render_arrays():
     if len(nums) > 0:
         write_index = 1
         for i in range(1, len(nums)):
-            if nums[i] != nums[i-1]:
+            if nums[i] != nums[i - 1]:
                 nums[write_index] = nums[i]
                 write_index += 1
 
@@ -474,22 +493,24 @@ def render_arrays():
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
 
         # Array original
-        ax1.bar(range(len(nums)), nums, color='lightcoral', alpha=0.7)
+        ax1.bar(range(len(nums)), nums, color="lightcoral", alpha=0.7)
         ax1.set_title("Array Original")
         ax1.set_xlabel("Índice")
         ax1.set_ylabel("Valor")
 
         # Array sem duplicatas
-        ax2.bar(range(len(resultado)), resultado, color='lightgreen', alpha=0.7)
+        ax2.bar(range(len(resultado)), resultado, color="lightgreen", alpha=0.7)
         ax2.set_title("Array Sem Duplicatas")
         ax2.set_xlabel("Índice")
         ax2.set_ylabel("Valor")
 
         st.pyplot(fig)
 
+
 # ============================================================================
 # 🏗️ MÓDULO 2: ESTRUTURAS DE DADOS
 # ============================================================================
+
 
 def render_estruturas_dados():
     """Renderiza o módulo de estruturas de dados."""
@@ -499,7 +520,7 @@ def render_estruturas_dados():
         "📚 Heap (Priority Queue)": "render_heap",
         "🔗 Trie (Árvore de Prefixos)": "render_trie",
         "🔗 Union-Find": "render_union_find",
-        "📊 Segment Tree": "render_segment_tree"
+        "📊 Segment Tree": "render_segment_tree",
     }
 
     selected = st.selectbox("Escolha uma estrutura:", list(estruturas.keys()))
@@ -512,6 +533,7 @@ def render_estruturas_dados():
         render_union_find()
     elif selected == "📊 Segment Tree":
         render_segment_tree()
+
 
 def render_heap():
     """Demonstração de Heap/Priority Queue."""
@@ -550,6 +572,7 @@ def render_heap():
                     st.write(f"{i+1}. {n} - Prioridade: {-p}")
         else:
             st.warning("Nenhum processo na fila!")
+
 
 def render_trie():
     """Demonstração de Trie."""
@@ -614,6 +637,7 @@ def render_trie():
         else:
             st.error(f"❌ '{teste_palavra}' não encontrada")
 
+
 def render_union_find():
     """Demonstração de Union-Find."""
     st.subheader("🔗 Union-Find (Disjoint Set)")
@@ -652,8 +676,8 @@ def render_union_find():
 
     with col1:
         st.markdown("### 🔗 Operações de Union")
-        x = st.number_input("Elemento X:", 0, tamanho-1, 0)
-        y = st.number_input("Elemento Y:", 0, tamanho-1, 1)
+        x = st.number_input("Elemento X:", 0, tamanho - 1, 0)
+        y = st.number_input("Elemento Y:", 0, tamanho - 1, 1)
 
         if st.button("Unir X e Y"):
             uf.union(x, y)
@@ -661,8 +685,8 @@ def render_union_find():
 
     with col2:
         st.markdown("### 🔍 Verificar Conexão")
-        a = st.number_input("Elemento A:", 0, tamanho-1, 2)
-        b = st.number_input("Elemento B:", 0, tamanho-1, 3)
+        a = st.number_input("Elemento A:", 0, tamanho - 1, 2)
+        b = st.number_input("Elemento B:", 0, tamanho - 1, 3)
 
         if st.button("Verificar"):
             pa, pb = uf.find(a), uf.find(b)
@@ -683,6 +707,7 @@ def render_union_find():
     for pai, elementos in conjuntos.items():
         st.write(f"**Conjunto {pai}:** {elementos}")
 
+
 def render_segment_tree():
     """Demonstração de Segment Tree."""
     st.subheader("📊 Segment Tree")
@@ -701,9 +726,9 @@ def render_segment_tree():
                 self.tree[node] = arr[start]
                 return
             mid = (start + end) // 2
-            self.build(arr, 2*node+1, start, mid)
-            self.build(arr, 2*node+2, mid+1, end)
-            self.tree[node] = self.tree[2*node+1] + self.tree[2*node+2]
+            self.build(arr, 2 * node + 1, start, mid)
+            self.build(arr, 2 * node + 2, mid + 1, end)
+            self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]
 
         def query(self, node, start, end, l, r):
             if r < start or end < l:
@@ -711,8 +736,7 @@ def render_segment_tree():
             if l <= start and end <= r:
                 return self.tree[node]
             mid = (start + end) // 2
-            return (self.query(2*node+1, start, mid, l, r) +
-                   self.query(2*node+2, mid+1, end, l, r))
+            return self.query(2 * node + 1, start, mid, l, r) + self.query(2 * node + 2, mid + 1, end, l, r)
 
     # Demonstração
     tamanho = st.slider("Tamanho do array:", 4, 16, 8)
@@ -726,12 +750,12 @@ def render_segment_tree():
 
     with col1:
         st.markdown("### 🔍 Query de Soma")
-        left = st.number_input("Índice esquerdo:", 0, tamanho-1, 0)
-        right = st.number_input("Índice direito:", left, tamanho-1, tamanho-1)
+        left = st.number_input("Índice esquerdo:", 0, tamanho - 1, 0)
+        right = st.number_input("Índice direito:", left, tamanho - 1, tamanho - 1)
 
         if st.button("Calcular Soma"):
-            soma = tree.query(0, 0, tamanho-1, left, right)
-            elementos = arr[left:right+1]
+            soma = tree.query(0, 0, tamanho - 1, left, right)
+            elementos = arr[left : right + 1]
             st.success(f"✅ Soma de {list(elementos)} = {soma}")
 
     with col2:
@@ -742,9 +766,11 @@ def render_segment_tree():
             if tree.tree[i] != 0:
                 st.write(f"Nó {i}: {tree.tree[i]}")
 
+
 # ============================================================================
 # 🎯 MÓDULO 3: PROGRAMAÇÃO DINÂMICA
 # ============================================================================
+
 
 def render_programacao_dinamica():
     """Renderiza o módulo de programação dinâmica."""
@@ -754,7 +780,7 @@ def render_programacao_dinamica():
         "🎒 Mochila 0/1": "render_mochila",
         "💰 Troco Mínimo": "render_troco",
         "📏 Longest Common Subsequence": "render_lcs",
-        "🎯 Edit Distance": "render_edit_distance"
+        "🎯 Edit Distance": "render_edit_distance",
     }
 
     selected = st.selectbox("Escolha um problema:", list(problemas.keys()))
@@ -768,6 +794,7 @@ def render_programacao_dinamica():
     elif selected == "🎯 Edit Distance":
         render_edit_distance()
 
+
 def render_mochila():
     """Problema da mochila 0/1."""
     st.subheader("🎒 Problema da Mochila 0/1")
@@ -780,7 +807,7 @@ def render_mochila():
         {"nome": "💰 Ouro", "peso": 4, "valor": 8},
         {"nome": "💍 Anel", "peso": 2, "valor": 6},
         {"nome": "⌚ Relógio", "peso": 5, "valor": 12},
-        {"nome": "📱 Celular", "peso": 1, "valor": 4}
+        {"nome": "📱 Celular", "peso": 1, "valor": 4},
     ]
 
     capacidade = st.slider("Capacidade da mochila:", 5, 15, 10)
@@ -795,11 +822,10 @@ def render_mochila():
 
     for i in range(1, n + 1):
         for w in range(capacidade + 1):
-            if itens[i-1]['peso'] <= w:
-                dp[i][w] = max(dp[i-1][w],
-                             dp[i-1][w - itens[i-1]['peso']] + itens[i-1]['valor'])
+            if itens[i - 1]["peso"] <= w:
+                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - itens[i - 1]["peso"]] + itens[i - 1]["valor"])
             else:
-                dp[i][w] = dp[i-1][w]
+                dp[i][w] = dp[i - 1][w]
 
     valor_maximo = dp[n][capacidade]
 
@@ -807,18 +833,19 @@ def render_mochila():
     selecionados = []
     w = capacidade
     for i in range(n, 0, -1):
-        if dp[i][w] != dp[i-1][w]:
-            selecionados.append(itens[i-1])
-            w -= itens[i-1]['peso']
+        if dp[i][w] != dp[i - 1][w]:
+            selecionados.append(itens[i - 1])
+            w -= itens[i - 1]["peso"]
 
     st.success(f"**Valor máximo:** {valor_maximo}")
     st.info("**Itens selecionados:**")
     peso_total = 0
     for item in selecionados:
         st.write(f"- {item['nome']} (Peso: {item['peso']}, Valor: {item['valor']})")
-        peso_total += item['peso']
+        peso_total += item["peso"]
 
     st.write(f"**Peso total:** {peso_total}/{capacidade}")
+
 
 def render_troco():
     """Problema do troco mínimo."""
@@ -831,7 +858,7 @@ def render_troco():
     valor = st.slider("Valor em centavos:", 1, 100, 37)
 
     # Algoritmo
-    dp = [float('inf')] * (valor + 1)
+    dp = [float("inf")] * (valor + 1)
     dp[0] = 0
 
     # Rastrear moedas usadas
@@ -857,15 +884,16 @@ def render_troco():
     # Visualização
     fig, ax = plt.subplots(figsize=(12, 6))
     x = list(range(valor + 1))
-    y = [min_moedas if min_moedas != float('inf') else 0 for min_moedas in dp]
+    y = [min_moedas if min_moedas != float("inf") else 0 for min_moedas in dp]
 
-    ax.plot(x, y, 'b-', linewidth=2, marker='o', markersize=4)
+    ax.plot(x, y, "b-", linewidth=2, marker="o", markersize=4)
     ax.set_title("Moedas Mínimas para Cada Valor")
     ax.set_xlabel("Valor (centavos)")
     ax.set_ylabel("Número Mínimo de Moedas")
     ax.grid(True, alpha=0.3)
 
     st.pyplot(fig)
+
 
 def render_lcs():
     """Longest Common Subsequence."""
@@ -885,20 +913,20 @@ def render_lcs():
         # Preencher tabela
         for i in range(1, m + 1):
             for j in range(1, n + 1):
-                if seq1[i-1] == seq2[j-1]:
-                    dp[i][j] = dp[i-1][j-1] + 1
+                if seq1[i - 1] == seq2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1] + 1
                 else:
-                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
 
         # Reconstruir LCS
         lcs = []
         i, j = m, n
         while i > 0 and j > 0:
-            if seq1[i-1] == seq2[j-1]:
-                lcs.append(seq1[i-1])
+            if seq1[i - 1] == seq2[j - 1]:
+                lcs.append(seq1[i - 1])
                 i -= 1
                 j -= 1
-            elif dp[i-1][j] > dp[i][j-1]:
+            elif dp[i - 1][j] > dp[i][j - 1]:
                 i -= 1
             else:
                 j -= 1
@@ -910,8 +938,9 @@ def render_lcs():
 
         # Visualização da tabela
         st.markdown("### 📊 Tabela DP")
-        df = pd.DataFrame(dp, index=[''] + list(seq1), columns=[''] + list(seq2))
+        df = pd.DataFrame(dp, index=[""] + list(seq1), columns=[""] + list(seq2))
         st.dataframe(df)
+
 
 def render_edit_distance():
     """Edit Distance (Levenshtein Distance)."""
@@ -937,14 +966,10 @@ def render_edit_distance():
         # Preencher tabela
         for i in range(1, m + 1):
             for j in range(1, n + 1):
-                if word1[i-1] == word2[j-1]:
-                    dp[i][j] = dp[i-1][j-1]
+                if word1[i - 1] == word2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1]
                 else:
-                    dp[i][j] = 1 + min(
-                        dp[i-1][j],      # delete
-                        dp[i][j-1],      # insert
-                        dp[i-1][j-1]     # replace
-                    )
+                    dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])  # delete  # insert  # replace
 
         distancia = dp[m][n]
 
@@ -959,12 +984,14 @@ def render_edit_distance():
 
         # Visualização da tabela
         st.markdown("### 📊 Tabela DP")
-        df = pd.DataFrame(dp, index=[''] + list(word1), columns=[''] + list(word2))
+        df = pd.DataFrame(dp, index=[""] + list(word1), columns=[""] + list(word2))
         st.dataframe(df)
+
 
 # ============================================================================
 # 🎯 MÓDULO 4: ENTREVISTAS
 # ============================================================================
+
 
 def render_entrevistas():
     """Renderiza o módulo de entrevistas."""
@@ -974,7 +1001,7 @@ def render_entrevistas():
         "🧩 Problemas Fáceis": "render_problemas_faceis",
         "🧠 Problemas Médios": "render_problemas_medios",
         "🔥 Problemas Difíceis": "render_problemas_dificeis",
-        "💡 Dicas para Entrevistas": "render_dicas_entrevistas"
+        "💡 Dicas para Entrevistas": "render_dicas_entrevistas",
     }
 
     selected = st.selectbox("Escolha um tópico:", list(topicos.keys()))
@@ -988,6 +1015,7 @@ def render_entrevistas():
     elif selected == "💡 Dicas para Entrevistas":
         render_dicas_entrevistas()
 
+
 def render_problemas_faceis():
     """Problemas fáceis para entrevistas."""
     st.subheader("🧩 Problemas Fáceis")
@@ -996,7 +1024,7 @@ def render_problemas_faceis():
         "🔄 Inverter Array": "Exemplo básico de manipulação de arrays",
         "🔍 Encontrar Máximo": "Encontrar o maior elemento em O(n)",
         "📊 Contar Frequências": "Usar dicionário para contar ocorrências",
-        "✅ Validar Parênteses": "Usar pilha para validação"
+        "✅ Validar Parênteses": "Usar pilha para validação",
     }
 
     selected_prob = st.selectbox("Escolha um problema:", list(problemas.keys()))
@@ -1005,7 +1033,8 @@ def render_problemas_faceis():
 
     # Exemplo de código
     if selected_prob == "🔄 Inverter Array":
-        st.code("""
+        st.code(
+            """
 def reverse_array(arr):
     left, right = 0, len(arr) - 1
     while left < right:
@@ -1017,10 +1046,13 @@ def reverse_array(arr):
 # Exemplo
 arr = [1, 2, 3, 4, 5]
 print(reverse_array(arr))  # [5, 4, 3, 2, 1]
-        """, language="python")
+        """,
+            language="python",
+        )
 
     elif selected_prob == "🔍 Encontrar Máximo":
-        st.code("""
+        st.code(
+            """
 def find_maximum(arr):
     if not arr:
         return None
@@ -1034,7 +1066,10 @@ def find_maximum(arr):
 # Exemplo
 arr = [3, 1, 4, 1, 5, 9, 2]
 print(find_maximum(arr))  # 9
-        """, language="python")
+        """,
+            language="python",
+        )
+
 
 def render_problemas_medios():
     """Problemas médios para entrevistas."""
@@ -1044,7 +1079,7 @@ def render_problemas_medios():
         "🎒 Mochila 0/1": "Problema clássico de otimização",
         "💰 Troco Mínimo": "Programação dinâmica aplicada",
         "🔗 Detectar Ciclo": "Algoritmo de detecção em grafos",
-        "📏 Subarray Máximo": "Kadane's Algorithm"
+        "📏 Subarray Máximo": "Kadane's Algorithm",
     }
 
     selected_prob = st.selectbox("Escolha um problema:", list(problemas.keys()))
@@ -1052,7 +1087,8 @@ def render_problemas_medios():
     st.write(f"**Descrição:** {problemas[selected_prob]}")
 
     if selected_prob == "📏 Subarray Máximo":
-        st.code("""
+        st.code(
+            """
 def max_subarray_sum(arr):
     if not arr:
         return 0
@@ -1069,7 +1105,10 @@ def max_subarray_sum(arr):
 # Exemplo
 arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
 print(max_subarray_sum(arr))  # 6 (subarray [4, -1, 2, 1])
-        """, language="python")
+        """,
+            language="python",
+        )
+
 
 def render_problemas_dificeis():
     """Problemas difíceis para entrevistas."""
@@ -1079,7 +1118,7 @@ def render_problemas_dificeis():
         "🎯 Median of Two Arrays": "Encontrar mediana de dois arrays ordenados",
         "🔄 Regular Expression": "Implementar regex matching",
         "📏 Longest Palindromic Substring": "Encontrar maior palíndromo",
-        "🧮 N-Queens Problem": "Backtracking avançado"
+        "🧮 N-Queens Problem": "Backtracking avançado",
     }
 
     selected_prob = st.selectbox("Escolha um problema:", list(problemas.keys()))
@@ -1087,7 +1126,8 @@ def render_problemas_dificeis():
     st.write(f"**Descrição:** {problemas[selected_prob]}")
 
     if selected_prob == "📏 Longest Palindromic Substring":
-        st.code("""
+        st.code(
+            """
 def longest_palindrome(s):
     if not s:
         return ""
@@ -1123,13 +1163,17 @@ def longest_palindrome(s):
 # Exemplo
 s = "babad"
 print(longest_palindrome(s))  # "bab" ou "aba"
-        """, language="python")
+        """,
+            language="python",
+        )
+
 
 def render_dicas_entrevistas():
     """Dicas para entrevistas técnicas."""
     st.subheader("💡 Dicas para Entrevistas Técnicas")
 
-    st.markdown("""
+    st.markdown(
+        """
     ### 🎯 Estratégia Geral
 
     1. **Entenda o problema** - Pergunte para esclarecer dúvidas
@@ -1151,11 +1195,14 @@ def render_dicas_entrevistas():
     - Conheça bem Python/Java/JavaScript
     - Sintaxe básica, estruturas de controle
     - Manipulação de strings e arrays
-    """)
+    """
+    )
+
 
 # ============================================================================
 # 🎯 FUNÇÃO PRINCIPAL
 # ============================================================================
+
 
 def main():
     """Função principal da aplicação."""
@@ -1172,13 +1219,10 @@ def main():
         "🧱 Fundamentos": "render_fundamentos",
         "🏗️ Estruturas de Dados": "render_estruturas_dados",
         "🧠 Programação Dinâmica": "render_programacao_dinamica",
-        "🎯 Entrevistas": "render_entrevistas"
+        "🎯 Entrevistas": "render_entrevistas",
     }
 
-    selected_module = st.sidebar.selectbox(
-        "Escolha um módulo:",
-        list(modulos.keys())
-    )
+    selected_module = st.sidebar.selectbox("Escolha um módulo:", list(modulos.keys()))
 
     # Renderizar módulo selecionado
     if selected_module == "🏠 Início":
@@ -1191,6 +1235,7 @@ def main():
         render_programacao_dinamica()
     elif selected_module == "🎯 Entrevistas":
         render_entrevistas()
+
 
 def render_home():
     """Página inicial da aplicação."""
@@ -1219,52 +1264,64 @@ def render_home():
     with col1:
         with st.container():
             st.markdown("### 🧱 Módulo 1: Fundamentos")
-            st.markdown("""
+            st.markdown(
+                """
             - 🔍 Busca Binária
             - 👆 Dois Ponteiros
             - 🪟 Janela Deslizante
             - 🔄 Operações de Bits
             - 📊 Otimização de Arrays
-            """)
+            """
+            )
 
         with st.container():
             st.markdown("### 🏗️ Módulo 2: Estruturas de Dados")
-            st.markdown("""
+            st.markdown(
+                """
             - 📚 Heap (Priority Queue)
             - 🔗 Trie (Árvore de Prefixos)
             - 🔗 Union-Find
             - 📊 Segment Tree
-            """)
+            """
+            )
 
     with col2:
         with st.container():
             st.markdown("### 🧠 Módulo 3: Programação Dinâmica")
-            st.markdown("""
+            st.markdown(
+                """
             - 🎒 Mochila 0/1
             - 💰 Troco Mínimo
             - 📏 Longest Common Subsequence
             - 🎯 Edit Distance
-            """)
+            """
+            )
 
         with st.container():
             st.markdown("### 🎯 Módulo 4: Entrevistas")
-            st.markdown("""
+            st.markdown(
+                """
             - 🧩 Problemas Fáceis
             - 🧠 Problemas Médios
             - 🔥 Problemas Difíceis
             - 💡 Dicas para Entrevistas
-            """)
+            """
+            )
 
     st.markdown("---")
 
     # Footer
-    st.markdown("""
+    st.markdown(
+        """
     <div style="text-align: center; color: #666; font-size: 0.9rem;">
         🎯 <strong>Algoritmos Visualizador</strong> |
         Desenvolvido com ❤️ usando Streamlit |
         Versão 2.0 - Simplificada
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 if __name__ == "__main__":
     main()

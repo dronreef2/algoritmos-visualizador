@@ -10,33 +10,25 @@ import streamlit as st
 import time
 import random
 from typing import Any, Dict
-from sistema_exercicios_praticos import (
-    sistema_exercicios,
-    Exercicio,
-    TipoExercicio,
-    Dificuldade,
-    SessaoExercicio
-)
+from sistema_exercicios_praticos import sistema_exercicios, Exercicio, TipoExercicio, Dificuldade, SessaoExercicio
+
 
 def render_exercicios_praticos():
     """Renderiza a página principal de exercícios práticos"""
 
-    st.markdown("""
+    st.markdown(
+        """
     ## 🎯 Exercícios Práticos Interativos
 
     ### Pratique e consolide seu conhecimento
 
     Resolva exercícios interativos com **validação em tempo real**,
     **feedback imediato** e **dicas contextuais** para aprender fazendo.
-    """)
+    """
+    )
 
     # Tabs principais
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "📝 Praticar Exercícios",
-        "🎯 Por Conceito",
-        "📊 Meu Desempenho",
-        "🏆 Conquistas"
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(["📝 Praticar Exercícios", "🎯 Por Conceito", "📊 Meu Desempenho", "🏆 Conquistas"])
 
     with tab1:
         render_pratica_exercicios()
@@ -50,6 +42,7 @@ def render_exercicios_praticos():
     with tab4:
         render_conquistas()
 
+
 def render_pratica_exercicios():
     """Renderiza a interface de prática de exercícios"""
 
@@ -59,18 +52,10 @@ def render_pratica_exercicios():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        dificuldade_filtro = st.selectbox(
-            "Dificuldade:",
-            ["Todas"] + [d.value for d in Dificuldade],
-            key="dif_exercicios"
-        )
+        dificuldade_filtro = st.selectbox("Dificuldade:", ["Todas"] + [d.value for d in Dificuldade], key="dif_exercicios")
 
     with col2:
-        tipo_filtro = st.selectbox(
-            "Tipo:",
-            ["Todos"] + [t.value for t in TipoExercicio],
-            key="tipo_exercicios"
-        )
+        tipo_filtro = st.selectbox("Tipo:", ["Todos"] + [t.value for t in TipoExercicio], key="tipo_exercicios")
 
     with col3:
         modo_aleatorio = st.checkbox("Modo Aleatório", value=True)
@@ -79,16 +64,10 @@ def render_pratica_exercicios():
     exercicios_filtrados = list(sistema_exercicios.exercicios.values())
 
     if dificuldade_filtro != "Todas":
-        exercicios_filtrados = [
-            ex for ex in exercicios_filtrados
-            if ex.dificuldade.value == dificuldade_filtro
-        ]
+        exercicios_filtrados = [ex for ex in exercicios_filtrados if ex.dificuldade.value == dificuldade_filtro]
 
     if tipo_filtro != "Todos":
-        exercicios_filtrados = [
-            ex for ex in exercicios_filtrados
-            if ex.tipo.value == tipo_filtro
-        ]
+        exercicios_filtrados = [ex for ex in exercicios_filtrados if ex.tipo.value == tipo_filtro]
 
     if not exercicios_filtrados:
         st.warning("Nenhum exercício encontrado com os filtros selecionados.")
@@ -100,18 +79,16 @@ def render_pratica_exercicios():
     else:
         exercicio_nomes = [ex.titulo for ex in exercicios_filtrados]
         exercicio_idx = st.selectbox(
-            "Selecione um exercício:",
-            range(len(exercicio_nomes)),
-            format_func=lambda x: exercicio_nomes[x]
+            "Selecione um exercício:", range(len(exercicio_nomes)), format_func=lambda x: exercicio_nomes[x]
         )
         exercicio_selecionado = exercicios_filtrados[exercicio_idx]
 
     # Iniciar sessão se necessário
     iniciar_nova_sessao = (
-        'sessao_atual' not in st.session_state or
-        not hasattr(st.session_state, 'sessao_atual') or
-        st.session_state.sessao_atual is None or
-        getattr(st.session_state.sessao_atual, 'exercicio_id', None) != exercicio_selecionado.id
+        "sessao_atual" not in st.session_state
+        or not hasattr(st.session_state, "sessao_atual")
+        or st.session_state.sessao_atual is None
+        or getattr(st.session_state.sessao_atual, "exercicio_id", None) != exercicio_selecionado.id
     )
 
     if iniciar_nova_sessao:
@@ -125,6 +102,7 @@ def render_pratica_exercicios():
     # Exibir exercício
     render_exercicio_interativo(exercicio_selecionado)
 
+
 def render_exercicio_interativo(exercicio: Exercicio):
     """Renderiza um exercício específico de forma interativa"""
 
@@ -137,7 +115,7 @@ def render_exercicio_interativo(exercicio: Exercicio):
     with col1:
         st.metric("Dificuldade", exercicio.dificuldade.value.title())
     with col2:
-        st.metric("Tipo", exercicio.tipo.value.replace('_', ' ').title())
+        st.metric("Tipo", exercicio.tipo.value.replace("_", " ").title())
     with col3:
         st.metric("Tempo Estimado", f"{exercicio.tempo_estimado}min")
 
@@ -153,10 +131,7 @@ def render_exercicio_interativo(exercicio: Exercicio):
 
     with col1:
         if st.button("💡 Dica", key=f"dica_{exercicio.id}"):
-            dica = sistema_exercicios.obter_dica(
-                exercicio.id,
-                st.session_state.get('tentativa_atual', 1)
-            )
+            dica = sistema_exercicios.obter_dica(exercicio.id, st.session_state.get("tentativa_atual", 1))
             if dica:
                 st.info(f"💡 **Dica:** {dica}")
             else:
@@ -165,7 +140,7 @@ def render_exercicio_interativo(exercicio: Exercicio):
     with col2:
         if st.button("🔄 Reiniciar", key=f"reiniciar_{exercicio.id}"):
             # Reiniciar sessão
-            if 'sessao_atual' in st.session_state:
+            if "sessao_atual" in st.session_state:
                 del st.session_state.sessao_atual
             st.session_state.tentativa_atual = 1
             st.session_state.resposta_submetida = False
@@ -173,18 +148,11 @@ def render_exercicio_interativo(exercicio: Exercicio):
             st.rerun()
 
     with col3:
-        submit_disabled = resposta_usuario is None or st.session_state.get('resposta_submetida', False)
-        if st.button(
-            "✅ Submeter Resposta",
-            disabled=submit_disabled,
-            key=f"submit_{exercicio.id}"
-        ):
+        submit_disabled = resposta_usuario is None or st.session_state.get("resposta_submetida", False)
+        if st.button("✅ Submeter Resposta", disabled=submit_disabled, key=f"submit_{exercicio.id}"):
             # Validar resposta
-            if 'sessao_atual' in st.session_state and st.session_state.sessao_atual:
-                feedback = sistema_exercicios.validar_resposta(
-                    st.session_state.sessao_atual.exercicio_id,
-                    resposta_usuario
-                )
+            if "sessao_atual" in st.session_state and st.session_state.sessao_atual:
+                feedback = sistema_exercicios.validar_resposta(st.session_state.sessao_atual.exercicio_id, resposta_usuario)
                 st.session_state.feedback = feedback
                 st.session_state.resposta_submetida = True
             else:
@@ -192,8 +160,9 @@ def render_exercicio_interativo(exercicio: Exercicio):
                 return
 
     # Exibir feedback
-    if st.session_state.get('feedback'):
+    if st.session_state.get("feedback"):
         render_feedback(st.session_state.feedback, exercicio)
+
 
 def render_interface_exercicio(exercicio: Exercicio) -> Any:
     """Renderiza a interface específica para cada tipo de exercício"""
@@ -204,18 +173,14 @@ def render_interface_exercicio(exercicio: Exercicio) -> Any:
             "Selecione a resposta correta:",
             options=range(len(opcoes)),
             format_func=lambda x: opcoes[x],
-            key=f"resposta_{exercicio.id}"
+            key=f"resposta_{exercicio.id}",
         )
 
     elif exercicio.tipo == TipoExercicio.VERDADEIRO_FALSO:
         afirmacoes = exercicio.dados_exercicio["afirmacoes"]
         respostas = []
         for i, afirmacao in enumerate(afirmacoes):
-            resposta = st.radio(
-                afirmacao,
-                ["Verdadeiro", "Falso"],
-                key=f"afirmacao_{i}_{exercicio.id}"
-            )
+            resposta = st.radio(afirmacao, ["Verdadeiro", "Falso"], key=f"afirmacao_{i}_{exercicio.id}")
             respostas.append(resposta == "Verdadeiro")
         return respostas
 
@@ -227,7 +192,7 @@ def render_interface_exercicio(exercicio: Exercicio) -> Any:
             options=range(len(passos)),
             format_func=lambda x: passos[x],
             default=list(range(len(passos))),
-            key=f"ordem_{exercicio.id}"
+            key=f"ordem_{exercicio.id}",
         )
         return ordem_atual
 
@@ -238,12 +203,8 @@ def render_interface_exercicio(exercicio: Exercicio) -> Any:
         st.write("Associe cada abordagem à sua complexidade:")
         respostas = {}
         for i, abordagem in enumerate(abordagens):
-            complexidade = st.selectbox(
-                f"Complexidade de: {abordagem}",
-                complexidades,
-                key=f"complex_{i}_{exercicio.id}"
-            )
-            respostas[abordagem.lower().replace(' ', '_')] = complexidade
+            complexidade = st.selectbox(f"Complexidade de: {abordagem}", complexidades, key=f"complex_{i}_{exercicio.id}")
+            respostas[abordagem.lower().replace(" ", "_")] = complexidade
         return respostas
 
     elif exercicio.tipo == TipoExercicio.DEBUGGING:
@@ -253,10 +214,11 @@ def render_interface_exercicio(exercicio: Exercicio) -> Any:
             "Qual é o problema no código?",
             options=range(len(opcoes_bug)),
             format_func=lambda x: opcoes_bug[x],
-            key=f"debug_{exercicio.id}"
+            key=f"debug_{exercicio.id}",
         )
 
     return None
+
 
 def render_feedback(feedback: Dict[str, Any], exercicio: Exercicio):
     """Renderiza o feedback da resposta"""
@@ -287,7 +249,7 @@ def render_feedback(feedback: Dict[str, Any], exercicio: Exercicio):
             pontos = feedback.get("pontos", 0)
             st.metric("Pontos", pontos)
         with col3:
-            if 'sessao_atual' in st.session_state and st.session_state.sessao_atual:
+            if "sessao_atual" in st.session_state and st.session_state.sessao_atual:
                 try:
                     tempo = st.session_state.sessao_atual.tempo_fim - st.session_state.sessao_atual.tempo_inicio
                     st.metric("Tempo", ".1f")
@@ -305,7 +267,7 @@ def render_feedback(feedback: Dict[str, Any], exercicio: Exercicio):
         st.error("❌ **Incorreto.** Tente novamente!")
 
         # Incrementar tentativa
-        st.session_state.tentativa_atual = st.session_state.get('tentativa_atual', 1) + 1
+        st.session_state.tentativa_atual = st.session_state.get("tentativa_atual", 1) + 1
 
         # Feedback específico baseado no tipo
         if exercicio.tipo == TipoExercicio.MULTIPLA_ESCOLHA:
@@ -314,21 +276,16 @@ def render_feedback(feedback: Dict[str, Any], exercicio: Exercicio):
         # Manter resposta submetida como False para permitir nova tentativa
         st.session_state.resposta_submetida = False
 
+
 def render_exercicios_por_conceito():
     """Renderiza exercícios organizados por conceito"""
 
     st.markdown("### 🎯 Exercícios por Conceito")
 
     # Selecionar conceito
-    conceitos_disponiveis = list(set(
-        ex.conceito_relacionado for ex in sistema_exercicios.exercicios.values()
-    ))
+    conceitos_disponiveis = list(set(ex.conceito_relacionado for ex in sistema_exercicios.exercicios.values()))
 
-    conceito_selecionado = st.selectbox(
-        "Selecione um conceito:",
-        conceitos_disponiveis,
-        key="conceito_exercicios"
-    )
+    conceito_selecionado = st.selectbox("Selecione um conceito:", conceitos_disponiveis, key="conceito_exercicios")
 
     if conceito_selecionado:
         exercicios_conceito = sistema_exercicios.obter_exercicios_por_conceito(conceito_selecionado)
@@ -345,7 +302,7 @@ def render_exercicios_por_conceito():
                 with col1:
                     st.metric("Dificuldade", exercicio.dificuldade.value.title())
                 with col2:
-                    st.metric("Tipo", exercicio.tipo.value.replace('_', ' ').title())
+                    st.metric("Tipo", exercicio.tipo.value.replace("_", " ").title())
                 with col3:
                     st.metric("Tempo", f"{exercicio.tempo_estimado}min")
 
@@ -356,6 +313,7 @@ def render_exercicios_por_conceito():
                     # Armazenar exercício selecionado e mudar para aba de prática
                     st.session_state.exercicio_selecionado = exercicio
                     st.success(f"Exercício '{exercicio.titulo}' selecionado! Vá para a aba 'Praticar Exercícios'.")
+
 
 def render_desempenho_usuario():
     """Renderiza estatísticas de desempenho do usuário"""
@@ -369,16 +327,13 @@ def render_desempenho_usuario():
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric(
-            "Exercícios Concluídos",
-            f"{stats['exercicios_concluidos']}/{stats['total_exercicios']}"
-        )
+        st.metric("Exercícios Concluídos", f"{stats['exercicios_concluidos']}/{stats['total_exercicios']}")
 
     with col2:
         st.metric("Taxa de Conclusão", ".1f")
 
     with col3:
-        st.metric("Pontos Totais", stats['pontos_totais'])
+        st.metric("Pontos Totais", stats["pontos_totais"])
 
     with col4:
         st.metric("Tempo Total", ".1f")
@@ -392,31 +347,32 @@ def render_desempenho_usuario():
             exercicio = sistema_exercicios.exercicios[sessao.exercicio_id]
             tipo = exercicio.tipo.value
             if tipo not in tipos_stats:
-                tipos_stats[tipo] = {'concluidos': 0, 'total': 0}
-            tipos_stats[tipo]['concluidos'] += 1
-            tipos_stats[tipo]['total'] += 1
+                tipos_stats[tipo] = {"concluidos": 0, "total": 0}
+            tipos_stats[tipo]["concluidos"] += 1
+            tipos_stats[tipo]["total"] += 1
 
     # Adicionar tipos não tentados
     for tipo in TipoExercicio:
         if tipo.value not in tipos_stats:
             exercicios_tipo = [ex for ex in sistema_exercicios.exercicios.values() if ex.tipo == tipo]
-            tipos_stats[tipo.value] = {'concluidos': 0, 'total': len(exercicios_tipo)}
+            tipos_stats[tipo.value] = {"concluidos": 0, "total": len(exercicios_tipo)}
 
     # Criar dados para gráfico
     tipos_nomes = list(tipos_stats.keys())
     taxas_conclusao = [
-        (stats['concluidos'] / stats['total'] * 100) if stats['total'] > 0 else 0
-        for stats in tipos_stats.values()
+        (stats["concluidos"] / stats["total"] * 100) if stats["total"] > 0 else 0 for stats in tipos_stats.values()
     ]
 
     import plotly.express as px
+
     fig = px.bar(
         x=tipos_nomes,
         y=taxas_conclusao,
         title="Taxa de Conclusão por Tipo (%)",
-        labels={'x': 'Tipo de Exercício', 'y': 'Taxa de Conclusão (%)'}
+        labels={"x": "Tipo de Exercício", "y": "Taxa de Conclusão (%)"},
     )
     st.plotly_chart(fig, use_container_width=True)
+
 
 def render_conquistas():
     """Renderiza sistema de conquistas e badges"""
@@ -429,29 +385,33 @@ def render_conquistas():
             "titulo": "Primeiros Passos",
             "descricao": "Complete seu primeiro exercício",
             "icone": "🎯",
-            "condicao": lambda: len([s for s in sistema_exercicios.sessoes_ativas.values() if s.concluido]) >= 1
+            "condicao": lambda: len([s for s in sistema_exercicios.sessoes_ativas.values() if s.concluido]) >= 1,
         },
         {
             "titulo": "Persistente",
             "descricao": "Tente um exercício pelo menos 3 vezes",
             "icone": "💪",
-            "condicao": lambda: any(s.tentativas >= 3 for s in sistema_exercicios.sessoes_ativas.values())
+            "condicao": lambda: any(s.tentativas >= 3 for s in sistema_exercicios.sessoes_ativas.values()),
         },
         {
             "titulo": "Perfeccionista",
             "descricao": "Acerte um exercício na primeira tentativa",
             "icone": "⭐",
-            "condicao": lambda: any(s.tentativas == 1 and s.concluido for s in sistema_exercicios.sessoes_ativas.values())
+            "condicao": lambda: any(s.tentativas == 1 and s.concluido for s in sistema_exercicios.sessoes_ativas.values()),
         },
         {
             "titulo": "Explorador",
             "descricao": "Pratique exercícios de 3 tipos diferentes",
             "icone": "🗺️",
-            "condicao": lambda: len(set(
-                sistema_exercicios.exercicios[s.exercicio_id].tipo
-                for s in sistema_exercicios.sessoes_ativas.values() if s.concluido
-            )) >= 3
-        }
+            "condicao": lambda: len(
+                set(
+                    sistema_exercicios.exercicios[s.exercicio_id].tipo
+                    for s in sistema_exercicios.sessoes_ativas.values()
+                    if s.concluido
+                )
+            )
+            >= 3,
+        },
     ]
 
     # Verificar conquistas desbloqueadas
@@ -473,7 +433,7 @@ def render_conquistas():
                 st.markdown(f"# {conquista['icone']}")
             with col2:
                 st.markdown(f"**{conquista['titulo']}**")
-                st.write(conquista['descricao'])
+                st.write(conquista["descricao"])
 
     # Exibir conquistas bloqueadas
     if conquistas_bloqueadas:
@@ -484,4 +444,4 @@ def render_conquistas():
                 st.markdown(f"# ⚫")
             with col2:
                 st.markdown(f"**{conquista['titulo']}**")
-                st.write(conquista['descricao'])
+                st.write(conquista["descricao"])

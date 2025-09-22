@@ -25,16 +25,13 @@ from pathlib import Path
 # Adicionar diretório raiz ao path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from integracao_gitmcp_exercicios import (
-    render_exercicios_gitmcp,
-    gerar_exercicio_github,
-    comparar_implementacoes_github
-)
+from integracao_gitmcp_exercicios import render_exercicios_gitmcp, gerar_exercicio_github, comparar_implementacoes_github
 from gitmcp_integration import GitMCPIntegration
 from sistema_exercicios_praticos import SistemaExerciciosPraticos
 
 # Inicializar cliente GitHub
 git_client = GitMCPIntegration()
+
 
 def demonstracao_integracao():
     """Demonstra a integração completa entre GitMCP e exercícios"""
@@ -57,8 +54,8 @@ def demonstracao_integracao():
         exemplos = git_client.obter_exemplos_codigo("busca_binaria", "python")
         if exemplos and exemplos.get("exemplos"):
             print(f"✅ Encontrados {len(exemplos['exemplos'])} exemplos!")
-            if exemplos['exemplos']:
-                primeiro = exemplos['exemplos'][0]
+            if exemplos["exemplos"]:
+                primeiro = exemplos["exemplos"][0]
                 print(f"📦 Primeiro exemplo: {primeiro.get('repositorio', 'N/A')}")
         else:
             print("⚠️ Nenhum exemplo encontrado")
@@ -86,7 +83,7 @@ def demonstracao_integracao():
         if comparacao and comparacao.get("implementacoes"):
             print("✅ Comparação realizada com sucesso!")
             print(f"📊 {len(comparacao['implementacoes'])} implementações analisadas")
-            for impl in comparacao['implementacoes'][:2]:
+            for impl in comparacao["implementacoes"][:2]:
                 print(f"  - {impl.get('repositorio', 'N/A')}: {impl.get('abordagem', 'N/A')}")
         else:
             print("⚠️ Não foi possível realizar comparação")
@@ -119,6 +116,7 @@ def demonstracao_integracao():
     print("  • Conexão teoria-prática")
     print("  • Acesso a código de qualidade")
 
+
 def demonstracao_streamlit():
     """Demonstra como executar a interface Streamlit integrada"""
 
@@ -131,6 +129,7 @@ def demonstracao_streamlit():
     print("   • 🎯 Exercícios GitHub - Pratique com código real")
     print("   • ⚡ Comparação Performance - Compare abordagens")
     print("   • 🔍 Explorar Repositórios - Descubra projetos")
+
 
 if __name__ == "__main__":
     demonstracao_integracao()

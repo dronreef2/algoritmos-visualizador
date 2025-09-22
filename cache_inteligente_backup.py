@@ -35,6 +35,7 @@ import os
 # 🎯 CLASSE PRINCIPAL DO SISTEMA DE CACHE
 # ============================================================================
 
+
 class CacheInteligente:
     """
     Sistema de cache inteligente otimizado para Streamlit.
@@ -58,16 +59,10 @@ class CacheInteligente:
         self.max_memory_mb = max_memory_mb
         self.ttl_seconds = ttl_seconds
         self._lock = threading.Lock()
-        self._stats = {
-            'hits': 0,
-            'misses': 0,
-            'saved_time': 0.0,
-            'memory_usage': 0.0,
-            'cache_size': 0
-        }
+        self._stats = {"hits": 0, "misses": 0, "saved_time": 0.0, "memory_usage": 0.0, "cache_size": 0}
 
         # Inicializar cache na sessão do Streamlit
-        if 'cache_inteligente' not in st.session_state:
+        if "cache_inteligente" not in st.session_state:
             st.session_state.cache_inteligente = {}
 
     @property
@@ -109,13 +104,13 @@ class CacheInteligente:
             keys_to_remove = []
 
             for key, data in self.cache.items():
-                if not self._verificar_ttl(data['timestamp']):
+                if not self._verificar_ttl(data["timestamp"]):
                     keys_to_remove.append(key)
 
             for key in keys_to_remove:
                 del self.cache[key]
 
-            self._stats['cache_size'] = len(self.cache)
+            self._stats["cache_size"] = len(self.cache)
 
     def _verificar_memoria(self) -> bool:
         """Verifica se o uso de memória está dentro do limite."""
@@ -137,25 +132,25 @@ class CacheInteligente:
         """
         with self._lock:
             if chave not in self.cache:
-                self._stats['misses'] += 1
+                self._stats["misses"] += 1
                 return None
 
             data = self.cache[chave]
 
             # Verificar TTL
-            if not self._verificar_ttl(data['timestamp']):
+            if not self._verificar_ttl(data["timestamp"]):
                 del self.cache[chave]
-                self._stats['misses'] += 1
+                self._stats["misses"] += 1
                 return None
 
             # Verificar memória
             if not self._verificar_memoria():
                 self._limpar_cache_antigo()
-                self._stats['misses'] += 1
+                self._stats["misses"] += 1
                 return None
 
-            self._stats['hits'] += 1
-            return self._descomprimir_dados(data['dados'])
+            self._stats["hits"] += 1
+            return self._descomprimir_dados(data["dados"])
 
     def armazenar(self, chave: str, dados: Any, ttl: Optional[int] = None):
         """
@@ -174,29 +169,24 @@ class CacheInteligente:
             # Comprimir dados grandes
             dados_comprimidos = self._comprimir_dados(dados)
 
-            self.cache[chave] = {
-                'dados': dados_comprimidos,
-                'timestamp': time.time(),
-                'ttl': ttl or self.ttl_seconds
-            }
+            self.cache[chave] = {"dados": dados_comprimidos, "timestamp": time.time(), "ttl": ttl or self.ttl_seconds}
 
-            self._stats['cache_size'] = len(self.cache)
+            self._stats["cache_size"] = len(self.cache)
 
     def limpar(self):
         """Limpa todo o cache."""
         with self._lock:
             self.cache.clear()
-            self._stats['cache_size'] = 0
+            self._stats["cache_size"] = 0
 
     def obter_estatisticas(self) -> Dict:
         """Retorna estatísticas do cache."""
         with self._lock:
             stats = self._stats.copy()
-            stats['hit_rate'] = (
-                stats['hits'] / (stats['hits'] + stats['misses'])
-                if (stats['hits'] + stats['misses']) > 0 else 0
+            stats["hit_rate"] = (
+                stats["hits"] / (stats["hits"] + stats["misses"]) if (stats["hits"] + stats["misses"]) > 0 else 0
             )
-            stats['memory_usage'] = self._get_memory_usage()
+            stats["memory_usage"] = self._get_memory_usage()
             return stats
 
     def _get_memory_usage(self) -> float:
@@ -204,14 +194,16 @@ class CacheInteligente:
         try:
             total_size = 0
             for data in self.cache.values():
-                total_size += len(data['dados'])
+                total_size += len(data["dados"])
             return total_size / 1024 / 1024  # MB
         except:
             return 0.0
 
+
 # ============================================================================
 # 🎯 DECORADORES PARA CACHE AUTOMÁTICO
 # ============================================================================
+
 
 def cache_visualizacao(ttl_seconds: int = 1800):
     """
@@ -220,11 +212,12 @@ def cache_visualizacao(ttl_seconds: int = 1800):
     Args:
         ttl_seconds: Tempo de vida do cache em segundos
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Obter instância do cache
-            if 'cache_instance' not in st.session_state:
+            if "cache_instance" not in st.session_state:
                 st.session_state.cache_instance = CacheInteligente()
 
             cache = st.session_state.cache_instance
@@ -249,7 +242,9 @@ def cache_visualizacao(ttl_seconds: int = 1800):
             return resultado
 
         return wrapper
+
     return decorator
+
 
 def cache_algoritmo(ttl_seconds: int = 3600):
     """
@@ -258,11 +253,12 @@ def cache_algoritmo(ttl_seconds: int = 3600):
     Args:
         ttl_seconds: Tempo de vida do cache em segundos
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Obter instância do cache
-            if 'cache_instance' not in st.session_state:
+            if "cache_instance" not in st.session_state:
                 st.session_state.cache_instance = CacheInteligente()
 
             cache = st.session_state.cache_instance
@@ -286,7 +282,9 @@ def cache_algoritmo(ttl_seconds: int = 3600):
             return resultado
 
         return wrapper
+
     return decorator
+
 
 def cache_mcp(ttl_seconds: int = 1800):
     """
@@ -295,11 +293,12 @@ def cache_mcp(ttl_seconds: int = 1800):
     Args:
         ttl_seconds: Tempo de vida do cache em segundos
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Obter instância do cache
-            if 'cache_instance' not in st.session_state:
+            if "cache_instance" not in st.session_state:
                 st.session_state.cache_instance = CacheInteligente()
 
             cache = st.session_state.cache_instance
@@ -319,23 +318,28 @@ def cache_mcp(ttl_seconds: int = 1800):
             return resultado
 
         return wrapper
+
     return decorator
+
 
 # ============================================================================
 # 🎯 UTILITÁRIOS DE CACHE
 # ============================================================================
 
+
 def obter_cache_stats() -> Dict:
     """Obtém estatísticas do sistema de cache."""
-    if 'cache_instance' not in st.session_state:
+    if "cache_instance" not in st.session_state:
         st.session_state.cache_instance = CacheInteligente()
 
     return st.session_state.cache_instance.obter_estatisticas()
 
+
 def limpar_cache():
     """Limpa todo o cache."""
-    if 'cache_instance' in st.session_state:
+    if "cache_instance" in st.session_state:
         st.session_state.cache_instance.limpar()
+
 
 def mostrar_estatisticas_cache():
     """Exibe estatísticas do cache em formato amigável."""
@@ -346,20 +350,23 @@ def mostrar_estatisticas_cache():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("Taxa de Acerto", ".1%", stats.get('hit_rate', 0) * 100)
+        st.metric("Taxa de Acerto", ".1%", stats.get("hit_rate", 0) * 100)
 
     with col2:
-        st.metric("Itens em Cache", stats.get('cache_size', 0))
+        st.metric("Itens em Cache", stats.get("cache_size", 0))
 
     with col3:
-        st.metric("Tempo Economizado", ".2f", stats.get('saved_time', 0))
+        st.metric("Tempo Economizado", ".2f", stats.get("saved_time", 0))
 
-    st.markdown(f"""
+    st.markdown(
+        f"""
     **📈 Detalhes:**
     - ✅ Hits: {stats.get('hits', 0)}
     - ❌ Misses: {stats.get('misses', 0)}
     - 💾 Uso de Memória: {stats.get('memory_usage', 0):.2f} MB
-    """)
+    """
+    )
+
 
 # ============================================================================
 # 🎯 EXEMPLOS DE USO

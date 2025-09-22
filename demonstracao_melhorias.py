@@ -9,6 +9,7 @@ from modulo_2_estruturas_dados.algoritmos_ordenacao import quick_sort_steps
 from modulo_2_estruturas_dados.algoritmos_grafos import Grafo, a_star_com_passos, heuristica_euclidiana
 from mcp_tavily_integration import TavilySearchClient
 
+
 def testar_otimizacao_cache():
     """Testa a otimização de cache em algoritmos recursivos"""
     print("⚡ Testando Otimização de Cache")
@@ -33,6 +34,7 @@ def testar_otimizacao_cache():
     print(f"Resultado correto: {resultado1 == resultado2}")
     print()
 
+
 def testar_a_star():
     """Testa o novo algoritmo A* Search"""
     print("🎯 Testando Algoritmo A* Search")
@@ -40,30 +42,31 @@ def testar_a_star():
 
     # Criar grafo de exemplo
     g = Grafo()
-    vertices = ['A', 'B', 'C', 'D', 'E', 'F']
+    vertices = ["A", "B", "C", "D", "E", "F"]
     for v in vertices:
         g.adicionar_vertice(v)
 
     arestas = [
-        ('A', 'B', 1), ('A', 'C', 4),
-        ('B', 'C', 2), ('B', 'D', 5),
-        ('C', 'D', 1), ('D', 'E', 3),
-        ('C', 'F', 6), ('E', 'F', 2)
+        ("A", "B", 1),
+        ("A", "C", 4),
+        ("B", "C", 2),
+        ("B", "D", 5),
+        ("C", "D", 1),
+        ("D", "E", 3),
+        ("C", "F", 6),
+        ("E", "F", 2),
     ]
 
     for u, v, peso in arestas:
         g.adicionar_aresta(u, v, peso)
 
     # Posições para heurística
-    posicoes = {
-        'A': (0, 0), 'B': (1, 1), 'C': (2, 0),
-        'D': (3, 1), 'E': (4, 0), 'F': (4, 2)
-    }
+    posicoes = {"A": (0, 0), "B": (1, 1), "C": (2, 0), "D": (3, 1), "E": (4, 0), "F": (4, 2)}
 
     heuristicas = heuristica_euclidiana(posicoes)
 
     # Executar A*
-    caminho, custo, passos = a_star_com_passos(g, 'A', 'F', heuristicas)
+    caminho, custo, passos = a_star_com_passos(g, "A", "F", heuristicas)
 
     print(f"Grafo com {len(g.vertices)} vértices criado")
     print(f"Heurísticas calculadas para {len(heuristicas)} nós")
@@ -71,6 +74,7 @@ def testar_a_star():
     print(f"Custo total: {custo}")
     print(f"Passos de execução: {len(passos)}")
     print()
+
 
 def testar_tavily_melhorado():
     """Testa as melhorias na integração Tavily MCP"""
@@ -83,13 +87,9 @@ def testar_tavily_melhorado():
     if client.is_configured():
         # Teste busca avançada
         print("\n🔍 Testando busca avançada...")
-        resultado = client.advanced_search(
-            query='algoritmos de busca em grafos',
-            depth='advanced',
-            language='pt'
-        )
+        resultado = client.advanced_search(query="algoritmos de busca em grafos", depth="advanced", language="pt")
 
-        qualidade = resultado.get('quality_analysis', {})
+        qualidade = resultado.get("quality_analysis", {})
         print(f"Status: {resultado.get('status')}")
         print(f"Resultados encontrados: {resultado.get('total_results')}")
         print(f"Score de qualidade: {qualidade.get('quality_score', 0)}")
@@ -99,11 +99,7 @@ def testar_tavily_melhorado():
         # Teste busca contextual
         print("\n💭 Testando busca com contexto...")
         contexto = "explicação detalhada para programadores iniciantes"
-        resultado_ctx = client.search_with_context(
-            query='binary search tree',
-            context=contexto,
-            language='pt'
-        )
+        resultado_ctx = client.search_with_context(query="binary search tree", context=contexto, language="pt")
 
         print(f"Status: {resultado_ctx.get('status')}")
         print(f"Contexto utilizado: {bool(resultado_ctx.get('context'))}")
@@ -117,6 +113,7 @@ def testar_tavily_melhorado():
         print("✅ Filtragem de domínios")
 
     print()
+
 
 def demonstrar_melhorias():
     """Demonstração completa das melhorias implementadas"""
@@ -147,6 +144,7 @@ def demonstrar_melhorias():
     print("   - Controle fino de profundidade")
     print()
     print("🎯 Projeto agora com nível de produção avançado!")
+
 
 if __name__ == "__main__":
     demonstrar_melhorias()

@@ -11,6 +11,7 @@ import requests
 import base64
 from typing import Dict, List, Optional, Any
 
+
 class GitHubDocsClient:
     """
     Cliente para acesso à documentação GitHub
@@ -26,10 +27,7 @@ class GitHubDocsClient:
         """
         self.base_url = "https://api.github.com"
         self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Algoritmos-Visualizador/1.0',
-            'Accept': 'application/vnd.github.v3+json'
-        })
+        self.session.headers.update({"User-Agent": "Algoritmos-Visualizador/1.0", "Accept": "application/vnd.github.v3+json"})
 
         # Prioriza st.secrets (Streamlit Cloud), depois parâmetro, depois variável de ambiente
         token = None
@@ -39,9 +37,10 @@ class GitHubDocsClient:
             # Tenta carregar do st.secrets (Streamlit Cloud)
             try:
                 import streamlit as st
-                if hasattr(st, 'secrets'):
+
+                if hasattr(st, "secrets"):
                     try:
-                        token = st.secrets.get('GITHUB_TOKEN')
+                        token = st.secrets.get("GITHUB_TOKEN")
                     except Exception:
                         # Handle missing secrets gracefully
                         pass
@@ -50,10 +49,10 @@ class GitHubDocsClient:
 
             # Fallback para variável de ambiente
             if not token:
-                token = os.getenv('GITHUB_TOKEN')
+                token = os.getenv("GITHUB_TOKEN")
 
         if token:
-            self.session.headers['Authorization'] = f'token {token}'
+            self.session.headers["Authorization"] = f"token {token}"
 
     def is_available(self) -> bool:
         """
@@ -95,7 +94,7 @@ class GitHubDocsClient:
                 "forks": data.get("forks_count"),
                 "topics": data.get("topics", []),
                 "html_url": data.get("html_url"),
-                "updated_at": data.get("updated_at")
+                "updated_at": data.get("updated_at"),
             }
 
         except requests.exceptions.RequestException as e:
@@ -103,7 +102,7 @@ class GitHubDocsClient:
                 "status": "error",
                 "repository": f"{owner}/{repo}",
                 "error": str(e),
-                "message": "Erro ao obter informações do repositório"
+                "message": "Erro ao obter informações do repositório",
             }
 
     def get_readme(self, owner: str, repo: str) -> Dict[str, Any]:
@@ -127,7 +126,7 @@ class GitHubDocsClient:
 
             # Decodifica base64 se necessário
             if data.get("encoding") == "base64":
-                content = base64.b64decode(content).decode('utf-8')
+                content = base64.b64decode(content).decode("utf-8")
 
             return {
                 "status": "success",
@@ -135,19 +134,13 @@ class GitHubDocsClient:
                 "filename": data.get("name", "README.md"),
                 "content": content,
                 "size": data.get("size", 0),
-                "download_url": data.get("download_url")
+                "download_url": data.get("download_url"),
             }
 
         except requests.exceptions.RequestException as e:
-            return {
-                "status": "error",
-                "repository": f"{owner}/{repo}",
-                "error": str(e),
-                "message": "Erro ao obter README"
-            }
+            return {"status": "error", "repository": f"{owner}/{repo}", "error": str(e), "message": "Erro ao obter README"}
 
-    def search_code(self, owner: str, repo: str, query: str,
-                   language: str = None, max_results: int = 5) -> Dict[str, Any]:
+    def search_code(self, owner: str, repo: str, query: str, language: str = None, max_results: int = 5) -> Dict[str, Any]:
         """
         Busca código em um repositório usando a API do GitHub
 
@@ -163,13 +156,10 @@ class GitHubDocsClient:
         """
         try:
             url = f"{self.base_url}/search/code"
-            params = {
-                'q': f'repo:{owner}/{repo} {query}',
-                'per_page': max_results
-            }
+            params = {"q": f"repo:{owner}/{repo} {query}", "per_page": max_results}
 
             if language:
-                params['q'] += f' language:{language}'
+                params["q"] += f" language:{language}"
 
             response = self.session.get(url, params=params, timeout=15)
             response.raise_for_status()
@@ -180,13 +170,15 @@ class GitHubDocsClient:
             # Processa os resultados
             results = []
             for item in items:
-                results.append({
-                    "name": item.get("name"),
-                    "path": item.get("path"),
-                    "url": item.get("html_url"),
-                    "repository": item.get("repository", {}).get("full_name"),
-                    "score": item.get("score", 0)
-                })
+                results.append(
+                    {
+                        "name": item.get("name"),
+                        "path": item.get("path"),
+                        "url": item.get("html_url"),
+                        "repository": item.get("repository", {}).get("full_name"),
+                        "score": item.get("score", 0),
+                    }
+                )
 
             return {
                 "status": "success",
@@ -195,7 +187,7 @@ class GitHubDocsClient:
                 "language": language,
                 "results": results,
                 "total_results": len(results),
-                "github_total": data.get("total_count", 0)
+                "github_total": data.get("total_count", 0),
             }
 
         except requests.exceptions.RequestException as e:
@@ -204,7 +196,7 @@ class GitHubDocsClient:
                 "query": query,
                 "repository": f"{owner}/{repo}",
                 "error": str(e),
-                "message": "Erro ao buscar código"
+                "message": "Erro ao buscar código",
             }
 
     def get_file_content(self, owner: str, repo: str, path: str) -> Dict[str, Any]:
@@ -229,7 +221,7 @@ class GitHubDocsClient:
 
             # Decodifica base64 se necessário
             if data.get("encoding") == "base64":
-                content = base64.b64decode(content).decode('utf-8')
+                content = base64.b64decode(content).decode("utf-8")
 
             return {
                 "status": "success",
@@ -238,7 +230,7 @@ class GitHubDocsClient:
                 "name": data.get("name"),
                 "content": content,
                 "size": data.get("size", 0),
-                "download_url": data.get("download_url")
+                "download_url": data.get("download_url"),
             }
 
         except requests.exceptions.RequestException as e:
@@ -247,7 +239,7 @@ class GitHubDocsClient:
                 "repository": f"{owner}/{repo}",
                 "path": path,
                 "error": str(e),
-                "message": "Erro ao obter conteúdo do arquivo"
+                "message": "Erro ao obter conteúdo do arquivo",
             }
 
 
@@ -260,8 +252,7 @@ class GitMCPIntegration:
         self.client = GitHubDocsClient()
         self.cache = {}
 
-    def buscar_documentacao_algoritmo(self, algoritmo: str,
-                                    linguagem: str = "python") -> Dict[str, Any]:
+    def buscar_documentacao_algoritmo(self, algoritmo: str, linguagem: str = "python") -> Dict[str, Any]:
         """
         Busca documentação específica para algoritmos
 
@@ -281,7 +272,7 @@ class GitMCPIntegration:
             "graph": ["TheAlgorithms/Python", "networkx/networkx"],
             "tree": ["TheAlgorithms/Python", "keon/algorithms"],
             "dynamic": ["TheAlgorithms/Python", "keon/algorithms"],
-            "machine_learning": ["scikit-learn/scikit-learn", "tensorflow/tensorflow"]
+            "machine_learning": ["scikit-learn/scikit-learn", "tensorflow/tensorflow"],
         }
 
         algoritmo_key = algoritmo.lower().replace(" ", "_")
@@ -300,18 +291,11 @@ class GitMCPIntegration:
             readme = self.client.get_readme(owner, repo)
 
             if repo_info["status"] == "success":
-                resultados.append({
-                    "repositorio": repo_full,
-                    "info": repo_info,
-                    "readme": readme if readme["status"] == "success" else None
-                })
+                resultados.append(
+                    {"repositorio": repo_full, "info": repo_info, "readme": readme if readme["status"] == "success" else None}
+                )
 
-        return {
-            "algoritmo": algoritmo,
-            "linguagem": linguagem,
-            "resultados": resultados,
-            "total_encontrados": len(resultados)
-        }
+        return {"algoritmo": algoritmo, "linguagem": linguagem, "resultados": resultados, "total_encontrados": len(resultados)}
 
     def obter_exemplos_codigo(self, conceito: str, linguagem: str = "python") -> Dict[str, Any]:
         """
@@ -335,29 +319,29 @@ class GitMCPIntegration:
             owner, repo = repo_full.split("/", 1)
 
             # Busca código
-            code_search = self.client.search_code(
-                owner, repo, conceito, language=linguagem, max_results=5
-            )
+            code_search = self.client.search_code(owner, repo, conceito, language=linguagem, max_results=5)
 
             if code_search["status"] == "success" and code_search["results"]:
                 # Para cada resultado, obtém o conteúdo completo
                 for result in code_search["results"]:
                     file_content = self.client.get_file_content(owner, repo, result["path"])
                     if file_content["status"] == "success":
-                        exemplos.append({
-                            "repositorio": repo_full,
-                            "arquivo": result["name"],
-                            "caminho": result["path"],
-                            "url": result["url"],
-                            "conteudo": file_content["content"],
-                            "score": result["score"]
-                        })
+                        exemplos.append(
+                            {
+                                "repositorio": repo_full,
+                                "arquivo": result["name"],
+                                "caminho": result["path"],
+                                "url": result["url"],
+                                "conteudo": file_content["content"],
+                                "score": result["score"],
+                            }
+                        )
 
         return {
             "conceito": conceito,
             "linguagem": linguagem,
             "exemplos": exemplos[:10],  # Limita a 10 exemplos
-            "total_exemplos": len(exemplos)
+            "total_exemplos": len(exemplos),
         }
 
     def comparar_implementacoes(self, algoritmo: str) -> Dict[str, Any]:
@@ -390,18 +374,16 @@ class GitMCPIntegration:
                 for result in search["results"]:
                     file_content = self.client.get_file_content(owner, repo, result["path"])
                     if file_content["status"] == "success":
-                        comparacoes[linguagem].append({
-                            "repositorio": repo_full,
-                            "arquivo": result["name"],
-                            "conteudo": file_content["content"],
-                            "url": result["url"]
-                        })
+                        comparacoes[linguagem].append(
+                            {
+                                "repositorio": repo_full,
+                                "arquivo": result["name"],
+                                "conteudo": file_content["content"],
+                                "url": result["url"],
+                            }
+                        )
 
-        return {
-            "algoritmo": algoritmo,
-            "comparacoes": comparacoes,
-            "linguagens": list(comparacoes.keys())
-        }
+        return {"algoritmo": algoritmo, "comparacoes": comparacoes, "linguagens": list(comparacoes.keys())}
 
 
 # Instância global para uso no projeto
@@ -426,7 +408,7 @@ def testar_integracao():
         print("\n📚 Testando busca de repositório...")
         repo = github_client.get_repository_info("TheAlgorithms", "Python")
         print(f"Status: {repo['status']}")
-        if repo['status'] == 'success':
+        if repo["status"] == "success":
             print(f"📖 Repositório: {repo.get('full_name')}")
             print(f"⭐ Stars: {repo.get('stars')}")
             print(f"📝 Descrição: {repo.get('description', 'N/A')[:100]}...")
@@ -435,8 +417,8 @@ def testar_integracao():
         print("\n📄 Testando busca de README...")
         readme = github_client.get_readme("TheAlgorithms", "Python")
         print(f"Status: {readme['status']}")
-        if readme['status'] == 'success':
-            content = readme.get('content', '')
+        if readme["status"] == "success":
+            content = readme.get("content", "")
             print(f"📏 Tamanho: {len(content)} caracteres")
             print(f"📄 Conteúdo (primeiras 200 chars): {content[:200]}...")
 

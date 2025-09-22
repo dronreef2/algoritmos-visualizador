@@ -14,6 +14,7 @@ import subprocess
 import webbrowser
 from pathlib import Path
 
+
 def executar_comando(comando, descricao):
     """Executa um comando e mostra o resultado."""
     print(f"\n🔧 {descricao}...")
@@ -32,21 +33,18 @@ def executar_comando(comando, descricao):
             print(f"Erro detalhado: {e.stderr}")
         return False
 
+
 def verificar_prerequisitos():
     """Verifica se todos os pré-requisitos estão atendidos."""
     print("📋 Verificando pré-requisitos...")
 
     # Verificar se estamos em um repositório git
-    if not os.path.exists('.git'):
+    if not os.path.exists(".git"):
         print("❌ Não está em um repositório Git!")
         return False
 
     # Verificar arquivos obrigatórios
-    arquivos_obrigatorios = [
-        'app_integrada.py',
-        'requirements.txt',
-        '.streamlit/config.toml'
-    ]
+    arquivos_obrigatorios = ["app_integrada.py", "requirements.txt", ".streamlit/config.toml"]
 
     for arquivo in arquivos_obrigatorios:
         if not os.path.exists(arquivo):
@@ -55,6 +53,7 @@ def verificar_prerequisitos():
 
     print("✅ Todos os pré-requisitos atendidos!")
     return True
+
 
 def fazer_deploy():
     """Executa o processo completo de deploy."""
@@ -74,7 +73,7 @@ def fazer_deploy():
     status = subprocess.run("git status --porcelain", shell=True, capture_output=True, text=True)
     if status.stdout.strip():
         print("\n📝 Há mudanças não commitadas. Fazendo commit...")
-        if not executar_comando('git add .', "Adicionando arquivos"):
+        if not executar_comando("git add .", "Adicionando arquivos"):
             return False
         if not executar_comando('git commit -m "🚀 Deploy automático"', "Fazendo commit"):
             return False
@@ -105,6 +104,7 @@ def fazer_deploy():
         print("\n🌐 Acesse manualmente: https://share.streamlit.io")
 
     return True
+
 
 if __name__ == "__main__":
     sucesso = fazer_deploy()

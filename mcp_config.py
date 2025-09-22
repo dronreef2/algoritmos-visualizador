@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from typing import Dict, Any
 
+
 class MCPConfig:
     """Gerenciador de configuração dos MCP Servers"""
 
@@ -28,17 +29,13 @@ class MCPConfig:
         if not self.gitmcp_config_file.exists():
             default_config = {
                 "gitmcp_base_url": "https://gitmcp.io",
-                "default_repositories": [
-                    "TheAlgorithms/Python",
-                    "keon/algorithms",
-                    "networkx/networkx"
-                ],
+                "default_repositories": ["TheAlgorithms/Python", "keon/algorithms", "networkx/networkx"],
                 "cache_enabled": True,
                 "max_results": 5,
-                "timeout": 10
+                "timeout": 10,
             }
 
-            with open(self.gitmcp_config_file, 'w', encoding='utf-8') as f:
+            with open(self.gitmcp_config_file, "w", encoding="utf-8") as f:
                 json.dump(default_config, f, indent=2, ensure_ascii=False)
 
     def is_tavily_installed(self) -> bool:
@@ -50,17 +47,16 @@ class MCPConfig:
         if not self.env_file.exists():
             return False
 
-        with open(self.env_file, 'r', encoding='utf-8') as f:
+        with open(self.env_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        return ("TAVILY_API_KEY=" in content and
-                "your_tavily_api_key_here" not in content and
-                len(content.strip()) > 0)
+        return "TAVILY_API_KEY=" in content and "your_tavily_api_key_here" not in content and len(content.strip()) > 0
 
     def is_gitmcp_available(self) -> bool:
         """Verifica se a API do GitHub está disponível (usada para GitMCP-like functionality)"""
         try:
             import requests
+
             response = requests.get("https://api.github.com/rate_limit", timeout=5)
             return response.status_code == 200
         except:
@@ -69,7 +65,7 @@ class MCPConfig:
     def get_gitmcp_config(self) -> Dict[str, Any]:
         """Retorna configuração do GitMCP"""
         try:
-            with open(self.gitmcp_config_file, 'r', encoding='utf-8') as f:
+            with open(self.gitmcp_config_file, "r", encoding="utf-8") as f:
                 return json.load(f)
         except:
             return {
@@ -77,7 +73,7 @@ class MCPConfig:
                 "default_repositories": ["TheAlgorithms/Python"],
                 "cache_enabled": True,
                 "max_results": 5,
-                "timeout": 10
+                "timeout": 10,
             }
 
     def update_gitmcp_config(self, updates: Dict[str, Any]):
@@ -85,7 +81,7 @@ class MCPConfig:
         current_config = self.get_gitmcp_config()
         current_config.update(updates)
 
-        with open(self.gitmcp_config_file, 'w', encoding='utf-8') as f:
+        with open(self.gitmcp_config_file, "w", encoding="utf-8") as f:
             json.dump(current_config, f, indent=2, ensure_ascii=False)
 
     def get_status(self) -> dict:
@@ -95,13 +91,13 @@ class MCPConfig:
                 "installed": self.is_tavily_installed(),
                 "configured": self.is_tavily_configured(),
                 "directory": str(self.mcp_dir),
-                "env_file": str(self.env_file)
+                "env_file": str(self.env_file),
             },
             "gitmcp": {
                 "available": self.is_gitmcp_available(),
                 "config_file": str(self.gitmcp_config_file),
-                "config": self.get_gitmcp_config()
-            }
+                "config": self.get_gitmcp_config(),
+            },
         }
 
     def _has_api_key(self) -> bool:
@@ -109,7 +105,7 @@ class MCPConfig:
         if not self.env_file.exists():
             return False
 
-        with open(self.env_file, 'r', encoding='utf-8') as f:
+        with open(self.env_file, "r", encoding="utf-8") as f:
             for line in f:
                 if line.startswith("TAVILY_API_KEY="):
                     key = line.split("=", 1)[1].strip()
@@ -187,7 +183,7 @@ O GitMCP é gratuito e não requer configuração especial:
         instructions += f"• Funcional: ✅ (API GitHub)\n"
 
         # Próximos passos
-        if not status['tavily']['configured']:
+        if not status["tavily"]["configured"]:
             instructions += "\n❌ PRÓXIMOS PASSOS PARA TAVILY:\n"
             instructions += "   1. Configure a chave da API no arquivo .env\n"
             instructions += "   2. Teste com: python exemplo_integracao_mcp.py\n"
@@ -198,6 +194,7 @@ O GitMCP é gratuito e não requer configuração especial:
 
         return instructions
 
+
 def verificar_configuracao():
     """Função de conveniência para verificar configuração completa"""
     config = MCPConfig()
@@ -206,8 +203,8 @@ def verificar_configuracao():
     status = config.get_status()
 
     # Verifica se pelo menos um MCP está funcionando
-    tavily_ok = status['tavily']['installed'] and status['tavily']['configured']
-    gitmcp_ok = status['gitmcp']['available']
+    tavily_ok = status["tavily"]["installed"] and status["tavily"]["configured"]
+    gitmcp_ok = status["gitmcp"]["available"]
 
     if tavily_ok or gitmcp_ok:
         print("\n🎉 Pelo menos um MCP Server está funcionando!")
@@ -227,6 +224,7 @@ def verificar_configuracao():
         print("\n⚠️ Nenhum MCP Server está configurado.")
         print("💡 Configure pelo menos um dos servidores acima.")
 
+
 def testar_gitmcp():
     """Testa especificamente a integração GitMCP"""
     print("🧪 TESTANDO GITMCP INTEGRATION")
@@ -235,7 +233,7 @@ def testar_gitmcp():
     config = MCPConfig()
     status = config.get_status()
 
-    if status['gitmcp']['available']:
+    if status["gitmcp"]["available"]:
         print("✅ GitMCP está disponível!")
 
         try:
@@ -246,15 +244,13 @@ def testar_gitmcp():
             docs = gitmcp_client.fetch_documentation("TheAlgorithms", "Python")
             print(f"Status: {docs['status']}")
 
-            if docs['status'] == 'success':
+            if docs["status"] == "success":
                 print(f"📖 Repositório: {docs['repository']}")
                 print(f"📝 Título: {docs.get('title', 'N/A')}")
 
                 # Testa busca específica
                 print("\n🔍 Testando busca específica...")
-                search = gitmcp_client.search_documentation(
-                    "TheAlgorithms", "Python", "quick sort", max_results=3
-                )
+                search = gitmcp_client.search_documentation("TheAlgorithms", "Python", "quick sort", max_results=3)
                 print(f"Resultados encontrados: {search.get('total_results', 0)}")
 
                 # Testa integração avançada
@@ -275,6 +271,7 @@ def testar_gitmcp():
         print("❌ GitMCP não está disponível")
         print("Verifique sua conexão com a internet")
 
+
 def demonstracao_completa():
     """Demonstração completa de ambos os MCP servers"""
     print("🚀 DEMONSTRAÇÃO MCP SERVERS")
@@ -283,6 +280,7 @@ def demonstracao_completa():
     verificar_configuracao()
     print("\n" + "=" * 50)
     testar_gitmcp()
+
 
 if __name__ == "__main__":
     demonstracao_completa()

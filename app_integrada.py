@@ -43,8 +43,9 @@ try:
         cache_algoritmo,
         cache_mcp,
         obter_cache_stats,
-        mostrar_estatisticas_cache
+        mostrar_estatisticas_cache,
     )
+
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False
@@ -56,9 +57,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Get Help': 'https://github.com/dronreef2/algoritmos-visualizador',
-        'Report a bug': 'https://github.com/dronreef2/algoritmos-visualizador/issues',
-        'About': '''
+        "Get Help": "https://github.com/dronreef2/algoritmos-visualizador",
+        "Report a bug": "https://github.com/dronreef2/algoritmos-visualizador/issues",
+        "About": """
         ### 🎯 Algoritmos Visualizador
 
         Uma plataforma completa para aprendizado de algoritmos e estruturas de dados
@@ -67,23 +68,26 @@ st.set_page_config(
         **Versão:** 2.0 - Integrada
         **Autor:** GitHub Copilot
         **Data:** 2025
-        '''
-    }
+        """,
+    },
 )
 
 # Adicionar caminhos dos módulos ao sys.path
 project_root = Path(__file__).parent
-sys.path.extend([
-    str(project_root),
-    str(project_root / "modulo_1_fundamentos"),
-    str(project_root / "modulo_2_estruturas_dados"),
-    str(project_root / "modulo_3_programacao_dinamica"),
-    str(project_root / "modulo_4_entrevistas"),
-])
+sys.path.extend(
+    [
+        str(project_root),
+        str(project_root / "modulo_1_fundamentos"),
+        str(project_root / "modulo_2_estruturas_dados"),
+        str(project_root / "modulo_3_programacao_dinamica"),
+        str(project_root / "modulo_4_entrevistas"),
+    ]
+)
 
 # Importar módulos integrados
 try:
     from modulos_integrados import ModulosEducacionaisIntegrados
+
     modulos_integrados = ModulosEducacionaisIntegrados()
     MODULOS_INTEGRADOS_AVAILABLE = True
 except ImportError:
@@ -92,10 +96,9 @@ except ImportError:
 
 # Inicializar sistema de cache inteligente
 if CACHE_AVAILABLE:
-    if 'cache_instance' not in st.session_state:
+    if "cache_instance" not in st.session_state:
         st.session_state.cache_instance = CacheInteligente(
-            max_memory_mb=200,  # 200MB máximo
-            ttl_seconds=3600    # 1 hora TTL padrão
+            max_memory_mb=200, ttl_seconds=3600  # 200MB máximo  # 1 hora TTL padrão
         )
         print("🚀 Sistema de Cache Inteligente inicializado!")
 
@@ -103,9 +106,11 @@ if CACHE_AVAILABLE:
 # 🎨 CSS CUSTOMIZADO PARA INTERFACE MODERNA
 # ============================================================================
 
+
 def load_css():
     """Carrega estilos CSS customizados para interface moderna."""
-    st.markdown("""
+    st.markdown(
+        """
     <style>
     /* Reset e variáveis CSS */
     :root {
@@ -367,29 +372,34 @@ def load_css():
         to { transform: rotate(360deg); }
     }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 # ============================================================================
 # 🔧 UTILITÁRIOS E HELPERS
 # ============================================================================
 
+
 def initialize_session_state():
     """Inicializa o estado da sessão com valores padrão."""
-    if 'user_progress' not in st.session_state:
+    if "user_progress" not in st.session_state:
         st.session_state.user_progress = {
-            'completed_modules': [],
-            'completed_exercises': [],
-            'current_streak': 0,
-            'total_study_time': 0,
-            'achievements': [],
-            'last_activity': datetime.now()
+            "completed_modules": [],
+            "completed_exercises": [],
+            "current_streak": 0,
+            "total_study_time": 0,
+            "achievements": [],
+            "last_activity": datetime.now(),
         }
 
-    if 'current_module' not in st.session_state:
+    if "current_module" not in st.session_state:
         st.session_state.current_module = "🏠 Home"
 
-    if 'exercise_session' not in st.session_state:
+    if "exercise_session" not in st.session_state:
         st.session_state.exercise_session = None
+
 
 def get_module_info(module_key: str) -> Dict[str, Any]:
     """Retorna informações detalhadas sobre um módulo."""
@@ -404,7 +414,7 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "🔄 Backtracking - Exponencial",
                 "🌐 BFS (Busca em Largura)",
                 "📊 Otimização de Arrays",
-                "🔢 Operações com Bits"
+                "🔢 Operações com Bits",
             ],
             "difficulty": "Iniciante a Intermediário",
             "estimated_time": "15-20 horas",
@@ -413,8 +423,8 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "Detector de fraudes bancárias",
                 "Análise de sequências de DNA",
                 "Planejador de turnos",
-                "Redes sociais"
-            ]
+                "Redes sociais",
+            ],
         },
         "🏗️ Módulo 2: Estruturas de Dados": {
             "title": "Estruturas de Dados Avançadas",
@@ -426,7 +436,7 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "📊 Segment Tree",
                 "🔗 Listas Encadeadas",
                 "📚 Tabelas Hash",
-                "🗂️ Árvores Binárias"
+                "🗂️ Árvores Binárias",
             ],
             "difficulty": "Intermediário a Avançado",
             "estimated_time": "20-25 horas",
@@ -435,8 +445,8 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "Motores de busca",
                 "Sistemas de recomendação",
                 "Gerenciamento de memória",
-                "Bancos de dados"
-            ]
+                "Bancos de dados",
+            ],
         },
         "🎯 Módulo 3: Programação Dinâmica": {
             "title": "Programação Dinâmica",
@@ -447,7 +457,7 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "📊 Tabulação",
                 "🎯 Otimização",
                 "🔄 Problemas Clássicos (Knapsack, LCS)",
-                "📈 Sequências Ótimas"
+                "📈 Sequências Ótimas",
             ],
             "difficulty": "Intermediário a Avançado",
             "estimated_time": "18-22 horas",
@@ -456,8 +466,8 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "Alinhamento de sequências",
                 "Compressão de dados",
                 "Planejamento financeiro",
-                "Jogos e IA"
-            ]
+                "Jogos e IA",
+            ],
         },
         "💼 Módulo 4: Entrevistas": {
             "title": "Entrevistas Técnicas",
@@ -468,7 +478,7 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "⏱️ Simulação de Tempo",
                 "📝 Feedback Detalhado",
                 "🧠 Estratégias de Resolução",
-                "💡 Otimização de Soluções"
+                "💡 Otimização de Soluções",
             ],
             "difficulty": "Intermediário a Avançado",
             "estimated_time": "12-16 horas",
@@ -477,22 +487,26 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
                 "Análise de performance",
                 "Resolução de problemas",
                 "Otimização de código",
-                "Pensamento algorítmico"
-            ]
-        }
+                "Pensamento algorítmico",
+            ],
+        },
     }
 
     return modules_info.get(module_key, {})
+
 
 def render_sidebar():
     """Renderiza a barra lateral com navegação e informações do usuário."""
     with st.sidebar:
         # Header da sidebar
-        st.markdown("""
+        st.markdown(
+            """
         <div class="sidebar-header">
             <h3>🧭 Navegação</h3>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
         # Menu principal
         menu_options = [
@@ -507,14 +521,14 @@ def render_sidebar():
             "� Explorar Módulos",
             "�📊 Dashboard de Progresso",
             "🏆 Conquistas",
-            "⚙️ Configurações"
+            "⚙️ Configurações",
         ]
 
         selected_option = st.selectbox(
             "Selecione uma seção:",
             menu_options,
-            index=menu_options.index(st.session_state.get('current_module', "🏠 Home")),
-            key="main_navigation"
+            index=menu_options.index(st.session_state.get("current_module", "🏠 Home")),
+            key="main_navigation",
         )
 
         st.session_state.current_module = selected_option
@@ -536,16 +550,19 @@ def render_sidebar():
 
                 # Botão para limpar cache com confirmação
                 if st.button("🧹 Limpar Cache", key="clear_cache"):
+
                     @st.dialog("🧹 Confirmar Limpeza de Cache")
                     def confirmar_limpeza_cache():
                         st.warning("⚠️ **Atenção:** Esta ação irá limpar todo o cache do sistema!")
-                        st.markdown("""
+                        st.markdown(
+                            """
                         Isso significa que:
                         - 🔄 Visualizações serão recalculadas
                         - 📊 Algoritmos serão executados novamente
                         - 🌐 Consultas MCP serão refeitas
                         - ⏱️ Pode causar lentidão temporária
-                        """)
+                        """
+                        )
 
                         col1, col2 = st.columns(2)
                         with col1:
@@ -555,6 +572,7 @@ def render_sidebar():
                         with col2:
                             if st.button("🧹 Confirmar Limpeza", type="primary", use_container_width=True):
                                 from cache_inteligente_moderno import limpar_cache
+
                                 limpar_cache()
                                 st.success("✅ Cache limpo com sucesso!")
                                 st.balloons()
@@ -565,7 +583,7 @@ def render_sidebar():
 
                 # Status do cache
                 cache_stats = obter_cache_stats()
-                hit_rate = cache_stats.get('hit_rate', 0) * 100
+                hit_rate = cache_stats.get("hit_rate", 0) * 100
 
                 if hit_rate > 50:
                     st.success(".1f")
@@ -587,13 +605,13 @@ def render_sidebar():
         # Métricas rápidas
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("Módulos Completados", len(progress['completed_modules']))
+            st.metric("Módulos Completados", len(progress["completed_modules"]))
         with col2:
-            st.metric("Sequência Atual", progress['current_streak'])
+            st.metric("Sequência Atual", progress["current_streak"])
 
         # Barra de progresso geral
         total_modules = 4
-        completed = len(progress['completed_modules'])
+        completed = len(progress["completed_modules"])
         progress_percentage = (completed / total_modules) * 100
 
         st.markdown("**Progresso Geral:**")
@@ -606,67 +624,89 @@ def render_sidebar():
 
         # Links úteis
         st.markdown("### 🔗 Links Úteis")
-        st.markdown("""
+        st.markdown(
+            """
         - [📚 Documentação](https://github.com/dronreef2/algoritmos-visualizador)
         - [🐛 Reportar Bug](https://github.com/dronreef2/algoritmos-visualizador/issues)
         - [💡 Sugestões](https://github.com/dronreef2/algoritmos-visualizador/discussions)
-        """)
+        """
+        )
+
 
 # ============================================================================
 # 🏠 PÁGINA INICIAL
 # ============================================================================
 
+
 def render_home_page():
     """Renderiza a página inicial com visão geral completa."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header fade-in">
         <h1>🎯 Algoritmos Visualizador Integrado</h1>
         <p>Uma experiência completa de aprendizado contextualizado com visualizações interativas</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Métricas principais
     col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h5>📚 Módulos</h5>
             <p>4 módulos completos</p>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with col2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h5>🎯 Algoritmos</h5>
             <p>50+ implementados</p>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with col3:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h5>🏗️ Estruturas</h5>
             <p>15+ visualizadas</p>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with col4:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h5>💼 Problemas</h5>
             <p>25+ de entrevista</p>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with col5:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h5>🎯 Exercícios</h5>
             <p>30+ interativos</p>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     # Destaques especiais
     st.markdown("## 🌟 Funcionalidades em Destaque")
@@ -674,7 +714,8 @@ def render_home_page():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="feature-card">
             <h4>🎯 Aprendizado Contextualizado</h4>
             <p>Jornadas temáticas com contexto histórico, aplicações reais e conexões entre conceitos.</p>
@@ -685,9 +726,12 @@ def render_home_page():
                 <li>📊 Acompanhamento de progresso</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        st.markdown("""
+        st.markdown(
+            """
         <div class="exercise-card">
             <h4>🎯 Exercícios Práticos Interativos</h4>
             <p>Pratique com exercícios reais, validação automática e feedback imediato.</p>
@@ -698,10 +742,13 @@ def render_home_page():
                 <li>✅ Sistema de conquistas</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with col2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="feature-card">
             <h4>🤖 Busca Inteligente com MCP</h4>
             <p>Busque explicações e exemplos na web usando IA integrada.</p>
@@ -712,9 +759,12 @@ def render_home_page():
                 <li>⚡ Busca avançada e básica</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        st.markdown("""
+        st.markdown(
+            """
         <div class="feature-card">
             <h4>📊 Visualizações Interativas</h4>
             <p>Veja algoritmos em ação com animações passo a passo.</p>
@@ -725,7 +775,9 @@ def render_home_page():
                 <li>🔍 Exploração detalhada</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     # Módulos disponíveis
     st.markdown("## 📋 Módulos de Aprendizado")
@@ -735,28 +787,34 @@ def render_home_page():
     with col1:
         # Módulo 1
         module_info = get_module_info("📚 Módulo 1: Fundamentos")
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="module-card">
             <h3>📚 Módulo 1: Fundamentos</h3>
             <p>{module_info.get('description', 'Algoritmos fundamentais')}</p>
             <ul>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        for topic in module_info.get('topics', [])[:4]:  # Mostra primeiros 4 tópicos
+        for topic in module_info.get("topics", [])[:4]:  # Mostra primeiros 4 tópicos
             st.markdown(f"<li>{topic}</li>", unsafe_allow_html=True)
 
         st.markdown("</ul></div>", unsafe_allow_html=True)
 
         # Módulo 3
         module_info = get_module_info("🎯 Módulo 3: Programação Dinâmica")
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="module-card">
             <h3>🎯 Módulo 3: Programação Dinâmica</h3>
             <p>{module_info.get('description', 'Metodologia 3 passos')}</p>
             <ul>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        for topic in module_info.get('topics', [])[:4]:
+        for topic in module_info.get("topics", [])[:4]:
             st.markdown(f"<li>{topic}</li>", unsafe_allow_html=True)
 
         st.markdown("</ul></div>", unsafe_allow_html=True)
@@ -764,61 +822,70 @@ def render_home_page():
     with col2:
         # Módulo 2
         module_info = get_module_info("🏗️ Módulo 2: Estruturas de Dados")
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="module-card">
             <h3>🏗️ Módulo 2: Estruturas de Dados</h3>
             <p>{module_info.get('description', 'Estruturas avançadas')}</p>
             <ul>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        for topic in module_info.get('topics', [])[:4]:
+        for topic in module_info.get("topics", [])[:4]:
             st.markdown(f"<li>{topic}</li>", unsafe_allow_html=True)
 
         st.markdown("</ul></div>", unsafe_allow_html=True)
 
         # Módulo 4
         module_info = get_module_info("💼 Módulo 4: Entrevistas")
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="module-card">
             <h3>💼 Módulo 4: Entrevistas</h3>
             <p>{module_info.get('description', 'Simulação de entrevistas')}</p>
             <ul>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        for topic in module_info.get('topics', [])[:4]:
+        for topic in module_info.get("topics", [])[:4]:
             st.markdown(f"<li>{topic}</li>", unsafe_allow_html=True)
 
         st.markdown("</ul></div>", unsafe_allow_html=True)
 
     # Call-to-action
     st.markdown("---")
-    st.markdown("""
+    st.markdown(
+        """
     <div style="text-align: center; margin: 2rem 0;">
         <h3>🚀 Pronto para começar sua jornada?</h3>
         <p>Escolha um módulo acima ou explore as funcionalidades especiais!</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 # ============================================================================
 # 📚 MÓDULOS INDIVIDUAIS
 # ============================================================================
 
+
 def render_module_1():
     """Renderiza o Módulo 1: Fundamentos."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>📚 Módulo 1: Fundamentos</h1>
         <p>Algoritmos fundamentais que formam a base do pensamento computacional</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Tabs do módulo
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "🔍 Busca Binária",
-        "👥 Dois Ponteiros",
-        "🪟 Janela Deslizante",
-        "🔄 Backtracking"
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(["🔍 Busca Binária", "👥 Dois Ponteiros", "🪟 Janela Deslizante", "🔄 Backtracking"])
 
     with tab1:
         render_busca_binaria()
@@ -832,22 +899,21 @@ def render_module_1():
     with tab4:
         render_backtracking()
 
+
 def render_module_2():
     """Renderiza o Módulo 2: Estruturas de Dados."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>🏗️ Módulo 2: Estruturas de Dados</h1>
         <p>Estruturas de dados avançadas com visualizações interativas</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Tabs do módulo
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "🔺 Heap (Min/Max)",
-        "🌳 Trie",
-        "🤝 Union-Find",
-        "📊 Segment Tree"
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(["🔺 Heap (Min/Max)", "🌳 Trie", "🤝 Union-Find", "📊 Segment Tree"])
 
     with tab1:
         render_heap()
@@ -861,22 +927,21 @@ def render_module_2():
     with tab4:
         render_segment_tree()
 
+
 def render_module_3():
     """Renderiza o Módulo 3: Programação Dinâmica."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>🎯 Módulo 3: Programação Dinâmica</h1>
         <p>Metodologia de 3 passos para resolver problemas complexos</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Tabs do módulo
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "💪 Força Bruta",
-        "🧠 Memoização",
-        "📊 Tabulação",
-        "🎯 Problemas Clássicos"
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(["💪 Força Bruta", "🧠 Memoização", "📊 Tabulação", "🎯 Problemas Clássicos"])
 
     with tab1:
         render_forca_bruta()
@@ -890,21 +955,21 @@ def render_module_3():
     with tab4:
         render_problemas_classicos()
 
+
 def render_module_4():
     """Renderiza o Módulo 4: Entrevistas."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>💼 Módulo 4: Entrevistas</h1>
         <p>Simulação completa de entrevistas técnicas</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Tabs do módulo
-    tab1, tab2, tab3 = st.tabs([
-        "🎯 Simulação de Entrevista",
-        "📊 Análise de Código",
-        "📝 Feedback"
-    ])
+    tab1, tab2, tab3 = st.tabs(["🎯 Simulação de Entrevista", "📊 Análise de Código", "📝 Feedback"])
 
     with tab1:
         render_simulacao_entrevista()
@@ -915,22 +980,27 @@ def render_module_4():
     with tab3:
         render_feedback_entrevista()
 
+
 # ============================================================================
 # 🎯 APRENDIZADO CONTEXTUALIZADO
 # ============================================================================
+
 
 def render_aprendizado_contextualizado():
     """Renderiza o sistema de aprendizado contextualizado."""
     try:
         from aprendizado_contextual_ui import render_aprendizado_contextual
+
         render_aprendizado_contextual()
     except ImportError:
         st.error("Sistema de aprendizado contextualizado não disponível.")
         st.info("Verifique se o arquivo `aprendizado_contextual_ui.py` está presente.")
 
+
 # ============================================================================
 # 🎯 EXERCÍCIOS PRÁTICOS
 # ============================================================================
+
 
 @st.fragment
 def render_exercicios_praticos():
@@ -952,25 +1022,30 @@ def render_exercicios_praticos():
         st.error("Sistema de exercícios práticos não disponível.")
         st.info("Verifique se o arquivo `exercicios_praticos_ui.py` está presente.")
 
+
 # ============================================================================
 # 🔍 BUSCA MCP
 # ============================================================================
 
+
 @st.fragment
 def render_busca_mcp():
     """Renderiza a interface de busca MCP com Tavily."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>🔍 Busca Inteligente com MCP</h1>
         <p>Busque explicações e exemplos usando IA integrada</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     try:
         from mcp_tavily_integration import TavilySearchClient
 
         # Inicializar cliente
-        if 'mcp_client' not in st.session_state:
+        if "mcp_client" not in st.session_state:
             st.session_state.mcp_client = TavilySearchClient()
 
         client = st.session_state.mcp_client
@@ -989,28 +1064,20 @@ def render_busca_mcp():
                     query = st.text_input(
                         "Digite sua consulta:",
                         placeholder="Ex: 'como funciona o algoritmo de Dijkstra?'",
-                        help="Faça perguntas sobre algoritmos, estruturas de dados ou problemas de programação"
+                        help="Faça perguntas sobre algoritmos, estruturas de dados ou problemas de programação",
                     )
 
                 with col2:
                     search_type = st.selectbox(
-                        "Tipo de busca:",
-                        ["basic", "advanced"],
-                        help="Basic: busca rápida, Advanced: busca detalhada"
+                        "Tipo de busca:", ["basic", "advanced"], help="Basic: busca rápida, Advanced: busca detalhada"
                     )
 
                     include_answer = st.checkbox(
-                        "Incluir resposta da IA",
-                        value=False,
-                        help="Gera resposta contextualizada usando IA"
+                        "Incluir resposta da IA", value=False, help="Gera resposta contextualizada usando IA"
                     )
 
                     max_results = st.slider(
-                        "Máximo de resultados:",
-                        min_value=1,
-                        max_value=10,
-                        value=5,
-                        help="Número máximo de resultados"
+                        "Máximo de resultados:", min_value=1, max_value=10, value=5, help="Número máximo de resultados"
                     )
 
                 # Botão de submit do formulário
@@ -1025,33 +1092,28 @@ def render_busca_mcp():
                         # Usar cache para buscas MCP
                         if CACHE_AVAILABLE:
                             st.write("💾 Verificando cache...")
-                            result = executar_busca_mcp_com_cache(
-                                client, query, search_type, include_answer, max_results
-                            )
+                            result = executar_busca_mcp_com_cache(client, query, search_type, include_answer, max_results)
                         else:
                             st.write("🌐 Fazendo consulta externa...")
                             result = client.search(
-                                query,
-                                search_depth=search_type,
-                                include_answer=include_answer,
-                                max_results=max_results
+                                query, search_depth=search_type, include_answer=include_answer, max_results=max_results
                             )
 
                         st.write("📊 Processando resultados...")
-                        if result and 'results' in result:
+                        if result and "results" in result:
                             status.update(label=f"✅ Encontrados {len(result['results'])} resultados!", state="complete")
 
                             # Exibir resultados
-                            for i, item in enumerate(result['results'], 1):
+                            for i, item in enumerate(result["results"], 1):
                                 with st.expander(f"📄 Resultado {i}: {item.get('title', 'Sem título')}"):
                                     st.markdown(f"**URL:** {item.get('url', 'N/A')}")
                                     st.markdown(f"**Conteúdo:** {item.get('snippet', 'N/A')}")
 
                             # Resposta da IA se solicitada
-                            if include_answer and 'answer' in result:
+                            if include_answer and "answer" in result:
                                 st.markdown("---")
                                 st.markdown("### 🧠 Resposta da IA")
-                                st.info(result['answer'])
+                                st.info(result["answer"])
 
                         else:
                             status.update(label="⚠️ Nenhum resultado encontrado", state="complete")
@@ -1070,18 +1132,23 @@ def render_busca_mcp():
         st.error("Integração MCP não disponível.")
         st.info("Verifique se o arquivo `mcp_tavily_integration.py` está presente.")
 
+
 # ============================================================================
 # 📊 DASHBOARD DE PROGRESSO
 # ============================================================================
 
+
 def render_dashboard_progresso():
     """Renderiza o dashboard de progresso do usuário."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>📊 Dashboard de Progresso</h1>
         <p>Acompanhe seu avanço no aprendizado de algoritmos</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     progress = st.session_state.user_progress
 
@@ -1089,39 +1156,33 @@ def render_dashboard_progresso():
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        completed_modules = len(progress['completed_modules'])
+        completed_modules = len(progress["completed_modules"])
         st.metric("Módulos Completados", f"{completed_modules}/4")
 
     with col2:
-        st.metric("Sequência Atual", progress['current_streak'])
+        st.metric("Sequência Atual", progress["current_streak"])
 
     with col3:
-        total_time = progress['total_study_time']
+        total_time = progress["total_study_time"]
         st.metric("Tempo de Estudo", f"{total_time} min")
 
     with col4:
-        achievements = len(progress['achievements'])
+        achievements = len(progress["achievements"])
         st.metric("Conquistas", achievements)
 
     # Gráfico de progresso
     st.markdown("### 📈 Progresso por Módulo")
 
     modules = ["Fundamentos", "Estruturas", "Dinâmica", "Entrevistas"]
-    completed = [1 if f"Módulo {i+1}" in progress['completed_modules'] else 0 for i in range(4)]
+    completed = [1 if f"Módulo {i+1}" in progress["completed_modules"] else 0 for i in range(4)]
 
-    fig = go.Figure(data=[
-        go.Bar(
-            x=modules,
-            y=completed,
-            marker_color=['#4CAF50' if c else '#FF9800' for c in completed]
-        )
-    ])
+    fig = go.Figure(data=[go.Bar(x=modules, y=completed, marker_color=["#4CAF50" if c else "#FF9800" for c in completed])])
 
     fig.update_layout(
         title="Status de Conclusão dos Módulos",
         xaxis_title="Módulos",
         yaxis_title="Status (0=Não Concluído, 1=Concluído)",
-        yaxis=dict(tickmode='linear', tick0=0, dtick=1)
+        yaxis=dict(tickmode="linear", tick0=0, dtick=1),
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -1129,7 +1190,7 @@ def render_dashboard_progresso():
     # Atividades recentes
     st.markdown("### 🕒 Atividades Recentes")
 
-    if 'last_activity' in progress:
+    if "last_activity" in progress:
         st.info(f"Última atividade: {progress['last_activity'].strftime('%d/%m/%Y %H:%M')}")
 
     # Recomendações
@@ -1141,18 +1202,23 @@ def render_dashboard_progresso():
     else:
         st.success("🎉 Parabéns! Você completou todos os módulos!")
 
+
 # ============================================================================
 # 🏆 SISTEMA DE CONQUISTAS
 # ============================================================================
 
+
 def render_conquistas():
     """Renderiza o sistema de conquistas."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>🏆 Sistema de Conquistas</h1>
         <p>Desbloqueie conquistas enquanto aprende algoritmos</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Conquistas disponíveis
     achievements = [
@@ -1160,44 +1226,44 @@ def render_conquistas():
             "name": "Primeiro Passo",
             "description": "Complete seu primeiro exercício",
             "icon": "🎯",
-            "unlocked": len(st.session_state.user_progress['completed_exercises']) > 0
+            "unlocked": len(st.session_state.user_progress["completed_exercises"]) > 0,
         },
         {
             "name": "Buscador Ávido",
             "description": "Complete o módulo de Busca Binária",
             "icon": "🔍",
-            "unlocked": "Módulo 1" in st.session_state.user_progress['completed_modules']
+            "unlocked": "Módulo 1" in st.session_state.user_progress["completed_modules"],
         },
         {
             "name": "Estruturador",
             "description": "Complete o módulo de Estruturas de Dados",
             "icon": "🏗️",
-            "unlocked": "Módulo 2" in st.session_state.user_progress['completed_modules']
+            "unlocked": "Módulo 2" in st.session_state.user_progress["completed_modules"],
         },
         {
             "name": "Dinâmico",
             "description": "Complete o módulo de Programação Dinâmica",
             "icon": "🎯",
-            "unlocked": "Módulo 3" in st.session_state.user_progress['completed_modules']
+            "unlocked": "Módulo 3" in st.session_state.user_progress["completed_modules"],
         },
         {
             "name": "Entrevistador",
             "description": "Complete o módulo de Entrevistas",
             "icon": "💼",
-            "unlocked": "Módulo 4" in st.session_state.user_progress['completed_modules']
+            "unlocked": "Módulo 4" in st.session_state.user_progress["completed_modules"],
         },
         {
             "name": "Sequência de Vitórias",
             "description": "Complete 7 exercícios seguidos",
             "icon": "🔥",
-            "unlocked": st.session_state.user_progress['current_streak'] >= 7
+            "unlocked": st.session_state.user_progress["current_streak"] >= 7,
         },
         {
             "name": "Mestre dos Algoritmos",
             "description": "Complete todos os módulos",
             "icon": "👑",
-            "unlocked": len(st.session_state.user_progress['completed_modules']) == 4
-        }
+            "unlocked": len(st.session_state.user_progress["completed_modules"]) == 4,
+        },
     ]
 
     # Exibir conquistas
@@ -1208,41 +1274,48 @@ def render_conquistas():
 
         with col:
             if achievement["unlocked"]:
-                st.markdown(f"""
+                st.markdown(
+                    f"""
                 <div class="metric-card" style="border-left-color: #4CAF50;">
                     <h5>{achievement['icon']} {achievement['name']}</h5>
                     <p>{achievement['description']}</p>
                     <span class="status-badge status-success">DESBLOQUEADA</span>
                 </div>
-                """, unsafe_allow_html=True)
+                """,
+                    unsafe_allow_html=True,
+                )
             else:
-                st.markdown(f"""
+                st.markdown(
+                    f"""
                 <div class="metric-card" style="border-left-color: #9E9E9E; opacity: 0.6;">
                     <h5>{achievement['icon']} {achievement['name']}</h5>
                     <p>{achievement['description']}</p>
                     <span class="status-badge status-info">BLOQUEADA</span>
                 </div>
-                """, unsafe_allow_html=True)
+                """,
+                    unsafe_allow_html=True,
+                )
+
 
 # ============================================================================
 # ⚙️ CONFIGURAÇÕES
 # ============================================================================
 
+
 def render_configuracoes():
     """Renderiza a página de configurações."""
-    st.markdown("""
+    st.markdown(
+        """
     <div class="main-header">
         <h1>⚙️ Configurações</h1>
         <p>Personalize sua experiência de aprendizado</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Tabs de configuração
-    tab1, tab2, tab3 = st.tabs([
-        "👤 Perfil",
-        "🎨 Interface",
-        "📊 Dados"
-    ])
+    tab1, tab2, tab3 = st.tabs(["👤 Perfil", "🎨 Interface", "📊 Dados"])
 
     with tab1:
         st.markdown("### 👤 Configurações do Perfil")
@@ -1258,7 +1331,7 @@ def render_configuracoes():
             interesses = st.multiselect(
                 "Interesses",
                 ["Algoritmos", "Estruturas de Dados", "Programação Dinâmica", "Entrevistas"],
-                default=["Algoritmos"]
+                default=["Algoritmos"],
             )
 
             # Botão de submit do formulário
@@ -1266,11 +1339,7 @@ def render_configuracoes():
 
             if submitted_perfil:
                 # Salvar configurações no session_state
-                st.session_state.user_profile = {
-                    'nome': nome,
-                    'nivel': nivel,
-                    'interesses': interesses
-                }
+                st.session_state.user_profile = {"nome": nome, "nivel": nivel, "interesses": interesses}
                 st.success("✅ Perfil salvo com sucesso!")
 
     with tab2:
@@ -1296,27 +1365,30 @@ def render_configuracoes():
             if submitted_interface:
                 # Aplicar configurações da interface
                 st.session_state.interface_config = {
-                    'tema': tema,
-                    'velocidade_animacao': velocidade,
-                    'mostrar_dicas': mostrar_dicas,
-                    'notificacoes': notificacoes
+                    "tema": tema,
+                    "velocidade_animacao": velocidade,
+                    "mostrar_dicas": mostrar_dicas,
+                    "notificacoes": notificacoes,
                 }
                 st.success("✅ Configurações da interface aplicadas!")
 
     with tab3:
         st.markdown("### 📊 Gerenciamento de Dados")
         if st.button("🗑️ Limpar Progresso", type="secondary", key="config_limpar_progresso"):
+
             @st.dialog("🗑️ Confirmar Limpeza de Progresso")
             def confirmar_limpeza_progresso():
                 st.error("⚠️ **Cuidado:** Esta ação é irreversível!")
-                st.markdown("""
+                st.markdown(
+                    """
                 Ao limpar o progresso, você perderá:
                 - 📚 Módulos concluídos
                 - 🎯 Exercícios finalizados
                 - 🔥 Sequência de estudo atual
                 - 🏆 Conquistas desbloqueadas
                 - 📊 Tempo total de estudo
-                """)
+                """
+                )
 
                 st.warning("💡 **Dica:** Considere fazer backup dos dados antes de continuar.")
 
@@ -1328,12 +1400,12 @@ def render_configuracoes():
                 with col2:
                     if st.button("🗑️ Confirmar Limpeza", type="primary", use_container_width=True):
                         st.session_state.user_progress = {
-                            'completed_modules': [],
-                            'completed_exercises': [],
-                            'current_streak': 0,
-                            'total_study_time': 0,
-                            'achievements': [],
-                            'last_activity': datetime.now()
+                            "completed_modules": [],
+                            "completed_exercises": [],
+                            "current_streak": 0,
+                            "total_study_time": 0,
+                            "achievements": [],
+                            "last_activity": datetime.now(),
                         }
                         st.success("✅ Progresso limpo com sucesso!")
                         st.info("🔄 Comece uma nova jornada de aprendizado!")
@@ -1347,12 +1419,14 @@ def render_configuracoes():
                 label="Baixar Dados JSON",
                 data=str(st.session_state.user_progress),
                 file_name="progresso_algoritmos.json",
-                mime="application/json"
+                mime="application/json",
             )
+
 
 # ============================================================================
 # � EXPLORAR MÓDULOS - INTEGRAÇÃO COMPLETA
 # ============================================================================
+
 
 def render_explorar_modulos():
     """Renderiza interface para explorar todos os módulos educacionais integrados."""
@@ -1362,19 +1436,22 @@ def render_explorar_modulos():
         st.error("❌ Módulos integrados não disponíveis. Verifique a instalação.")
         return
 
-    st.markdown("""
+    st.markdown(
+        """
     <div class="module-card">
         <h3>🔍 Exploração Completa dos Módulos</h3>
         <p>Explore todo o conteúdo educacional organizado por módulos, com acesso direto aos arquivos fonte e documentação.</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # Seleção de módulo
     modulos_disponiveis = {
         0: "📚 Módulo 1: Fundamentos",
         1: "🏗️ Módulo 2: Estruturas de Dados",
         2: "🎯 Módulo 3: Programação Dinâmica",
-        3: "💼 Módulo 4: Entrevistas"
+        3: "💼 Módulo 4: Entrevistas",
     }
 
     col1, col2 = st.columns([1, 2])
@@ -1384,7 +1461,7 @@ def render_explorar_modulos():
             "Selecione um módulo:",
             options=list(modulos_disponiveis.keys()),
             format_func=lambda x: modulos_disponiveis[x],
-            key="modulo_explorar"
+            key="modulo_explorar",
         )
 
     with col2:
@@ -1431,7 +1508,7 @@ def render_explorar_modulos():
                                     data=info_arquivo["conteudo"],
                                     file_name=nome_arquivo,
                                     mime="text/plain",
-                                    key=f"download_{nome_arquivo}"
+                                    key=f"download_{nome_arquivo}",
                                 )
 
     # Visão geral de todos os módulos
@@ -1441,7 +1518,8 @@ def render_explorar_modulos():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="feature-card">
             <h4>📚 Módulo 1: Fundamentos</h4>
             <p>Algoritmos essenciais e técnicas básicas</p>
@@ -1453,9 +1531,12 @@ def render_explorar_modulos():
                 <li>🔍 BFS/DFS</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        st.markdown("""
+        st.markdown(
+            """
         <div class="feature-card">
             <h4>🏗️ Módulo 2: Estruturas de Dados</h4>
             <p>Estruturas avançadas e algoritmos associados</p>
@@ -1466,10 +1547,13 @@ def render_explorar_modulos():
                 <li>📊 Visualização Interativa</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with col2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="feature-card">
             <h4>🎯 Módulo 3: Programação Dinâmica</h4>
             <p>Técnicas avançadas de otimização</p>
@@ -1480,9 +1564,12 @@ def render_explorar_modulos():
                 <li>📊 Análise de Complexidade</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        st.markdown("""
+        st.markdown(
+            """
         <div class="feature-card">
             <h4>💼 Módulo 4: Entrevistas</h4>
             <p>Preparação para entrevistas técnicas</p>
@@ -1493,11 +1580,15 @@ def render_explorar_modulos():
                 <li>📈 Acompanhamento de Progresso</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
+
 
 # ============================================================================
 # �🔍 VISUALIZADORES INDIVIDUAIS (IMPLEMENTAÇÕES BÁSICAS)
 # ============================================================================
+
 
 def render_busca_binaria():
     """Renderiza demonstração da busca binária."""
@@ -1526,7 +1617,7 @@ def render_busca_binaria():
 
             st.write(f"🔍 Analisando {len(resultado['passos'])} passos...")
 
-            if resultado['encontrado']:
+            if resultado["encontrado"]:
                 status.update(label=f"✅ Encontrado na posição {resultado['posicao']}!", state="complete")
                 st.success(f"✅ Encontrado na posição {resultado['posicao']}!")
             else:
@@ -1534,8 +1625,11 @@ def render_busca_binaria():
                 st.error("❌ Valor não encontrado!")
 
         # Mostrar passos (fora do status para manter visível)
-        for i, passo in enumerate(resultado['passos']):
-            st.write(f"Passo {i+1}: esquerda={passo['esquerda']}, direita={passo['direita']}, meio={passo['meio']}, valor={passo['valor']}")
+        for i, passo in enumerate(resultado["passos"]):
+            st.write(
+                f"Passo {i+1}: esquerda={passo['esquerda']}, direita={passo['direita']}, meio={passo['meio']}, valor={passo['valor']}"
+            )
+
 
 @cache_algoritmo(ttl_seconds=1800)
 def executar_busca_binaria_com_cache(array, target):
@@ -1545,29 +1639,17 @@ def executar_busca_binaria_com_cache(array, target):
 
     while esquerda <= direita:
         meio = (esquerda + direita) // 2
-        passos.append({
-            'esquerda': esquerda,
-            'direita': direita,
-            'meio': meio,
-            'valor': array[meio]
-        })
+        passos.append({"esquerda": esquerda, "direita": direita, "meio": meio, "valor": array[meio]})
 
         if array[meio] == target:
-            return {
-                'encontrado': True,
-                'posicao': meio,
-                'passos': passos
-            }
+            return {"encontrado": True, "posicao": meio, "passos": passos}
         elif array[meio] < target:
             esquerda = meio + 1
         else:
             direita = meio - 1
 
-    return {
-        'encontrado': False,
-        'posicao': -1,
-        'passos': passos
-    }
+    return {"encontrado": False, "posicao": -1, "passos": passos}
+
 
 def executar_busca_binaria_sem_cache(array, target):
     """Executa busca binária sem cache (fallback)."""
@@ -1576,29 +1658,17 @@ def executar_busca_binaria_sem_cache(array, target):
 
     while esquerda <= direita:
         meio = (esquerda + direita) // 2
-        passos.append({
-            'esquerda': esquerda,
-            'direita': direita,
-            'meio': meio,
-            'valor': array[meio]
-        })
+        passos.append({"esquerda": esquerda, "direita": direita, "meio": meio, "valor": array[meio]})
 
         if array[meio] == target:
-            return {
-                'encontrado': True,
-                'posicao': meio,
-                'passos': passos
-            }
+            return {"encontrado": True, "posicao": meio, "passos": passos}
         elif array[meio] < target:
             esquerda = meio + 1
         else:
             direita = meio - 1
 
-    return {
-        'encontrado': False,
-        'posicao': -1,
-        'passos': passos
-    }
+    return {"encontrado": False, "posicao": -1, "passos": passos}
+
 
 def render_dois_ponteiros():
     """Renderiza demonstração dos dois ponteiros."""
@@ -1638,40 +1708,38 @@ def render_dois_ponteiros():
 
         st.pyplot(fig)
 
+
 @cache_visualizacao(ttl_seconds=1800)
 def criar_visualizacao_container(alturas, max_area):
     """Cria visualização do Container With Most Water com cache."""
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.bar(range(len(alturas)), alturas, color='skyblue')
+    ax.bar(range(len(alturas)), alturas, color="skyblue")
     ax.set_title(f"Container With Most Water - Área Máxima: {max_area}")
     ax.set_xlabel("Posição")
     ax.set_ylabel("Altura")
 
     # Adicionar linhas para mostrar a área máxima
-    ax.axhline(y=max_area/10, color='red', linestyle='--', alpha=0.7,
-               label=f'Área Máxima: {max_area}')
+    ax.axhline(y=max_area / 10, color="red", linestyle="--", alpha=0.7, label=f"Área Máxima: {max_area}")
     ax.legend()
 
     return fig
 
+
 def criar_visualizacao_container_sem_cache(alturas, max_area):
     """Cria visualização sem cache (fallback)."""
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.bar(range(len(alturas)), alturas, color='skyblue')
+    ax.bar(range(len(alturas)), alturas, color="skyblue")
     ax.set_title(f"Container With Most Water - Área Máxima: {max_area}")
     ax.set_xlabel("Posição")
     ax.set_ylabel("Altura")
     return fig
 
+
 @cache_mcp(ttl_seconds=1800)
 def executar_busca_mcp_com_cache(client, query, search_type, include_answer, max_results):
     """Executa busca MCP com cache inteligente."""
-    return client.search(
-        query,
-        search_depth=search_type,
-        include_answer=include_answer,
-        max_results=max_results
-    )
+    return client.search(query, search_depth=search_type, include_answer=include_answer, max_results=max_results)
+
 
 def render_janela_deslizante():
     """Renderiza demonstração da janela deslizante."""
@@ -1692,14 +1760,14 @@ def render_janela_deslizante():
             current_sum = max_sum
 
             for i in range(k, len(nums)):
-                current_sum = current_sum - nums[i-k] + nums[i]
+                current_sum = current_sum - nums[i - k] + nums[i]
                 max_sum = max(max_sum, current_sum)
 
             st.success(f"Soma máxima: {max_sum}")
 
             # Visualização
             fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(nums, 'o-', linewidth=2, markersize=8)
+            ax.plot(nums, "o-", linewidth=2, markersize=8)
             ax.set_title(f"Janela Deslizante (K={k})")
             ax.set_xlabel("Posição")
             ax.set_ylabel("Valor")
@@ -1707,6 +1775,7 @@ def render_janela_deslizante():
             st.pyplot(fig)
         else:
             st.error("Array deve ter pelo menos K elementos!")
+
 
 def render_backtracking():
     """Renderiza demonstração de backtracking."""
@@ -1719,6 +1788,7 @@ def render_backtracking():
     nums = [int(x.strip()) for x in nums.split(",")]
 
     if st.button("Gerar Subconjuntos"):
+
         def backtrack(start, current, result):
             result.append(current[:])
             for i in range(start, len(nums)):
@@ -1734,6 +1804,7 @@ def render_backtracking():
             st.write(f"[{', '.join(map(str, subset))}]")
 
         st.info(f"Total de subconjuntos: {len(result)}")
+
 
 def render_heap():
     """Renderiza demonstração de Heap."""
@@ -1755,12 +1826,13 @@ def render_heap():
             resultado = processar_heap_sem_cache(valores)
 
         st.write("**Array original:**", valores)
-        st.write("**Heap resultante:**", resultado['heap'])
+        st.write("**Heap resultante:**", resultado["heap"])
 
         # Operações
-        if resultado['heap']:
+        if resultado["heap"]:
             st.write(f"**Menor elemento removido:** {resultado['menor']}")
-            st.write("**Heap após remoção:**", resultado['heap_final'])
+            st.write("**Heap após remoção:**", resultado["heap_final"])
+
 
 @cache_algoritmo(ttl_seconds=3600)
 def processar_heap_com_cache(valores):
@@ -1774,17 +1846,10 @@ def processar_heap_com_cache(valores):
     heap_copia = heap[:]
     if heap_copia:
         menor = heapq.heappop(heap_copia)
-        return {
-            'heap': heap,
-            'menor': menor,
-            'heap_final': heap_copia
-        }
+        return {"heap": heap, "menor": menor, "heap_final": heap_copia}
     else:
-        return {
-            'heap': heap,
-            'menor': None,
-            'heap_final': heap
-        }
+        return {"heap": heap, "menor": None, "heap_final": heap}
+
 
 def processar_heap_sem_cache(valores):
     """Processa operações de heap sem cache (fallback)."""
@@ -1797,17 +1862,10 @@ def processar_heap_sem_cache(valores):
     heap_copia = heap[:]
     if heap_copia:
         menor = heapq.heappop(heap_copia)
-        return {
-            'heap': heap,
-            'menor': menor,
-            'heap_final': heap_copia
-        }
+        return {"heap": heap, "menor": menor, "heap_final": heap_copia}
     else:
-        return {
-            'heap': heap,
-            'menor': None,
-            'heap_final': heap
-        }
+        return {"heap": heap, "menor": None, "heap_final": heap}
+
 
 def render_trie():
     """Renderiza demonstração de Trie."""
@@ -1859,6 +1917,7 @@ def render_trie():
             else:
                 st.error(f"❌ '{palavra_busca}' não encontrada!")
 
+
 def render_union_find():
     """Renderiza demonstração de Union-Find."""
     st.markdown("### 🤝 Union-Find")
@@ -1902,9 +1961,9 @@ def render_union_find():
 
     col1, col2 = st.columns(2)
     with col1:
-        p = st.number_input("Elemento P:", 0, n-1, 0)
+        p = st.number_input("Elemento P:", 0, n - 1, 0)
     with col2:
-        q = st.number_input("Elemento Q:", 0, n-1, 1)
+        q = st.number_input("Elemento Q:", 0, n - 1, 1)
 
     if st.button("Fazer Union", key="union_find_union"):
         if uf.union(p, q):
@@ -1915,6 +1974,7 @@ def render_union_find():
         st.write("**Estado após union:**")
         st.write("Parent:", uf.parent)
         st.write("Rank:", uf.rank)
+
 
 def render_segment_tree():
     """Renderiza demonstração de Segment Tree."""
@@ -1933,9 +1993,9 @@ def render_segment_tree():
                 return
 
             mid = (start + end) // 2
-            self.build(arr, 2*node+1, start, mid)
-            self.build(arr, 2*node+2, mid+1, end)
-            self.tree[node] = self.tree[2*node+1] + self.tree[2*node+2]
+            self.build(arr, 2 * node + 1, start, mid)
+            self.build(arr, 2 * node + 2, mid + 1, end)
+            self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]
 
         def query(self, node, start, end, l, r):
             if r < start or end < l:
@@ -1944,8 +2004,8 @@ def render_segment_tree():
                 return self.tree[node]
 
             mid = (start + end) // 2
-            left = self.query(2*node+1, start, mid, l, r)
-            right = self.query(2*node+2, mid+1, end, l, r)
+            left = self.query(2 * node + 1, start, mid, l, r)
+            right = self.query(2 * node + 2, mid + 1, end, l, r)
             return left + right
 
     # Demonstração
@@ -1960,16 +2020,17 @@ def render_segment_tree():
 
         col1, col2 = st.columns(2)
         with col1:
-            l = st.number_input("Índice esquerdo:", 0, len(valores)-1, 0)
+            l = st.number_input("Índice esquerdo:", 0, len(valores) - 1, 0)
         with col2:
-            r = st.number_input("Índice direito:", 0, len(valores)-1, len(valores)-1)
+            r = st.number_input("Índice direito:", 0, len(valores) - 1, len(valores) - 1)
 
         if st.button("Consultar Soma", key="segment_tree_consultar"):
             if l <= r:
-                soma = tree.query(0, 0, len(valores)-1, l, r)
+                soma = tree.query(0, 0, len(valores) - 1, l, r)
                 st.success(f"Soma de [{l}:{r}] = {soma}")
             else:
                 st.error("Índice esquerdo deve ser <= direito!")
+
 
 def render_forca_bruta():
     """Renderiza exemplo de força bruta."""
@@ -1982,6 +2043,7 @@ def render_forca_bruta():
     nums = [int(x.strip()) for x in nums.split(",")]
 
     if st.button("Encontrar Subconjuntos", key="forca_bruta_subsets"):
+
         def find_subsets(nums, target, index=0, current=[], result=[]):
             if sum(current) == target:
                 result.append(current[:])
@@ -2007,6 +2069,7 @@ def render_forca_bruta():
         else:
             st.warning("Nenhum subconjunto encontrado com essa soma.")
 
+
 def render_memoizacao():
     """Renderiza exemplo de memoização."""
     st.markdown("### 🧠 Memoização")
@@ -2023,7 +2086,7 @@ def render_memoizacao():
             if n <= 1:
                 return n
 
-            memo[n] = fib_memo(n-1) + fib_memo(n-2)
+            memo[n] = fib_memo(n - 1) + fib_memo(n - 2)
             return memo[n]
 
         resultado = fib_memo(n)
@@ -2033,6 +2096,7 @@ def render_memoizacao():
         st.write("**Cache de memoização:**")
         for k, v in sorted(memo.items()):
             st.write(f"fib({k}) = {v}")
+
 
 def render_tabulacao():
     """Renderiza exemplo de tabulação."""
@@ -2048,24 +2112,24 @@ def render_tabulacao():
                 fib[1] = 1
 
             for i in range(2, n + 1):
-                fib[i] = fib[i-1] + fib[i-2]
+                fib[i] = fib[i - 1] + fib[i - 2]
 
             st.success(f"Fibonacci({n}) = {fib[n]}")
 
             # Mostrar tabela
             st.write("**Tabela de Fibonacci:**")
-            for i in range(min(n+1, 20)):  # Mostra até 20 primeiros
+            for i in range(min(n + 1, 20)):  # Mostra até 20 primeiros
                 st.write(f"fib({i}) = {fib[i]}")
 
             if n > 19:
                 st.info("... (mostrando apenas os primeiros 20)")
 
+
 def render_problemas_classicos():
     """Renderiza problemas clássicos de DP."""
     st.markdown("### 🎯 Problemas Clássicos de Programação Dinâmica")
 
-    problema = st.selectbox("Escolha um problema:",
-                           ["Knapsack 0/1", "Longest Common Subsequence", "Coin Change"])
+    problema = st.selectbox("Escolha um problema:", ["Knapsack 0/1", "Longest Common Subsequence", "Coin Change"])
 
     if problema == "Knapsack 0/1":
         st.markdown("**Knapsack 0/1**")
@@ -2084,10 +2148,10 @@ def render_problemas_classicos():
 
             for i in range(1, n + 1):
                 for w in range(capacidade + 1):
-                    if pesos[i-1] <= w:
-                        dp[i][w] = max(dp[i-1][w], dp[i-1][w - pesos[i-1]] + valores[i-1])
+                    if pesos[i - 1] <= w:
+                        dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - pesos[i - 1]] + valores[i - 1])
                     else:
-                        dp[i][w] = dp[i-1][w]
+                        dp[i][w] = dp[i - 1][w]
 
             st.success(f"Valor máximo: {dp[n][capacidade]}")
 
@@ -2104,10 +2168,10 @@ def render_problemas_classicos():
 
             for i in range(1, m + 1):
                 for j in range(1, n + 1):
-                    if s1[i-1] == s2[j-1]:
-                        dp[i][j] = dp[i-1][j-1] + 1
+                    if s1[i - 1] == s2[j - 1]:
+                        dp[i][j] = dp[i - 1][j - 1] + 1
                     else:
-                        dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+                        dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
 
             st.success(f"Comprimento da LCS: {dp[m][n]}")
 
@@ -2121,7 +2185,7 @@ def render_problemas_classicos():
         moedas = [int(x.strip()) for x in moedas.split(",")]
 
         if st.button("Calcular", key="coin_change_calcular"):
-            dp = [float('inf')] * (valor + 1)
+            dp = [float("inf")] * (valor + 1)
             dp[0] = 0
 
             for i in range(1, valor + 1):
@@ -2129,10 +2193,11 @@ def render_problemas_classicos():
                     if moeda <= i:
                         dp[i] = min(dp[i], dp[i - moeda] + 1)
 
-            if dp[valor] != float('inf'):
+            if dp[valor] != float("inf"):
                 st.success(f"Número mínimo de moedas: {dp[valor]}")
             else:
                 st.error("Não é possível fazer esse valor com as moedas dadas.")
+
 
 def render_simulacao_entrevista():
     """Renderiza simulação de entrevista."""
@@ -2154,7 +2219,8 @@ def render_simulacao_entrevista():
 
         # Problema de exemplo baseado na categoria
         if categoria == "Array":
-            st.markdown("""
+            st.markdown(
+                """
             **Problema: Two Sum**
 
             Dado um array de números inteiros `nums` e um inteiro `target`, retorne os índices dos dois números que somam `target`.
@@ -2166,7 +2232,8 @@ def render_simulacao_entrevista():
             Input: nums = [2,7,11,15], target = 9
             Output: [0,1]
             ```
-            """)
+            """
+            )
 
             # Área de resposta
             resposta = st.text_area("Sua solução (código Python):", height=200)
@@ -2189,27 +2256,31 @@ def render_simulacao_entrevista():
                 else:
                     st.warning("Por favor, escreva sua solução!")
 
+
 def render_analise_codigo():
     """Renderiza análise de código."""
     st.markdown("### 📊 Análise de Código")
 
-    codigo = st.text_area("Cole seu código para análise:", height=200,
-                         value="""def two_sum(nums, target):
+    codigo = st.text_area(
+        "Cole seu código para análise:",
+        height=200,
+        value="""def two_sum(nums, target):
     seen = {}
     for i, num in enumerate(nums):
         complement = target - num
         if complement in seen:
             return [seen[complement], i]
         seen[num] = i
-    return []""")
+    return []""",
+    )
 
     if st.button("🔍 Analisar Código", key="analise_codigo_analisar"):
         st.markdown("### 📋 Análise Detalhada")
 
         # Análise básica
-        linhas = len(codigo.split('\n'))
-        funcoes = codigo.count('def ')
-        loops = codigo.count('for ') + codigo.count('while ')
+        linhas = len(codigo.split("\n"))
+        funcoes = codigo.count("def ")
+        loops = codigo.count("for ") + codigo.count("while ")
 
         col1, col2, col3 = st.columns(3)
 
@@ -2240,6 +2311,7 @@ def render_analise_codigo():
         st.markdown("- Adicione comentários explicativos")
         st.markdown("- Considere casos extremos (array vazio, etc.)")
 
+
 def render_feedback_entrevista():
     """Renderiza feedback da entrevista."""
     st.markdown("### 📝 Feedback da Entrevista")
@@ -2262,7 +2334,8 @@ def render_feedback_entrevista():
     # Feedback detalhado
     st.markdown("### 💬 Feedback Detalhado")
 
-    st.markdown("""
+    st.markdown(
+        """
     **Pontos Fortes:**
     - ✅ Solução correta e eficiente
     - ✅ Boa compreensão do problema
@@ -2278,20 +2351,25 @@ def render_feedback_entrevista():
     - Pratique mais problemas de Two Pointers
     - Estude otimizações para casos específicos
     - Foque em explicar seu raciocínio durante a resolução
-    """)
+    """
+    )
 
     # Recomendações
     st.markdown("### 📚 Recomendações de Estudo")
-    st.markdown("""
+    st.markdown(
+        """
     - 🔍 **Busca Binária:** Pratique variações (lower bound, upper bound)
     - 👥 **Dois Ponteiros:** Estude aplicações em strings e arrays
     - 🪟 **Janela Deslizante:** Foque em problemas de substring
     - 🔄 **Backtracking:** Pratique com problemas de combinação
-    """)
+    """
+    )
+
 
 # ============================================================================
 # 🎯 FUNÇÃO PRINCIPAL
 # ============================================================================
+
 
 def main():
     """Função principal da aplicação."""
@@ -2334,13 +2412,17 @@ def main():
 
     # Footer
     st.markdown("---")
-    st.markdown("""
+    st.markdown(
+        """
     <div style="text-align: center; color: #666; font-size: 0.9rem;">
         🎯 <strong>Algoritmos Visualizador Integrado</strong> | 
         Desenvolvido com ❤️ usando Streamlit | 
         Versão 2.0
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 if __name__ == "__main__":
     main()

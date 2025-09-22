@@ -11,6 +11,7 @@ from typing import Dict, List, Any
 from gitmcp_integration import gitmcp_integration, gitmcp_client
 from mcp_config import MCPConfig
 
+
 class AprendizadoComGitMCP:
     """
     Sistema de aprendizado aprimorado com GitMCP
@@ -22,8 +23,7 @@ class AprendizadoComGitMCP:
         self.gitmcp = gitmcp_integration
         self.client = gitmcp_client
 
-    def obter_documentacao_algoritmo(self, algoritmo: str,
-                                   linguagem: str = "python") -> Dict[str, Any]:
+    def obter_documentacao_algoritmo(self, algoritmo: str, linguagem: str = "python") -> Dict[str, Any]:
         """
         Obtém documentação completa de um algoritmo
 
@@ -50,16 +50,11 @@ class AprendizadoComGitMCP:
                 "repositorio": melhor_resultado["repositorio"],
                 "documentacao": melhor_resultado["documentacao"],
                 "exemplos_busca": melhor_resultado["resultados_busca"],
-                "fonte": "GitMCP"
+                "fonte": "GitMCP",
             }
         else:
             print("❌ Nenhuma documentação encontrada")
-            return {
-                "algoritmo": algoritmo,
-                "linguagem": linguagem,
-                "erro": "Documentação não encontrada",
-                "fonte": "GitMCP"
-            }
+            return {"algoritmo": algoritmo, "linguagem": linguagem, "erro": "Documentação não encontrada", "fonte": "GitMCP"}
 
     def comparar_implementacoes(self, algoritmo: str) -> Dict[str, Any]:
         """
@@ -82,18 +77,13 @@ class AprendizadoComGitMCP:
                 "algoritmo": algoritmo,
                 "comparacoes": comparacao["comparacoes"],
                 "linguagens": comparacao["linguagens"],
-                "fonte": "GitMCP"
+                "fonte": "GitMCP",
             }
         else:
             print("❌ Nenhuma implementação encontrada para comparação")
-            return {
-                "algoritmo": algoritmo,
-                "erro": "Implementações não encontradas",
-                "fonte": "GitMCP"
-            }
+            return {"algoritmo": algoritmo, "erro": "Implementações não encontradas", "fonte": "GitMCP"}
 
-    def obter_exemplos_praticos(self, conceito: str,
-                               max_exemplos: int = 3) -> List[Dict[str, Any]]:
+    def obter_exemplos_praticos(self, conceito: str, max_exemplos: int = 3) -> List[Dict[str, Any]]:
         """
         Obtém exemplos práticos de código para um conceito
 
@@ -130,13 +120,7 @@ class AprendizadoComGitMCP:
         print(f"🎓 Criando sessão de aprendizado: {topico}")
         print("=" * 50)
 
-        sessao = {
-            "topico": topico,
-            "documentacao": None,
-            "exemplos": [],
-            "comparacoes": None,
-            "fontes": []
-        }
+        sessao = {"topico": topico, "documentacao": None, "exemplos": [], "comparacoes": None, "fontes": []}
 
         # 1. Obtém documentação principal
         print("\n1️⃣ Buscando documentação...")
@@ -184,8 +168,8 @@ class AprendizadoComGitMCP:
 """
 
         # Documentação
-        if sessao['documentacao']:
-            doc = sessao['documentacao']
+        if sessao["documentacao"]:
+            doc = sessao["documentacao"]
             relatorio += f"""
 📖 DOCUMENTAÇÃO ENCONTRADA:
 • Repositório: {doc.get('repositorio', 'N/A')}
@@ -194,7 +178,7 @@ class AprendizadoComGitMCP:
 """
 
         # Exemplos
-        if sessao['exemplos']:
+        if sessao["exemplos"]:
             relatorio += f"""
 💻 EXEMPLOS PRÁTICOS ENCONTRADOS: {len(sessao['exemplos'])}
 
@@ -202,9 +186,9 @@ Exemplos disponíveis para análise detalhada.
 """
 
         # Comparações
-        if sessao['comparacoes']:
-            comp = sessao['comparacoes']
-            linguagens = comp.get('linguagens', [])
+        if sessao["comparacoes"]:
+            comp = sessao["comparacoes"]
+            linguagens = comp.get("linguagens", [])
             relatorio += f"""
 🔄 COMPARAÇÕES DE IMPLEMENTAÇÃO:
 • Linguagens encontradas: {', '.join(linguagens)}
@@ -235,7 +219,7 @@ def demonstracao_gitmcp_aprendizado():
     config = MCPConfig()
     status = config.get_status()
 
-    if not status['gitmcp']['available']:
+    if not status["gitmcp"]["available"]:
         print("❌ GitMCP não está disponível")
         print("Verifique sua conexão com a internet")
         return
@@ -251,7 +235,7 @@ def demonstracao_gitmcp_aprendizado():
     for topico in topicos:
         print(f"\n{'=' * 60}")
         print(f"🎯 ANALISANDO: {topico.upper()}")
-        print('=' * 60)
+        print("=" * 60)
 
         # Cria sessão de aprendizado
         sessao = aprendizado.criar_sessao_aprendizado(topico)
@@ -286,7 +270,7 @@ def exemplo_uso_simples():
         print("🔍 Buscando documentação do repositório TheAlgorithms/Python...")
         docs = gitmcp_client.get_repository_info("TheAlgorithms", "Python")
 
-        if docs['status'] == 'success':
+        if docs["status"] == "success":
             print("✅ Documentação encontrada!")
             print(f"📖 Título: {docs.get('title', 'N/A')}")
             print(f"📝 Descrição: {docs.get('description', 'N/A')[:100]}...")
@@ -294,7 +278,7 @@ def exemplo_uso_simples():
             print("\n🔍 Buscando exemplos de 'bubble sort'...")
             exemplos = gitmcp_client.search_code("TheAlgorithms", "Python", "bubble sort", max_results=2)
 
-            if exemplos['status'] == 'success':
+            if exemplos["status"] == "success":
                 print(f"✅ Encontrados {exemplos.get('total_results', 0)} exemplos!")
             else:
                 print("❌ Erro na busca de exemplos")

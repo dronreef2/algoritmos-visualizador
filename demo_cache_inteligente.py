@@ -26,12 +26,13 @@ from cache_inteligente import (
     cache_mcp,
     obter_cache_stats,
     mostrar_estatisticas_cache,
-    limpar_cache
+    limpar_cache,
 )
 
 # ============================================================================
 # 🎯 EXEMPLO 1: CACHE DE VISUALIZAÇÕES
 # ============================================================================
+
 
 @cache_visualizacao(ttl_seconds=1800)  # Cache por 30 minutos
 def criar_grafico_complexo(dados, titulo="Gráfico Complexo"):
@@ -50,11 +51,11 @@ def criar_grafico_complexo(dados, titulo="Gráfico Complexo"):
     y1 = np.sin(x) * dados
     y2 = np.cos(x) * dados
 
-    ax.plot(x, y1, 'b-', label='Seno', linewidth=2)
-    ax.plot(x, y2, 'r--', label='Cosseno', linewidth=2)
-    ax.fill_between(x, y1, y2, alpha=0.3, color='gray')
+    ax.plot(x, y1, "b-", label="Seno", linewidth=2)
+    ax.plot(x, y2, "r--", label="Cosseno", linewidth=2)
+    ax.fill_between(x, y1, y2, alpha=0.3, color="gray")
 
-    ax.set_title(titulo, fontsize=14, fontweight='bold')
+    ax.set_title(titulo, fontsize=14, fontweight="bold")
     ax.set_xlabel("Eixo X")
     ax.set_ylabel("Eixo Y")
     ax.legend()
@@ -62,9 +63,11 @@ def criar_grafico_complexo(dados, titulo="Gráfico Complexo"):
 
     return fig
 
+
 # ============================================================================
 # 🎯 EXEMPLO 2: CACHE DE ALGORITMOS
 # ============================================================================
+
 
 @cache_algoritmo(ttl_seconds=3600)  # Cache por 1 hora
 def fibonacci_otimizado(n):
@@ -82,9 +85,10 @@ def fibonacci_otimizado(n):
     memo = {0: 0, 1: 1}
 
     for i in range(2, n + 1):
-        memo[i] = memo[i-1] + memo[i-2]
+        memo[i] = memo[i - 1] + memo[i - 2]
 
     return memo[n]
+
 
 @cache_algoritmo(ttl_seconds=3600)
 def calcular_primos_ate_n(n):
@@ -105,14 +109,16 @@ def calcular_primos_ate_n(n):
 
     for i in range(2, int(n**0.5) + 1):
         if eh_primo[i]:
-            for j in range(i*i, n+1, i):
+            for j in range(i * i, n + 1, i):
                 eh_primo[j] = False
 
-    return [i for i in range(2, n+1) if eh_primo[i]]
+    return [i for i in range(2, n + 1) if eh_primo[i]]
+
 
 # ============================================================================
 # 🎯 EXEMPLO 3: CACHE DE CONSULTAS MCP (SIMULAÇÃO)
 # ============================================================================
+
 
 @cache_mcp(ttl_seconds=1800)  # Cache por 30 minutos
 def buscar_informacao_algoritmo(algoritmo, profundidade="basic"):
@@ -130,38 +136,42 @@ def buscar_informacao_algoritmo(algoritmo, profundidade="basic"):
             "titulo": "Busca Binária - Algoritmo Fundamental",
             "conteudo": "A busca binária é um algoritmo de busca eficiente que funciona dividindo repetidamente o espaço de busca pela metade.",
             "complexidade": "O(log n)",
-            "aplicacoes": ["Busca em arrays ordenados", "Otimização de consultas"]
+            "aplicacoes": ["Busca em arrays ordenados", "Otimização de consultas"],
         },
         "dois_ponteiros": {
             "titulo": "Técnica dos Dois Ponteiros",
             "conteudo": "A técnica dos dois ponteiros é usada para problemas que envolvem arrays ou listas ligadas.",
             "complexidade": "O(n)",
-            "aplicacoes": ["Container With Most Water", "Problema dos três números"]
+            "aplicacoes": ["Container With Most Water", "Problema dos três números"],
         },
         "heap": {
             "titulo": "Heap - Estrutura de Dados",
             "conteudo": "Heap é uma estrutura de dados baseada em árvore especializada em encontrar o mínimo ou máximo rapidamente.",
             "complexidade": "O(log n) para operações",
-            "aplicacoes": ["Fila de prioridade", "Ordenação heapsort"]
-        }
+            "aplicacoes": ["Fila de prioridade", "Ordenação heapsort"],
+        },
     }
 
     return resultados.get(algoritmo, {"erro": "Algoritmo não encontrado"})
+
 
 # ============================================================================
 # 🎯 INTERFACE STREAMLIT PARA DEMONSTRAÇÃO
 # ============================================================================
 
+
 def demo_cache_visualizacoes():
     """Demonstra cache de visualizações."""
     st.markdown("### 📊 Cache de Visualizações")
 
-    st.markdown("""
+    st.markdown(
+        """
     **Como funciona:**
     - As visualizações são cacheadas automaticamente
     - Mesmo dados geram o mesmo gráfico instantaneamente
     - Cache expira em 30 minutos
-    """)
+    """
+    )
 
     # Controles
     col1, col2 = st.columns(2)
@@ -192,16 +202,19 @@ def demo_cache_visualizacoes():
         # Mostrar se foi cacheado
         st.info("💡 Na segunda execução com os mesmos parâmetros, será instantâneo!")
 
+
 def demo_cache_algoritmos():
     """Demonstra cache de algoritmos."""
     st.markdown("### ⚡ Cache de Algoritmos")
 
-    st.markdown("""
+    st.markdown(
+        """
     **Como funciona:**
     - Resultados de algoritmos são cacheados
     - Cálculos complexos são executados apenas uma vez
     - Cache expira em 1 hora
-    """)
+    """
+    )
 
     # Fibonacci
     st.markdown("#### 🌀 Fibonacci Otimizado")
@@ -228,16 +241,19 @@ def demo_cache_algoritmos():
         st.write("Primos:", primos[:20], "..." if len(primos) > 20 else "")
         st.info(".3f")
 
+
 def demo_cache_mcp():
     """Demonstra cache de consultas MCP."""
     st.markdown("### 🔍 Cache de Consultas MCP")
 
-    st.markdown("""
+    st.markdown(
+        """
     **Como funciona:**
     - Consultas de busca são cacheadas
     - Mesmo termo retorna resultado instantaneamente
     - Cache expira em 30 minutos
-    """)
+    """
+    )
 
     # Seleção de algoritmo
     algoritmos = ["busca_binaria", "dois_ponteiros", "heap"]
@@ -257,32 +273,25 @@ def demo_cache_mcp():
             st.markdown(f"**Complexidade:** {resultado['complexidade']}")
             st.markdown(f"**Aplicações:** {', '.join(resultado['aplicacoes'])}")
         else:
-            st.error(resultado['erro'])
+            st.error(resultado["erro"])
 
         st.info(".3f")
+
 
 # ============================================================================
 # 🎯 FUNÇÃO PRINCIPAL
 # ============================================================================
 
+
 def main():
     """Função principal da demonstração."""
-    st.set_page_config(
-        page_title="🎯 Cache Inteligente Demo",
-        page_icon="🎯",
-        layout="wide"
-    )
+    st.set_page_config(page_title="🎯 Cache Inteligente Demo", page_icon="🎯", layout="wide")
 
     st.title("🚀 Sistema de Cache Inteligente")
     st.markdown("---")
 
     # Abas para diferentes demonstrações
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "📊 Visualizações",
-        "⚡ Algoritmos",
-        "🔍 MCP",
-        "📈 Estatísticas"
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 Visualizações", "⚡ Algoritmos", "🔍 MCP", "📈 Estatísticas"])
 
     with tab1:
         demo_cache_visualizacoes()
@@ -314,7 +323,8 @@ def main():
 
         # Informações adicionais
         st.markdown("---")
-        st.markdown("""
+        st.markdown(
+            """
         ### 💡 Dicas de Uso
 
         **Para Visualizações:**
@@ -333,7 +343,9 @@ def main():
         - TTL padrão: 30 minutos para visualizações, 1 hora para algoritmos
         - Memória máxima: 200MB
         - Compressão automática para dados grandes
-        """)
+        """
+        )
+
 
 if __name__ == "__main__":
     main()

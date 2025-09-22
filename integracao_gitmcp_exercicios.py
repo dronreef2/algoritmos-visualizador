@@ -13,9 +13,7 @@ Integração inteligente que enriquece os exercícios práticos com:
 import streamlit as st
 import random
 from typing import Dict, Any, List, Optional
-from sistema_exercicios_praticos import (
-    SistemaExerciciosPraticos, Exercicio, TipoExercicio, Dificuldade
-)
+from sistema_exercicios_praticos import SistemaExerciciosPraticos, Exercicio, TipoExercicio, Dificuldade
 from gitmcp_integration import GitMCPIntegration
 from datetime import datetime
 import time
@@ -24,18 +22,16 @@ import time
 sistema_exercicios = SistemaExerciciosPraticos()
 git_client = GitMCPIntegration()
 
+
 def render_exercicios_gitmcp():
     """Renderiza interface integrada de exercícios com GitMCP"""
 
     st.markdown("### 🔗 Exercícios com Integração GitHub")
 
     # Abas para diferentes funcionalidades
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "📚 Exemplos Reais",
-        "🎯 Exercícios GitHub",
-        "⚡ Comparação Performance",
-        "🔍 Explorar Repositórios"
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["📚 Exemplos Reais", "🎯 Exercícios GitHub", "⚡ Comparação Performance", "🔍 Explorar Repositórios"]
+    )
 
     with tab1:
         render_exemplos_reais()
@@ -49,6 +45,7 @@ def render_exercicios_gitmcp():
     with tab4:
         render_explorar_repositorios()
 
+
 def render_exemplos_reais():
     """Renderiza exemplos reais de algoritmos do GitHub"""
 
@@ -56,25 +53,24 @@ def render_exemplos_reais():
 
     # Selecionar algoritmo/conceito
     conceitos = [
-        "busca_binaria", "ordenacao", "grafos", "programacao_dinamica",
-        "backtracking", "estruturas_dados", "otimizacao"
+        "busca_binaria",
+        "ordenacao",
+        "grafos",
+        "programacao_dinamica",
+        "backtracking",
+        "estruturas_dados",
+        "otimizacao",
     ]
 
     conceito_selecionado = st.selectbox(
-        "Selecione um conceito:",
-        conceitos,
-        format_func=lambda x: x.replace('_', ' ').title(),
-        key="conceito_gitmcp"
+        "Selecione um conceito:", conceitos, format_func=lambda x: x.replace("_", " ").title(), key="conceito_gitmcp"
     )
 
     if st.button("🔍 Buscar Exemplos Reais", key="buscar_exemplos"):
         with st.spinner("Buscando exemplos no GitHub..."):
             try:
                 # Buscar exemplos de código relacionados
-                exemplos = git_client.obter_exemplos_codigo(
-                    conceito_selecionado,
-                    "python"
-                )
+                exemplos = git_client.obter_exemplos_codigo(conceito_selecionado, "python")
 
                 if exemplos and exemplos.get("exemplos"):
                     st.success(f"Encontrados {len(exemplos['exemplos'])} exemplos!")
@@ -87,15 +83,19 @@ def render_exemplos_reais():
 
                             # Exibir conteúdo do código
                             with st.expander("� Código", expanded=False):
-                                st.code(exemplo['conteudo'], language="python")
+                                st.code(exemplo["conteudo"], language="python")
 
                             # Tentar buscar README do repositório
                             try:
-                                owner, repo = exemplo['repositorio'].split('/', 1)
+                                owner, repo = exemplo["repositorio"].split("/", 1)
                                 readme = git_client.client.get_readme(owner, repo)
                                 if readme and readme["status"] == "success":
                                     with st.expander("� README", expanded=False):
-                                        st.markdown(readme["content"][:1000] + "..." if len(readme["content"]) > 1000 else readme["content"])
+                                        st.markdown(
+                                            readme["content"][:1000] + "..."
+                                            if len(readme["content"]) > 1000
+                                            else readme["content"]
+                                        )
                             except:
                                 st.info("README não disponível")
 
@@ -104,6 +104,7 @@ def render_exemplos_reais():
 
             except Exception as e:
                 st.error(f"Erro ao buscar exemplos: {str(e)}")
+
 
 def render_exercicios_github():
     """Renderiza exercícios gerados baseados em código real do GitHub"""
@@ -114,8 +115,8 @@ def render_exercicios_github():
     tipo_exercicio = st.selectbox(
         "Tipo de exercício:",
         ["debugging", "otimizacao", "analise_complexidade", "comparacao_abordagens"],
-        format_func=lambda x: x.replace('_', ' ').title(),
-        key="tipo_exercicio_github"
+        format_func=lambda x: x.replace("_", " ").title(),
+        key="tipo_exercicio_github",
     )
 
     if st.button("🎲 Gerar Exercício", key="gerar_exercicio_github"):
@@ -128,31 +129,32 @@ def render_exercicios_github():
                 # Exibir informações do exercício
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.metric("Dificuldade", exercicio_gerado['dificuldade'])
+                    st.metric("Dificuldade", exercicio_gerado["dificuldade"])
                 with col2:
-                    st.metric("Fonte", exercicio_gerado['repositorio'])
+                    st.metric("Fonte", exercicio_gerado["repositorio"])
 
                 st.markdown(f"**{exercicio_gerado['titulo']}**")
-                st.write(exercicio_gerado['enunciado'])
+                st.write(exercicio_gerado["enunciado"])
 
-                if exercicio_gerado['codigo']:
-                    st.code(exercicio_gerado['codigo'], language="python")
+                if exercicio_gerado["codigo"]:
+                    st.code(exercicio_gerado["codigo"], language="python")
 
                 # Interface de resposta baseada no tipo
                 resposta = render_interface_resposta_github(exercicio_gerado)
 
                 if st.button("✅ Verificar Resposta", key="verificar_github"):
                     feedback = verificar_resposta_github(exercicio_gerado, resposta)
-                    if feedback['correta']:
-                        st.success("🎉 Correto! " + feedback['explicacao'])
+                    if feedback["correta"]:
+                        st.success("🎉 Correto! " + feedback["explicacao"])
                     else:
-                        st.error("❌ Incorreto. " + feedback['explicacao'])
+                        st.error("❌ Incorreto. " + feedback["explicacao"])
 
-                    if 'solucao' in feedback:
+                    if "solucao" in feedback:
                         with st.expander("💡 Ver Solução"):
-                            st.code(feedback['solucao'], language="python")
+                            st.code(feedback["solucao"], language="python")
             else:
                 st.error("Não foi possível gerar um exercício. Tente novamente.")
+
 
 def render_comparacao_performance():
     """Renderiza comparações de performance entre diferentes implementações"""
@@ -162,15 +164,15 @@ def render_comparacao_performance():
     algoritmo = st.selectbox(
         "Selecione um algoritmo:",
         ["busca_binaria", "ordenacao", "busca_grafo"],
-        format_func=lambda x: x.replace('_', ' ').title(),
-        key="algoritmo_performance"
+        format_func=lambda x: x.replace("_", " ").title(),
+        key="algoritmo_performance",
     )
 
     if st.button("📊 Comparar Implementações", key="comparar_performance"):
         with st.spinner("Analisando implementações..."):
             comparacao = git_client.comparar_implementacoes(algoritmo)
 
-            if comparacao and 'comparacoes' in comparacao:
+            if comparacao and "comparacoes" in comparacao:
                 st.markdown("### 📈 Resultados da Comparação")
 
                 # Processa as comparações para criar a estrutura esperada
@@ -178,32 +180,37 @@ def render_comparacao_performance():
                 complexidades = []
                 insights = []
 
-                for linguagem, lista_implementacoes in comparacao['comparacoes'].items():
+                for linguagem, lista_implementacoes in comparacao["comparacoes"].items():
                     for i, impl in enumerate(lista_implementacoes):
-                        implementacoes.append({
-                            'linguagem': linguagem,
-                            'repositorio': impl['repositorio'],
-                            'arquivo': impl['arquivo'],
-                            'url': impl['url'],
-                            'linhas_codigo': len(impl['conteudo'].split('\n')) if impl['conteudo'] else 0
-                        })
+                        implementacoes.append(
+                            {
+                                "linguagem": linguagem,
+                                "repositorio": impl["repositorio"],
+                                "arquivo": impl["arquivo"],
+                                "url": impl["url"],
+                                "linhas_codigo": len(impl["conteudo"].split("\n")) if impl["conteudo"] else 0,
+                            }
+                        )
 
                         # Estima complexidade baseada no tamanho do código
                         complexidade = "O(n log n)" if "sort" in algoritmo.lower() else "O(n)"
-                        complexidades.append({
-                            'implementacao': f"{impl['repositorio']}/{impl['arquivo']}",
-                            'complexidade': complexidade,
-                            'linhas': len(impl['conteudo'].split('\n')) if impl['conteudo'] else 0
-                        })
+                        complexidades.append(
+                            {
+                                "implementacao": f"{impl['repositorio']}/{impl['arquivo']}",
+                                "complexidade": complexidade,
+                                "linhas": len(impl["conteudo"].split("\n")) if impl["conteudo"] else 0,
+                            }
+                        )
 
                 # Adiciona insights
                 insights.append(f"Encontradas {len(implementacoes)} implementações de {algoritmo}")
-                if len(comparacao.get('linguagens', [])) > 1:
+                if len(comparacao.get("linguagens", [])) > 1:
                     insights.append("Implementações disponíveis em múltiplas linguagens")
                 insights.append("Complexidade estimada baseada na análise do código")
 
                 # Tabela de comparação
                 import pandas as pd
+
                 if implementacoes:
                     df = pd.DataFrame(implementacoes)
                     st.dataframe(df)
@@ -213,11 +220,9 @@ def render_comparacao_performance():
                 # Gráfico de complexidade
                 if complexidades:
                     import plotly.express as px
+
                     fig = px.bar(
-                        complexidades,
-                        x='implementacao',
-                        y='linhas',
-                        title="Comparação de Implementações (Linhas de Código)"
+                        complexidades, x="implementacao", y="linhas", title="Comparação de Implementações (Linhas de Código)"
                     )
                     st.plotly_chart(fig)
 
@@ -229,6 +234,7 @@ def render_comparacao_performance():
             else:
                 st.warning("Não foi possível obter dados de comparação.")
 
+
 def render_explorar_repositorios():
     """Renderiza interface para explorar repositórios de algoritmos"""
 
@@ -238,20 +244,14 @@ def render_explorar_repositorios():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        linguagem = st.selectbox(
-            "Linguagem:",
-            ["python", "javascript", "java", "cpp", "go"],
-            key="linguagem_repo"
-        )
+        linguagem = st.selectbox("Linguagem:", ["python", "javascript", "java", "cpp", "go"], key="linguagem_repo")
 
     with col2:
         min_stars = st.slider("Mínimo de estrelas:", 0, 1000, 50, key="min_stars")
 
     with col3:
         topico = st.selectbox(
-            "Tópico:",
-            ["algorithms", "data-structures", "competitive-programming", "interview-preparation"],
-            key="topico_repo"
+            "Tópico:", ["algorithms", "data-structures", "competitive-programming", "interview-preparation"], key="topico_repo"
         )
 
     query = f"{topico} {linguagem}"
@@ -259,10 +259,7 @@ def render_explorar_repositorios():
     if st.button("🔍 Buscar Repositórios", key="buscar_repos"):
         with st.spinner("Buscando repositórios..."):
             # Usar busca de documentação que inclui repositórios conhecidos
-            documentacao = git_client.buscar_documentacao_algoritmo(
-                topico.replace("-", "_"),
-                linguagem
-            )
+            documentacao = git_client.buscar_documentacao_algoritmo(topico.replace("-", "_"), linguagem)
 
             if documentacao and documentacao.get("resultados"):
                 st.success(f"Encontrados {len(documentacao['resultados'])} repositórios!")
@@ -270,7 +267,9 @@ def render_explorar_repositorios():
                 for i, resultado in enumerate(documentacao["resultados"][:10]):
                     repo_info = resultado.get("info", {})
                     if repo_info.get("status") == "success":
-                        with st.expander(f"{i+1}. ⭐ {repo_info.get('stars', 0)} - {repo_info.get('name', 'N/A')}", expanded=False):
+                        with st.expander(
+                            f"{i+1}. ⭐ {repo_info.get('stars', 0)} - {repo_info.get('name', 'N/A')}", expanded=False
+                        ):
                             col1, col2 = st.columns([3, 1])
 
                             with col1:
@@ -286,12 +285,17 @@ def render_explorar_repositorios():
                                         readme = resultado.get("readme")
                                         if readme and readme.get("status") == "success":
                                             st.markdown("---")
-                                            st.markdown(readme["content"][:1500] + "..." if len(readme["content"]) > 1500 else readme["content"])
+                                            st.markdown(
+                                                readme["content"][:1500] + "..."
+                                                if len(readme["content"]) > 1500
+                                                else readme["content"]
+                                            )
                                     except:
                                         st.error("Erro ao carregar README")
 
             else:
                 st.info("Nenhum repositório encontrado com os critérios especificados.")
+
 
 def gerar_exercicio_github(tipo: str) -> Optional[Dict[str, Any]]:
     """Gera um exercício baseado em código real do GitHub"""
@@ -306,24 +310,28 @@ def gerar_exercicio_github(tipo: str) -> Optional[Dict[str, Any]]:
 
         # Buscar arquivos de código usando search_code com query mais genérica
         queries = [
-            "def sort", "def search", "def graph", "class.*Sort", "class.*Search",
-            "def bubble", "def quick", "def merge", "def binary"
+            "def sort",
+            "def search",
+            "def graph",
+            "class.*Sort",
+            "class.*Search",
+            "def bubble",
+            "def quick",
+            "def merge",
+            "def binary",
         ]
-        
+
         code_results = []
         for query in queries:
             try:
-                code_search = git_client.client.search_code(
-                    owner, repo, query,
-                    language="python", max_results=3
-                )
+                code_search = git_client.client.search_code(owner, repo, query, language="python", max_results=3)
                 if code_search["status"] == "success" and code_search.get("results"):
                     code_results.extend(code_search["results"])
                     if len(code_results) >= 5:  # Já temos resultados suficientes
                         break
             except:
                 continue
-        
+
         if not code_results:
             return None
 
@@ -340,7 +348,7 @@ def gerar_exercicio_github(tipo: str) -> Optional[Dict[str, Any]]:
             "content": file_content["content"],
             "name": code_file["name"],
             "path": code_file["path"],
-            "url": code_file["url"]
+            "url": code_file["url"],
         }
 
         # Gerar exercício baseado no tipo
@@ -357,122 +365,112 @@ def gerar_exercicio_github(tipo: str) -> Optional[Dict[str, Any]]:
         st.error(f"Erro ao gerar exercício: {str(e)}")
         return None
 
+
 def gerar_exercicio_debugging(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de debugging"""
 
     return {
-        'titulo': "Debugging: Encontre o Erro",
-        'enunciado': f"Analise o código abaixo do repositório '{repo_name}' e identifique o problema:",
-        'codigo': code_file['content'],
-        'tipo': 'debugging',
-        'dificuldade': 'Médio',
-        'repositorio': repo_name,
-        'solucao_esperada': 'Identificar bug no código'
+        "titulo": "Debugging: Encontre o Erro",
+        "enunciado": f"Analise o código abaixo do repositório '{repo_name}' e identifique o problema:",
+        "codigo": code_file["content"],
+        "tipo": "debugging",
+        "dificuldade": "Médio",
+        "repositorio": repo_name,
+        "solucao_esperada": "Identificar bug no código",
     }
+
 
 def gerar_exercicio_otimizacao(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de otimização"""
 
     return {
-        'titulo': "Otimização: Melhore a Performance",
-        'enunciado': f"Analise o código abaixo e sugira melhorias de performance:",
-        'codigo': code_file['content'],
-        'tipo': 'otimizacao',
-        'dificuldade': 'Difícil',
-        'repositorio': repo_name,
-        'solucao_esperada': 'Sugerir otimizações'
+        "titulo": "Otimização: Melhore a Performance",
+        "enunciado": f"Analise o código abaixo e sugira melhorias de performance:",
+        "codigo": code_file["content"],
+        "tipo": "otimizacao",
+        "dificuldade": "Difícil",
+        "repositorio": repo_name,
+        "solucao_esperada": "Sugerir otimizações",
     }
+
 
 def gerar_exercicio_complexidade(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de análise de complexidade"""
 
     return {
-        'titulo': "Análise: Determine a Complexidade",
-        'enunciado': f"Analise o algoritmo abaixo e determine sua complexidade temporal e espacial:",
-        'codigo': code_file['content'],
-        'tipo': 'complexidade',
-        'dificuldade': 'Médio',
-        'repositorio': repo_name,
-        'solucao_esperada': 'O(n log n), O(n), etc.'
+        "titulo": "Análise: Determine a Complexidade",
+        "enunciado": f"Analise o algoritmo abaixo e determine sua complexidade temporal e espacial:",
+        "codigo": code_file["content"],
+        "tipo": "complexidade",
+        "dificuldade": "Médio",
+        "repositorio": repo_name,
+        "solucao_esperada": "O(n log n), O(n), etc.",
     }
+
 
 def gerar_exercicio_comparacao(code_file: Dict, repo_name: str) -> Dict[str, Any]:
     """Gera exercício de comparação de abordagens"""
 
     return {
-        'titulo': "Comparação: Avalie as Abordagens",
-        'enunciado': f"Compare diferentes abordagens para resolver o problema implementado no código:",
-        'codigo': code_file['content'],
-        'tipo': 'comparacao',
-        'dificuldade': 'Difícil',
-        'repositorio': repo_name,
-        'solucao_esperada': 'Comparar vantagens e desvantagens'
+        "titulo": "Comparação: Avalie as Abordagens",
+        "enunciado": f"Compare diferentes abordagens para resolver o problema implementado no código:",
+        "codigo": code_file["content"],
+        "tipo": "comparacao",
+        "dificuldade": "Difícil",
+        "repositorio": repo_name,
+        "solucao_esperada": "Comparar vantagens e desvantagens",
     }
+
 
 def render_interface_resposta_github(exercicio: Dict) -> Any:
     """Renderiza interface de resposta para exercícios GitHub"""
 
-    if exercicio['tipo'] == 'debugging':
-        return st.text_area(
-            "Descreva o problema encontrado:",
-            height=100,
-            key="resposta_debugging"
-        )
+    if exercicio["tipo"] == "debugging":
+        return st.text_area("Descreva o problema encontrado:", height=100, key="resposta_debugging")
 
-    elif exercicio['tipo'] == 'otimizacao':
-        return st.text_area(
-            "Sugira melhorias de performance:",
-            height=150,
-            key="resposta_otimizacao"
-        )
+    elif exercicio["tipo"] == "otimizacao":
+        return st.text_area("Sugira melhorias de performance:", height=150, key="resposta_otimizacao")
 
-    elif exercicio['tipo'] == 'complexidade':
+    elif exercicio["tipo"] == "complexidade":
         col1, col2 = st.columns(2)
         with col1:
             temporal = st.selectbox(
                 "Complexidade Temporal:",
                 ["O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n²)", "O(2^n)"],
-                key="complexidade_temporal"
+                key="complexidade_temporal",
             )
         with col2:
             espacial = st.selectbox(
-                "Complexidade Espacial:",
-                ["O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n²)"],
-                key="complexidade_espacial"
+                "Complexidade Espacial:", ["O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n²)"], key="complexidade_espacial"
             )
-        return {'temporal': temporal, 'espacial': espacial}
+        return {"temporal": temporal, "espacial": espacial}
 
-    elif exercicio['tipo'] == 'comparacao':
-        return st.text_area(
-            "Compare as abordagens implementadas:",
-            height=200,
-            key="resposta_comparacao"
-        )
+    elif exercicio["tipo"] == "comparacao":
+        return st.text_area("Compare as abordagens implementadas:", height=200, key="resposta_comparacao")
+
 
 def verificar_resposta_github(exercicio: Dict, resposta: Any) -> Dict[str, Any]:
     """Verifica resposta do exercício GitHub"""
 
     # Simulação de verificação (em produção, seria mais sofisticada)
-    if exercicio['tipo'] == 'complexidade':
+    if exercicio["tipo"] == "complexidade":
         # Verificação básica para exemplo
-        if resposta['temporal'] in ['O(n log n)', 'O(n)']:
-            return {
-                'correta': True,
-                'explicacao': 'Análise correta da complexidade!'
-            }
+        if resposta["temporal"] in ["O(n log n)", "O(n)"]:
+            return {"correta": True, "explicacao": "Análise correta da complexidade!"}
         else:
             return {
-                'correta': False,
-                'explicacao': 'Reveja a análise da complexidade.',
-                'solucao': 'Complexidade típica: O(n log n) para algoritmos de ordenação eficientes'
+                "correta": False,
+                "explicacao": "Reveja a análise da complexidade.",
+                "solucao": "Complexidade típica: O(n log n) para algoritmos de ordenação eficientes",
             }
 
     # Para outros tipos, feedback genérico
     return {
-        'correta': random.choice([True, False]),  # Simulação
-        'explicacao': 'Análise realizada com base no código do repositório.',
-        'solucao': 'Solução baseada nas melhores práticas encontradas no GitHub'
+        "correta": random.choice([True, False]),  # Simulação
+        "explicacao": "Análise realizada com base no código do repositório.",
+        "solucao": "Solução baseada nas melhores práticas encontradas no GitHub",
     }
+
 
 def comparar_implementacoes_github(algoritmo: str) -> Optional[Dict[str, Any]]:
     """Compara diferentes implementações do mesmo algoritmo"""
@@ -494,21 +492,19 @@ def integrar_gitmcp_na_ui_exercicios():
     st.markdown("---")
     st.markdown("## 🤖 Aprimorado com GitMCP")
 
-    st.markdown("""
+    st.markdown(
+        """
     Esta seção de exercícios foi **enriquecida com dados reais do GitHub**:
 
     🎯 **Exemplos Reais**: Implementações de algoritmos de repositórios open-source
     📚 **Documentação**: README e documentação de projetos populares
     🔄 **Comparações**: Diferentes abordagens para o mesmo problema
     🔍 **Exploração**: Busca interativa por algoritmos no GitHub
-    """)
+    """
+    )
 
     # Tabs da integração
-    tab1, tab2, tab3 = st.tabs([
-        "🔍 Explorador GitHub",
-        "🔄 Comparar Implementações",
-        "📊 Relatório de Aprendizado"
-    ])
+    tab1, tab2, tab3 = st.tabs(["🔍 Explorador GitHub", "🔄 Comparar Implementações", "📊 Relatório de Aprendizado"])
 
     with tab1:
         render_explorar_repositorios()
@@ -524,7 +520,7 @@ def integrar_gitmcp_na_ui_exercicios():
         exercicio_selecionado = st.selectbox(
             "Selecione um exercício para gerar relatório:",
             exercicios_ids,
-            format_func=lambda x: sistema_exercicios.exercicios[x].titulo
+            format_func=lambda x: sistema_exercicios.exercicios[x].titulo,
         )
 
         if st.button("📊 Gerar Relatório", type="primary"):
@@ -539,16 +535,12 @@ def integrar_gitmcp_na_ui_exercicios():
                 label="📥 Baixar Relatório",
                 data=relatorio,
                 file_name=f"relatorio_aprendizado_{exercicio.conceito_relacionado}.md",
-                mime="text/markdown"
+                mime="text/markdown",
             )
 
 
 if __name__ == "__main__":
-    st.set_page_config(
-        page_title="Exercícios Práticos + GitMCP",
-        page_icon="🎯",
-        layout="wide"
-    )
+    st.set_page_config(page_title="Exercícios Práticos + GitMCP", page_icon="🎯", layout="wide")
 
     st.title("🎯 Exercícios Práticos Enriquecidos com GitMCP")
 
@@ -561,12 +553,13 @@ if __name__ == "__main__":
         st.error("❌ Não foi possível conectar ao GitHub API")
         st.info("Verifique sua conexão com a internet para acessar todas as funcionalidades.")
 
+
 def gerar_relatorio_aprendizado_github(exercicio: Dict) -> str:
     """Gera relatório de aprendizado baseado em dados do GitHub"""
 
     try:
         # Buscar repositórios relacionados ao conceito do exercício
-        conceito = exercicio.get('conceito_relacionado', 'algorithms')
+        conceito = exercicio.get("conceito_relacionado", "algorithms")
         documentacao = git_client.buscar_documentacao_algoritmo(conceito, "python")
 
         relatorio = f"""

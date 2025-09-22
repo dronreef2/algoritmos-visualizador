@@ -11,33 +11,27 @@ import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta
 import pandas as pd
-from sistema_aprendizado_contextual import (
-    sistema_aprendizado,
-    Conceito,
-    JornadaAprendizado,
-    Dificuldade,
-    Tema
-)
+from sistema_aprendizado_contextual import sistema_aprendizado, Conceito, JornadaAprendizado, Dificuldade, Tema
+
 
 def render_aprendizado_contextual():
     """Renderiza a página principal de aprendizado contextualizado"""
 
-    st.markdown("""
+    st.markdown(
+        """
     ## 🎯 Aprendizado Contextualizado
 
     ### Uma jornada imersiva através dos algoritmos e estruturas de dados
 
     Explore conceitos através de **jornadas temáticas**, entenda o **contexto histórico**,
     veja **aplicações reais** e conecte conceitos em um **mapa de aprendizado visual**.
-    """)
+    """
+    )
 
     # Tabs principais
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "🗺️ Mapa de Aprendizado",
-        "🚀 Jornadas Temáticas",
-        "📚 Conceitos Interativos",
-        "📊 Meu Progresso"
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["🗺️ Mapa de Aprendizado", "🚀 Jornadas Temáticas", "📚 Conceitos Interativos", "📊 Meu Progresso"]
+    )
 
     with tab1:
         render_mapa_aprendizado()
@@ -51,15 +45,18 @@ def render_aprendizado_contextual():
     with tab4:
         render_progresso_usuario()
 
+
 def render_mapa_aprendizado():
     """Renderiza o mapa visual de aprendizado"""
 
     st.markdown("### 🗺️ Mapa de Aprendizado")
 
-    st.markdown("""
+    st.markdown(
+        """
     Visualize como os conceitos se conectam e evoluem. Cada nó representa um conceito,
     e as conexões mostram pré-requisitos e progressão natural de aprendizado.
-    """)
+    """
+    )
 
     # Criar dados para o grafo
     nodes = []
@@ -67,100 +64,98 @@ def render_mapa_aprendizado():
 
     # Adicionar nós (conceitos)
     for nome, conceito in sistema_aprendizado.conceitos.items():
-        nodes.append({
-            'id': nome,
-            'label': conceito.nome,
-            'dificuldade': conceito.dificuldade.value,
-            'tema': conceito.tema.value,
-            'size': 20 + len(conceito.aplicacoes_reais) * 2
-        })
+        nodes.append(
+            {
+                "id": nome,
+                "label": conceito.nome,
+                "dificuldade": conceito.dificuldade.value,
+                "tema": conceito.tema.value,
+                "size": 20 + len(conceito.aplicacoes_reais) * 2,
+            }
+        )
 
         # Adicionar arestas (pré-requisitos)
         for pre_req in conceito.pre_requisitos:
             if pre_req in sistema_aprendizado.conceitos:
-                edges.append({
-                    'from': pre_req,
-                    'to': nome
-                })
+                edges.append({"from": pre_req, "to": nome})
 
     # Criar visualização com Plotly
     fig = go.Figure()
 
     # Adicionar nós
     for node in nodes:
-        fig.add_trace(go.Scatter(
-            x=[node['id']],  # Posição baseada no nome (simplificado)
-            y=[node['size']],
-            mode='markers+text',
-            marker=dict(
-                size=node['size'],
-                color={
-                    'iniciante': 'lightgreen',
-                    'intermediario': 'orange',
-                    'avancado': 'red'
-                }[node['dificuldade']],
-                line=dict(width=2, color='black')
-            ),
-            text=node['label'],
-            textposition="top center",
-            name=node['label']
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=[node["id"]],  # Posição baseada no nome (simplificado)
+                y=[node["size"]],
+                mode="markers+text",
+                marker=dict(
+                    size=node["size"],
+                    color={"iniciante": "lightgreen", "intermediario": "orange", "avancado": "red"}[node["dificuldade"]],
+                    line=dict(width=2, color="black"),
+                ),
+                text=node["label"],
+                textposition="top center",
+                name=node["label"],
+            )
+        )
 
     # Adicionar arestas
     for edge in edges:
-        fig.add_trace(go.Scatter(
-            x=[edge['from'], edge['to']],
-            y=[20, 20],  # Linha horizontal simplificada
-            mode='lines',
-            line=dict(width=2, color='gray'),
-            showlegend=False
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=[edge["from"], edge["to"]],
+                y=[20, 20],  # Linha horizontal simplificada
+                mode="lines",
+                line=dict(width=2, color="gray"),
+                showlegend=False,
+            )
+        )
 
     fig.update_layout(
         title="Mapa de Conexões entre Conceitos",
         showlegend=False,
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-        height=600
+        height=600,
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
     # Legenda
-    st.markdown("""
+    st.markdown(
+        """
     **Legenda:**
     - 🟢 Verde: Conceitos Iniciantes
     - 🟠 Laranja: Conceitos Intermediários
     - 🔴 Vermelho: Conceitos Avançados
     - 📏 Tamanho: Número de aplicações reais
     - ➡️ Setas: Pré-requisitos necessários
-    """)
+    """
+    )
+
 
 def render_jornadas_tematicas():
     """Renderiza as jornadas de aprendizado temáticas"""
 
     st.markdown("### 🚀 Jornadas de Aprendizado Temáticas")
 
-    st.markdown("""
+    st.markdown(
+        """
     Escolha uma jornada completa de aprendizado com objetivos claros,
     projetos práticos e progressão estruturada.
-    """)
+    """
+    )
 
     # Filtros
     col1, col2 = st.columns(2)
 
     with col1:
-        tema_filtro = st.selectbox(
-            "Filtrar por Tema:",
-            ["Todos"] + [tema.value for tema in Tema],
-            key="tema_jornada"
-        )
+        tema_filtro = st.selectbox("Filtrar por Tema:", ["Todos"] + [tema.value for tema in Tema], key="tema_jornada")
 
     with col2:
         dificuldade_filtro = st.selectbox(
-            "Filtrar por Dificuldade:",
-            ["Todos"] + [dif.value for dif in Dificuldade],
-            key="dif_jornada"
+            "Filtrar por Dificuldade:", ["Todos"] + [dif.value for dif in Dificuldade], key="dif_jornada"
         )
 
     # Filtrar jornadas
@@ -184,9 +179,7 @@ def render_jornadas_tematicas():
                 st.metric("Duração", jornada.duracao_estimada)
             with col3:
                 progresso = sistema_aprendizado.calcular_progresso_jornada(
-                    list(sistema_aprendizado.jornadas.keys())[
-                        list(sistema_aprendizado.jornadas.values()).index(jornada)
-                    ]
+                    list(sistema_aprendizado.jornadas.keys())[list(sistema_aprendizado.jornadas.values()).index(jornada)]
                 )
                 st.metric("Progresso", f"{progresso:.1f}%")
 
@@ -216,22 +209,23 @@ def render_jornadas_tematicas():
                 st.success(f"Jornada '{jornada.titulo}' iniciada! 🎉")
                 st.info("Funcionalidade completa será implementada em breve.")
 
+
 def render_conceitos_interativos():
     """Renderiza a exploração interativa de conceitos"""
 
     st.markdown("### 📚 Exploração de Conceitos")
 
-    st.markdown("""
+    st.markdown(
+        """
     Explore conceitos individuais com contexto histórico, aplicações reais
     e conexões com outros conceitos.
-    """)
+    """
+    )
 
     # Seleção de conceito
     conceitos_nomes = list(sistema_aprendizado.conceitos.keys())
     conceito_selecionado = st.selectbox(
-        "Selecione um conceito para explorar:",
-        conceitos_nomes,
-        format_func=lambda x: sistema_aprendizado.conceitos[x].nome
+        "Selecione um conceito para explorar:", conceitos_nomes, format_func=lambda x: sistema_aprendizado.conceitos[x].nome
     )
 
     if conceito_selecionado:
@@ -251,12 +245,7 @@ def render_conceitos_interativos():
             st.metric("Pré-requisitos", len(conceito.pre_requisitos))
 
         # Tabs do conceito
-        tab1, tab2, tab3, tab4 = st.tabs([
-            "📖 Conceito",
-            "🏛️ Contexto Histórico",
-            "🌍 Aplicações Reais",
-            "🔗 Conexões"
-        ])
+        tab1, tab2, tab3, tab4 = st.tabs(["📖 Conceito", "🏛️ Contexto Histórico", "🌍 Aplicações Reais", "🔗 Conexões"])
 
         with tab1:
             st.markdown("#### 📖 Entendimento do Conceito")
@@ -291,19 +280,24 @@ def render_conceitos_interativos():
             proximo = sistema_aprendizado.recomendar_proximo_conceito(conceito_selecionado)
             if proximo:
                 proximo_conceito = sistema_aprendizado.conceitos[proximo]
-                st.markdown(f"""
+                st.markdown(
+                    f"""
                 **🎯 Próximo conceito recomendado:**
                 {proximo_conceito.nome} - {proximo_conceito.descricao}
-                """)
+                """
+                )
+
 
 def render_progresso_usuario():
     """Renderiza o dashboard de progresso do usuário"""
 
     st.markdown("### 📊 Meu Progresso de Aprendizado")
 
-    st.markdown("""
+    st.markdown(
+        """
     Acompanhe seu progresso através das jornadas e conceitos estudados.
-    """)
+    """
+    )
 
     # Métricas gerais
     col1, col2, col3, col4 = st.columns(4)
@@ -333,10 +327,9 @@ def render_progresso_usuario():
     for tema in Tema:
         conceitos_tema = [c for c in sistema_aprendizado.conceitos.values() if c.tema == tema]
         if conceitos_tema:
-            completados_tema = len([
-                c for c in conceitos_tema
-                if c.nome in sistema_aprendizado.progresso_usuario["conceitos_completados"]
-            ])
+            completados_tema = len(
+                [c for c in conceitos_tema if c.nome in sistema_aprendizado.progresso_usuario["conceitos_completados"]]
+            )
             temas_progresso[tema.value] = (completados_tema / len(conceitos_tema)) * 100
 
     if temas_progresso:
@@ -344,7 +337,7 @@ def render_progresso_usuario():
             x=list(temas_progresso.keys()),
             y=list(temas_progresso.values()),
             title="Progresso por Tema (%)",
-            labels={'x': 'Tema', 'y': 'Progresso (%)'}
+            labels={"x": "Tema", "y": "Progresso (%)"},
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -356,11 +349,12 @@ def render_progresso_usuario():
         "Complete os fundamentos antes de avançar para estruturas complexas",
         "Pratique algoritmos de busca antes de grafos",
         "Estude programação dinâmica após dominar recursão",
-        "Aplique conceitos em projetos práticos"
+        "Aplique conceitos em projetos práticos",
     ]
 
     for rec in recomendacoes:
         st.info(f"💡 {rec}")
+
 
 # Função para integrar com o menu principal
 def integrar_aprendizado_contextual():
@@ -374,7 +368,7 @@ def integrar_aprendizado_contextual():
         "🏗️ Módulo 2: Estruturas de Dados",
         "🎯 Módulo 3: Programação Dinâmica",
         "💼 Módulo 4: Entrevistas",
-        "🔍 Busca MCP (Tavily)"
+        "🔍 Busca MCP (Tavily)",
     ]
 
     # Esta função deve ser chamada no lugar do selectbox principal

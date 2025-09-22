@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from enum import Enum
 import json
 
+
 class TipoExercicio(Enum):
     MULTIPLA_ESCOLHA = "multipla_escolha"
     VERDADEIRO_FALSO = "verdadeiro_falso"
@@ -22,14 +23,17 @@ class TipoExercicio(Enum):
     COMPLEXIDADE_ANALISE = "complexidade_analise"
     DEBUGGING = "debugging"
 
+
 class Dificuldade(Enum):
     INICIANTE = "iniciante"
     INTERMEDIARIO = "intermediario"
     AVANCADO = "avancado"
 
+
 @dataclass
 class Exercicio:
     """Representa um exercício prático"""
+
     id: str
     titulo: str
     descricao: str
@@ -43,9 +47,11 @@ class Exercicio:
     dicas: List[str]
     tempo_estimado: int  # em minutos
 
+
 @dataclass
 class SessaoExercicio:
     """Representa uma sessão de exercícios"""
+
     exercicio_id: str
     respostas_usuario: List[Any]
     tempo_inicio: float
@@ -53,6 +59,7 @@ class SessaoExercicio:
     tentativas: int
     pontos: int
     concluido: bool
+
 
 class SistemaExerciciosPraticos:
     """Sistema principal de exercícios práticos"""
@@ -78,18 +85,17 @@ class SistemaExerciciosPraticos:
                         "O(1) - Tempo constante",
                         "O(log n) - Tempo logarítmico",
                         "O(n) - Tempo linear",
-                        "O(n²) - Tempo quadrático"
+                        "O(n²) - Tempo quadrático",
                     ]
                 },
                 resposta_correta=1,  # índice da resposta correta
                 explicacao="A busca binária divide o array ao meio a cada iteração, resultando em complexidade O(log n).",
                 dicas=[
                     "Pense em quantas vezes você pode dividir um array ao meio",
-                    "Compare com a busca linear que verifica cada elemento"
+                    "Compare com a busca linear que verifica cada elemento",
                 ],
-                tempo_estimado=5
+                tempo_estimado=5,
             ),
-
             "busca_binaria_aplicacao": Exercicio(
                 id="busca_binaria_aplicacao",
                 titulo="Busca Binária - Aplicação Prática",
@@ -103,18 +109,14 @@ class SistemaExerciciosPraticos:
                         "Array ordenado de números",
                         "Lista ordenada de strings",
                         "Array não ordenado",
-                        "Índice de banco de dados ordenado"
+                        "Índice de banco de dados ordenado",
                     ]
                 },
                 resposta_correta=2,
                 explicacao="A busca binária requer que os dados estejam ordenados para funcionar corretamente.",
-                dicas=[
-                    "A busca binária depende da ordenação dos dados",
-                    "Considere as pré-condições do algoritmo"
-                ],
-                tempo_estimado=3
+                dicas=["A busca binária depende da ordenação dos dados", "Considere as pré-condições do algoritmo"],
+                tempo_estimado=3,
             ),
-
             "ordenacao_bubble_sort": Exercicio(
                 id="ordenacao_bubble_sort",
                 titulo="Bubble Sort - Análise de Passos",
@@ -128,19 +130,15 @@ class SistemaExerciciosPraticos:
                         "Comparar elementos adjacentes",
                         "Trocar se estiverem na ordem errada",
                         "Mover para o próximo par",
-                        "Repetir até o array estar ordenado"
+                        "Repetir até o array estar ordenado",
                     ],
-                    "ordem_correta": [0, 1, 2, 3]
+                    "ordem_correta": [0, 1, 2, 3],
                 },
                 resposta_correta=[0, 1, 2, 3],
                 explicacao="O Bubble Sort compara e troca elementos adjacentes iterativamente até ordenar completamente.",
-                dicas=[
-                    "Pense no movimento das bolhas na água",
-                    "Cada passagem move o maior elemento para o final"
-                ],
-                tempo_estimado=7
+                dicas=["Pense no movimento das bolhas na água", "Cada passagem move o maior elemento para o final"],
+                tempo_estimado=7,
             ),
-
             "arvore_binaria_balanceamento": Exercicio(
                 id="arvore_binaria_balanceamento",
                 titulo="Árvore Binária - Balanceamento",
@@ -154,18 +152,14 @@ class SistemaExerciciosPraticos:
                         "Uma árvore balanceada garante complexidade O(log n) para operações",
                         "Árvores AVL são sempre balanceadas",
                         "O balanceamento evita o pior caso de complexidade O(n)",
-                        "Árvores rubro-negras garantem balanceamento perfeito"
+                        "Árvores rubro-negras garantem balanceamento perfeito",
                     ]
                 },
                 resposta_correta=[True, True, True, False],
                 explicacao="Árvores balanceadas garantem performance O(log n), mas nem sempre balanceamento perfeito como em Árvores Rubro-Negras que garantem altura máxima de 2*log n.",
-                dicas=[
-                    "Considere a diferença de altura entre subárvores",
-                    "Pense na relação entre altura e número de nós"
-                ],
-                tempo_estimado=8
+                dicas=["Considere a diferença de altura entre subárvores", "Pense na relação entre altura e número de nós"],
+                tempo_estimado=8,
             ),
-
             "grafo_dijkstra_aplicacao": Exercicio(
                 id="grafo_dijkstra_aplicacao",
                 titulo="Dijkstra - Aplicação em GPS",
@@ -179,18 +173,14 @@ class SistemaExerciciosPraticos:
                         "É o algoritmo mais rápido para qualquer grafo",
                         "Garante o caminho mais curto com pesos positivos",
                         "Funciona mesmo com pesos negativos",
-                        "Não precisa de estrutura de dados auxiliar"
+                        "Não precisa de estrutura de dados auxiliar",
                     ]
                 },
                 resposta_correta=1,
                 explicacao="Dijkstra garante o caminho mais curto em grafos com pesos positivos, ideal para distâncias em mapas.",
-                dicas=[
-                    "Considere as restrições do algoritmo",
-                    "Pense em pesos negativos (buracos negros?)"
-                ],
-                tempo_estimado=6
+                dicas=["Considere as restrições do algoritmo", "Pense em pesos negativos (buracos negros?)"],
+                tempo_estimado=6,
             ),
-
             "programacao_dinamica_fibonacci": Exercicio(
                 id="programacao_dinamica_fibonacci",
                 titulo="Programação Dinâmica - Fibonacci",
@@ -204,29 +194,20 @@ class SistemaExerciciosPraticos:
                         "Recursão sem memoização",
                         "Recursão com memoização",
                         "Iterativo com array",
-                        "Fórmula matemática direta"
+                        "Fórmula matemática direta",
                     ],
-                    "complexidades": [
-                        "O(2^n)",
-                        "O(n)",
-                        "O(n)",
-                        "O(1)"
-                    ]
+                    "complexidades": ["O(2^n)", "O(n)", "O(n)", "O(1)"],
                 },
                 resposta_correta={
                     "recursao_sem_memo": "O(2^n)",
                     "recursao_com_memo": "O(n)",
                     "iterativo": "O(n)",
-                    "formula": "O(1)"
+                    "formula": "O(1)",
                 },
                 explicacao="A recursão sem memoização recalcula valores, criando árvore exponencial. Memoização evita recálculos, fórmula direta é mais eficiente.",
-                dicas=[
-                    "Conte quantas vezes cada valor é calculado",
-                    "Considere o espaço usado para memoização"
-                ],
-                tempo_estimado=10
+                dicas=["Conte quantas vezes cada valor é calculado", "Considere o espaço usado para memoização"],
+                tempo_estimado=10,
             ),
-
             "debug_codigo_busca": Exercicio(
                 id="debug_codigo_busca",
                 titulo="Debugging - Busca Binária com Bug",
@@ -256,17 +237,14 @@ def busca_binaria(arr, alvo):
                         "Divisão inteira do meio pode causar overflow",
                         "Limites não são atualizados corretamente",
                         "Comparação de igualdade está errada",
-                        "Array não está sendo percorrido completamente"
-                    ]
+                        "Array não está sendo percorrido completamente",
+                    ],
                 },
                 resposta_correta=1,
                 explicacao="Os limites esquerda e direita não são atualizados corretamente, causando loop infinito ou busca incorreta.",
-                dicas=[
-                    "Verifique como os limites são atualizados",
-                    "Teste com um exemplo simples"
-                ],
-                tempo_estimado=8
-            )
+                dicas=["Verifique como os limites são atualizados", "Teste com um exemplo simples"],
+                tempo_estimado=8,
+            ),
         }
 
     def _carregar_historico(self) -> Dict[str, List[SessaoExercicio]]:
@@ -295,7 +273,7 @@ def busca_binaria(arr, alvo):
             tempo_fim=None,
             tentativas=0,
             pontos=0,
-            concluido=False
+            concluido=False,
         )
 
         self.sessoes_ativas[sessao_id] = sessao
@@ -336,7 +314,7 @@ def busca_binaria(arr, alvo):
             "explicacao": exercicio.explicacao,
             "tentativas": sessao.tentativas,
             "pontos": sessao.pontos if correta else 0,
-            "concluido": sessao.concluido
+            "concluido": sessao.concluido,
         }
 
     def obter_dica(self, exercicio_id: str, tentativa_atual: int) -> Optional[str]:
@@ -355,23 +333,19 @@ def busca_binaria(arr, alvo):
     def calcular_estatisticas_usuario(self) -> Dict[str, Any]:
         """Calcula estatísticas de desempenho do usuário"""
         total_exercicios = len(self.exercicios)
-        exercicios_concluidos = len([
-            s for s in self.sessoes_ativas.values() if s.concluido
-        ])
+        exercicios_concluidos = len([s for s in self.sessoes_ativas.values() if s.concluido])
 
         pontos_totais = sum(s.pontos for s in self.sessoes_ativas.values() if s.concluido)
-        tempo_total = sum(
-            (s.tempo_fim - s.tempo_inicio) for s in self.sessoes_ativas.values()
-            if s.tempo_fim
-        )
+        tempo_total = sum((s.tempo_fim - s.tempo_inicio) for s in self.sessoes_ativas.values() if s.tempo_fim)
 
         return {
             "exercicios_concluidos": exercicios_concluidos,
             "total_exercicios": total_exercicios,
             "taxa_conclusao": (exercicios_concluidos / total_exercicios * 100) if total_exercicios > 0 else 0,
             "pontos_totais": pontos_totais,
-            "tempo_total_minutos": tempo_total / 60 if tempo_total > 0 else 0
+            "tempo_total_minutos": tempo_total / 60 if tempo_total > 0 else 0,
         }
+
 
 # Instância global do sistema
 sistema_exercicios = SistemaExerciciosPraticos()

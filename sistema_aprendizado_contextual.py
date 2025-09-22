@@ -15,10 +15,12 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 
+
 class Dificuldade(Enum):
     INICIANTE = "iniciante"
     INTERMEDIARIO = "intermediario"
     AVANCADO = "avancado"
+
 
 class Tema(Enum):
     PESQUISA = "pesquisa"
@@ -27,9 +29,11 @@ class Tema(Enum):
     DINAMICA = "programacao_dinamica"
     ESTRUTURAS = "estruturas_dados"
 
+
 @dataclass
 class Conceito:
     """Representa um conceito de algoritmo/estrutura"""
+
     nome: str
     descricao: str
     dificuldade: Dificuldade
@@ -39,9 +43,11 @@ class Conceito:
     contexto_historico: str
     exemplos_praticos: List[str]
 
+
 @dataclass
 class JornadaAprendizado:
     """Representa uma jornada completa de aprendizado"""
+
     titulo: str
     descricao: str
     tema_principal: Tema
@@ -50,6 +56,7 @@ class JornadaAprendizado:
     conceitos: List[str]
     projetos_praticos: List[str]
     objetivos_aprendizagem: List[str]
+
 
 class SistemaAprendizadoContextualizado:
     """Sistema principal para aprendizado contextualizado"""
@@ -72,16 +79,15 @@ class SistemaAprendizadoContextualizado:
                     "Sistema de busca em bancos de dados",
                     "Busca em sistemas de arquivos",
                     "Localização de registros em logs ordenados",
-                    "Busca em dicionários digitais"
+                    "Busca em dicionários digitais",
                 ],
                 contexto_historico="Desenvolvido na década de 1940, é um dos algoritmos fundamentais da computação",
                 exemplos_praticos=[
                     "Encontrar um contato na agenda telefônica",
                     "Localizar uma palavra em dicionário",
-                    "Buscar commits no Git por data"
-                ]
+                    "Buscar commits no Git por data",
+                ],
             ),
-
             "arvore_binaria": Conceito(
                 nome="Árvore Binária de Busca",
                 descricao="Estrutura de dados que mantém elementos ordenados para busca eficiente",
@@ -92,16 +98,15 @@ class SistemaAprendizadoContextualizado:
                     "Índices de banco de dados",
                     "Sistema de arquivos (B-trees)",
                     "Estrutura de dados para compiladores",
-                    "Implementação de mapas e conjuntos ordenados"
+                    "Implementação de mapas e conjuntos ordenados",
                 ],
                 contexto_historico="Conceito fundamental desde os anos 1960, base para muitas estruturas modernas",
                 exemplos_praticos=[
                     "Mapa de preços em loja online",
                     "Índice de livros em biblioteca",
-                    "Estrutura de dados para jogos (árvores de decisão)"
-                ]
+                    "Estrutura de dados para jogos (árvores de decisão)",
+                ],
             ),
-
             "algoritmo_dijkstra": Conceito(
                 nome="Algoritmo de Dijkstra",
                 descricao="Algoritmo para encontrar o caminho mais curto em grafos",
@@ -112,16 +117,15 @@ class SistemaAprendizadoContextualizado:
                     "Sistemas de GPS e navegação",
                     "Roteamento de rede de computadores",
                     "Planejamento de rotas em jogos",
-                    "Otimização de caminhos em logística"
+                    "Otimização de caminhos em logística",
                 ],
                 contexto_historico="Criado por Edsger Dijkstra em 1956, revolucionou a teoria dos grafos",
                 exemplos_praticos=[
                     "Encontrar rota mais rápida no Google Maps",
                     "Roteamento de pacotes na internet",
-                    "Planejamento de caminhos em jogos de estratégia"
-                ]
+                    "Planejamento de caminhos em jogos de estratégia",
+                ],
             ),
-
             "programacao_dinamica": Conceito(
                 nome="Programação Dinâmica",
                 descricao="Técnica para resolver problemas complexos dividindo-os em subproblemas",
@@ -132,15 +136,15 @@ class SistemaAprendizadoContextualizado:
                     "Otimização de sequências de DNA",
                     "Compressão de dados (LZ77)",
                     "Sistemas de recomendação",
-                    "Otimização de carteiras de investimento"
+                    "Otimização de carteiras de investimento",
                 ],
                 contexto_historico="Desenvolvido por Richard Bellman na década de 1950 para pesquisa operacional",
                 exemplos_praticos=[
                     "Correção ortográfica em editores de texto",
                     "Compressão de arquivos ZIP",
-                    "Sistema de cache inteligente em navegadores"
-                ]
-            )
+                    "Sistema de cache inteligente em navegadores",
+                ],
+            ),
         }
 
     def _carregar_jornadas(self) -> Dict[str, JornadaAprendizado]:
@@ -156,16 +160,15 @@ class SistemaAprendizadoContextualizado:
                 projetos_praticos=[
                     "Implementar busca em agenda telefônica",
                     "Sistema de busca em biblioteca digital",
-                    "Busca eficiente em logs de sistema"
+                    "Busca eficiente em logs de sistema",
                 ],
                 objetivos_aprendizagem=[
                     "Entender diferença entre busca linear e binária",
                     "Implementar algoritmos de busca eficientes",
                     "Analisar complexidade de algoritmos de busca",
-                    "Aplicar busca em problemas reais"
-                ]
+                    "Aplicar busca em problemas reais",
+                ],
             ),
-
             "estruturas_arvore": JornadaAprendizado(
                 titulo="Estruturas em Árvore",
                 descricao="Explore estruturas hierárquicas essenciais na computação",
@@ -176,16 +179,15 @@ class SistemaAprendizadoContextualizado:
                 projetos_praticos=[
                     "Implementar corretor ortográfico com Trie",
                     "Sistema de arquivos com árvore B",
-                    "Indexação de banco de dados"
+                    "Indexação de banco de dados",
                 ],
                 objetivos_aprendizagem=[
                     "Compreender estruturas de árvore",
                     "Implementar operações básicas em árvores",
                     "Balancear árvores para eficiência",
-                    "Aplicar árvores em problemas reais"
-                ]
+                    "Aplicar árvores em problemas reais",
+                ],
             ),
-
             "algoritmos_grafos": JornadaAprendizado(
                 titulo="Algoritmos em Grafos",
                 descricao="Domine algoritmos para resolução de problemas em redes",
@@ -196,26 +198,21 @@ class SistemaAprendizadoContextualizado:
                 projetos_praticos=[
                     "Sistema de navegação GPS",
                     "Análise de redes sociais",
-                    "Roteamento de rede de computadores"
+                    "Roteamento de rede de computadores",
                 ],
                 objetivos_aprendizagem=[
                     "Representar problemas como grafos",
                     "Implementar algoritmos de travessia",
                     "Resolver problemas de caminho mínimo",
-                    "Aplicar grafos em sistemas reais"
-                ]
-            )
+                    "Aplicar grafos em sistemas reais",
+                ],
+            ),
         }
 
     def _carregar_progresso(self) -> Dict[str, Any]:
         """Carrega progresso do usuário"""
         # Em produção, isso viria de um banco de dados
-        return {
-            "conceitos_completados": [],
-            "jornadas_iniciadas": [],
-            "tempo_estudado": 0,
-            "exercicios_resolvidos": 0
-        }
+        return {"conceitos_completados": [], "jornadas_iniciadas": [], "tempo_estudado": 0, "exercicios_resolvidos": 0}
 
     def obter_conceitos_por_dificuldade(self, dificuldade: Dificuldade) -> List[Conceito]:
         """Retorna conceitos filtrados por dificuldade"""
@@ -242,10 +239,7 @@ class SistemaAprendizadoContextualizado:
         conceito = self.conceitos[conceito_atual]
 
         # Procurar conceitos relacionados no mesmo tema
-        relacionados = [
-            nome for nome, c in self.conceitos.items()
-            if c.tema == conceito.tema and nome != conceito_atual
-        ]
+        relacionados = [nome for nome, c in self.conceitos.items() if c.tema == conceito.tema and nome != conceito_atual]
 
         # Retornar primeiro conceito relacionado não completado
         for relacionado in relacionados:
@@ -253,6 +247,7 @@ class SistemaAprendizadoContextualizado:
                 return relacionado
 
         return None
+
 
 # Instância global do sistema
 sistema_aprendizado = SistemaAprendizadoContextualizado()
