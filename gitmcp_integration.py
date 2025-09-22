@@ -39,8 +39,12 @@ class GitHubDocsClient:
             # Tenta carregar do st.secrets (Streamlit Cloud)
             try:
                 import streamlit as st
-                if hasattr(st, 'secrets') and 'GITHUB_TOKEN' in st.secrets:
-                    token = st.secrets['GITHUB_TOKEN']
+                if hasattr(st, 'secrets'):
+                    try:
+                        token = st.secrets.get('GITHUB_TOKEN')
+                    except Exception:
+                        # Handle missing secrets gracefully
+                        pass
             except ImportError:
                 pass
 
