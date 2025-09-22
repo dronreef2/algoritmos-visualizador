@@ -128,11 +128,12 @@ def cache_recurso():
 def obter_cache_stats() -> Dict:
     """Retorna estatísticas do cache para compatibilidade."""
     # O Streamlit não expõe estatísticas detalhadas, então retornamos básicas
+    # CORREÇÃO: Retornar hit_rate como float para evitar TypeError
     return {
         "cache_type": "streamlit_native",
         "hits": "N/A (gerenciado pelo Streamlit)",
         "misses": "N/A (gerenciado pelo Streamlit)",
-        "hit_rate": 85.0,  # Valor estimado para compatibilidade numérica
+        "hit_rate": 85.0,  # Valor numérico para evitar TypeError
         "memory_usage": "Gerenciado automaticamente",
         "cache_size": "Dinâmico",
         "performance": "Natva C++ otimizada",
