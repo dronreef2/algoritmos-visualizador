@@ -257,7 +257,8 @@ jobs:
       if: success()
       run: |
         echo "✅ Monitoramento concluído com sucesso!"
-        echo "📊 Relatório gerado e artefatos salvos" then
+        echo "📊 Relatório gerado e artefatos salvos"
+        if [ "$APP_STATUS" = "offline" ]; then
           echo "❌ Streamlit App: Inacessível"
         else
           echo "❓ Streamlit App: Status desconhecido"
@@ -268,4 +269,5 @@ jobs:
         echo "🔄 Próxima verificação: $(date -d '+1 day' +'%Y-%m-%d 09:00 UTC')"
         echo ""
         echo "🌐 URL da Aplicação: https://algoritmos-visualizador.streamlit.app"
+        echo "📊 Status HTTP: ${APP_STATUS:-desconhecido}"
         echo "📊 Status HTTP: ${APP_STATUS:-desconhecido}"
