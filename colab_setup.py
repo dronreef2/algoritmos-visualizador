@@ -4,14 +4,14 @@
 # Suporte completo a GPU/TPU, recursos ilimitados
 
 # Instalar dependências
-!pip install -q streamlit>=1.32.0
-!pip install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-!pip install -q numpy pandas matplotlib plotly seaborn scipy
-!pip install -q requests pillow tavily-python psutil
+# !pip install -q streamlit>=1.32.0  # noqa
+# !pip install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118  # noqa
+# !pip install -q numpy pandas matplotlib plotly seaborn scipy  # noqa
+# !pip install -q requests pillow tavily-python psutil  # noqa
 
 # Para funcionalidades avançadas (opcional)
-# !pip install -q jupyter ipywidgets
-# !pip install -q gitpython pygithub
+# !pip install -q jupyter ipywidgets  # noqa
+# !pip install -q gitpython pygithub  # noqa
 
 # Verificar instalação
 import torch

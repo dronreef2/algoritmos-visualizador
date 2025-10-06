@@ -231,7 +231,8 @@ def check_file_structure():
                 print(f"   ✅ {file_path}: {file_count} arquivos")
             else:
                 size_kb = path.stat().st_size / 1024
-                print(f"   ✅ {file_path}: {size_kb:.1f} KB")            results[file_path] = True
+                print(f"   ✅ {file_path}: {size_kb:.1f} KB")
+                results[file_path] = True
         else:
             print(f"   ❌ {file_path}: Não encontrado")
             results[file_path] = False
@@ -252,14 +253,14 @@ def performance_test():
         for _ in range(100):
             y = torch.matmul(x, x)
         cpu_time = time.time() - start_time
-        print(".3f"
+        print(f"   ✅ CPU time: {cpu_time:.3f}s")
         # Teste NumPy
         start_time = time.time()
         x_np = np.random.randn(100, 100)
         for _ in range(100):
             y_np = np.dot(x_np, x_np)
         numpy_time = time.time() - start_time
-        print(".3f"
+        print(f"   ✅ NumPy time: {numpy_time:.3f}s")
         return {
             'cpu_time': cpu_time,
             'numpy_time': numpy_time,
@@ -350,5 +351,4 @@ def main():
     sys.exit(0 if critical_ok else 1)
 
 if __name__ == "__main__":
-    main()</content>
-<parameter name="filePath">/workspaces/algoritmos-visualizador/check_streamlit_cloud_compatibility.py
+    main()
