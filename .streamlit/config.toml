@@ -12,8 +12,8 @@ level = "info"
 
 [client]
 
-# Whether to enable st.cache
-caching = true
+# Whether to enable st.cache - REMOVIDO: não é mais suportado no Streamlit moderno
+# caching = true  # ❌ Esta linha foi removida para evitar warning
 
 # If false, will attempt to open a new tab or window every time Streamlit is
 # called. If true, will only open a new tab the first time Streamlit is called.

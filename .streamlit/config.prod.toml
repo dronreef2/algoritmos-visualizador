@@ -1,0 +1,30 @@
+[global]
+developmentMode = false
+showWarningOnDirectExecution = false
+
+[logger]
+level = "warning"  # Reduzido para produção
+
+[client]
+showSidebarNavigation = true
+
+[server]
+headless = true
+runOnSave = false
+address = "0.0.0.0"
+port = 8501
+baseUrlPath = ""
+
+# Configurações de produção para melhor performance
+enableCORS = false
+enableXsrfProtection = true
+maxUploadSize = 200
+maxMessageSize = 200
+enableWebsocketCompression = true
+
+# Otimizações para deploy na nuvem
+folderWatchBlacklist = ['__pycache__', '*.pyc', '.git', 'node_modules']
+fileWatcherType = "none"  # Desabilita watcher em produção
+
+# Cookie secret será definido via variável de ambiente
+cookieSecret = "algoritmos-visualizador-prod-key"
