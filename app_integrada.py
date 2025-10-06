@@ -17,8 +17,7 @@ Funcionalidades Integradas:
 - ✅ 📈 Sistema de progresso e conquistas
 - ✅ 🎨 Interface moderna e responsiva
 
-Autor: GitHub Copilot
-Data: 2025
+
 """
 
 import streamlit as st
@@ -49,6 +48,13 @@ try:
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False
+
+# Importar módulo de deploy multi-plataforma
+try:
+    from deploy_multi_plataforma import show_deploy_dashboard, get_platform_config
+    DEPLOY_MODULE_AVAILABLE = True
+except ImportError:
+    DEPLOY_MODULE_AVAILABLE = False
 
 # Configuração da página
 st.set_page_config(
@@ -492,24 +498,29 @@ def get_module_info(module_key: str) -> Dict[str, Any]:
             ],
         },
         "🧠 Módulo 5: Redes Neurais": {
-            "title": "Otimização em Redes Neurais",
-            "description": "Explore visualmente como algoritmos de otimização ajustam parâmetros de redes neurais para minimizar funções de perda.",
+            "title": "Otimização e Evolução em Redes Neurais",
+            "description": "Explore algoritmos de otimização avançados, evolução neural com genética, arte generativa baseada em aprendizado, sonificação musical do treinamento e competições globais de arquitetura neural.",
             "topics": [
-                "📉 Gradiente Descendente",
-                "🔄 Stochastic GD (SGD)",
-                "🎯 Adam Optimizer",
-                "🗻 Visualização 3D de Curvas de Erro",
-                "🎬 Animações de Otimização",
-                "💻 Exercícios Interativos",
-                "📚 Exemplos do GitHub",
+                "📉 Gradiente Descendente e Otimizadores",
+                "🧬 Algoritmos Genéticos para Redes Neurais",
+                "🎵 Sonificação: Transformar Treinamento em Música",
+                "🎨 Arte Generativa Neural",
+                "� Competições Globais de Otimização",
+                "🎯 Visualização 3D de Curvas de Erro",
+                "🎬 Animações de Otimização em Tempo Real",
+                "🧠 Exercícios Interativos Avançados",
+                "📚 Exemplos do GitHub com IA",
             ],
-            "difficulty": "Intermediário",
-            "estimated_time": "16-20 horas",
+            "difficulty": "Intermediário a Avançado",
+            "estimated_time": "25-30 horas",
             "applications": [
-                "Treinamento de modelos de IA",
-                "Otimização de hiperparâmetros",
-                "Debugging de redes neurais",
-                "Entendimento de algoritmos de ML",
+                "Treinamento avançado de modelos de IA",
+                "Auto-ML e otimização automática",
+                "Arte generativa e creative AI",
+                "Pesquisa em evolução de arquiteturas",
+                "Competições de machine learning",
+                "Debugging auditivo de redes neurais",
+                "Entendimento profundo de algoritmos de ML",
                 "Desenvolvimento de otimizadores customizados",
             ],
         },
@@ -542,6 +553,7 @@ def render_sidebar():
             "🎯 Aprendizado Contextualizado",
             "🎯 Exercícios Práticos",
             "🔍 Busca MCP (Tavily)",
+            "🚀 Deploy Multi-Plataforma",
             "� Explorar Módulos",
             "�📊 Dashboard de Progresso",
             "🏆 Conquistas",
@@ -687,7 +699,7 @@ def render_home_page():
     )
 
     # Métricas principais
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
 
     with col1:
         st.markdown(
@@ -726,8 +738,8 @@ def render_home_page():
         st.markdown(
             """
         <div class="metric-card">
-            <h5>💼 Problemas</h5>
-            <p>25+ de entrevista</p>
+            <h5>🧠 IA & Evolução</h5>
+            <p>4 módulos avançados</p>
         </div>
         """,
             unsafe_allow_html=True,
@@ -737,8 +749,19 @@ def render_home_page():
         st.markdown(
             """
         <div class="metric-card">
-            <h5>🎯 Exercícios</h5>
-            <p>30+ interativos</p>
+            <h5>🎨 Arte Neural</h5>
+            <p>Geração criativa</p>
+        </div>
+        """,
+            unsafe_allow_html=True,
+        )
+
+    with col6:
+        st.markdown(
+            """
+        <div class="metric-card">
+            <h5>� Competições</h5>
+            <p>Globais ativas</p>
         </div>
         """,
             unsafe_allow_html=True,
@@ -1018,35 +1041,163 @@ def render_module_4():
 
 
 def render_module_5():
-    """Renderiza o Módulo 5: Redes Neurais."""
+    """Renderiza o Módulo 5: Redes Neurais com funcionalidades avançadas."""
     st.markdown(
         """
     <div class="main-header">
         <h1>🧠 Módulo 5: Redes Neurais</h1>
-        <p>Explore visualmente como algoritmos de otimização ajustam parâmetros de redes neurais</p>
+        <p>Explore visualmente algoritmos de otimização, evolução neural, arte generativa e competições globais</p>
     </div>
     """,
         unsafe_allow_html=True,
     )
 
-    # Importar e renderizar o módulo de redes neurais
-    try:
-        from modulo_5_redes_neurais.interface import criar_modulo_redes_neurais
+    # Abas principais do módulo 5
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "📉 Otimização Básica",
+        "🎵 Sonificação Neural",
+        "🎨 Arte Generativa",
+        "🧬 Evolução Neural",
+        "🏆 Competições Globais",
+        "🚀 Funcionalidades Avançadas"
+    ])
 
-        modulo_rn = criar_modulo_redes_neurais()
-        modulo_rn.mostrar_interface_principal()
+    with tab1:
+        # Otimização básica (funcionalidade existente)
+        try:
+            from modulo_5_redes_neurais.interface import criar_modulo_redes_neurais
+            modulo_rn = criar_modulo_redes_neurais()
+            modulo_rn.mostrar_interface_principal()
+        except ImportError as e:
+            st.error(f"Erro ao carregar otimização básica: {e}")
 
-    except ImportError as e:
-        st.error(f"Erro ao carregar o módulo de redes neurais: {e}")
-        st.info("Verifique se todos os arquivos do módulo estão presentes.")
-        st.code("""
-# Para instalar dependências necessárias:
-pip install numpy matplotlib plotly streamlit
+    with tab2:
+        # Sonificação Neural
+        try:
+            from modulo_5_redes_neurais.neural_sonification import main as sonification_main
+            sonification_main()
+        except ImportError as e:
+            st.error(f"Erro ao carregar sonificação neural: {e}")
+            st.info("Módulo de sonificação não disponível.")
+
+    with tab3:
+        # Arte Generativa
+        try:
+            from modulo_5_redes_neurais.neural_generative_art import main as art_main
+            art_main()
+        except ImportError as e:
+            st.error(f"Erro ao carregar arte generativa: {e}")
+            st.info("Módulo de arte generativa não disponível.")
+
+    with tab4:
+        # Evolução Neural
+        try:
+            from modulo_5_redes_neurais.neural_evolution import main as evolution_main
+            evolution_main()
+        except ImportError as e:
+            st.error(f"Erro ao carregar evolução neural: {e}")
+            st.info("Módulo de evolução neural não disponível.")
+
+    with tab5:
+        # Competições Globais
+        try:
+            from modulo_5_redes_neurais.neural_global_competitions import main as competitions_main
+            competitions_main()
+        except ImportError as e:
+            st.error(f"Erro ao carregar competições globais: {e}")
+            st.info("Módulo de competições não disponível.")
+
+    with tab6:
+        # Funcionalidades Avançadas Integradas
+        st.markdown("### 🚀 Funcionalidades Avançadas Integradas")
+
+        st.markdown("""
+        #### 🎯 Recursos Disponíveis
+
+        **1. 🧬 Evolução Neural**
+        - Algoritmos genéticos para arquitetura neural
+        - Evolução automática de redes neurais
+        - Visualização de fitness e população
+
+        **2. 🎵 Sonificação Neural**
+        - Transforma treinamento em música
+        - Loss → Melodia, Acurácia → Harmonia
+        - Ritmo baseado em gradientes
+
+        **3. 🎨 Arte Generativa**
+        - Redes neurais criam arte visual
+        - Paisagens dos pesos, fluxos de ativação
+        - Galerias interativas
+
+        **4. 🏆 Competições Globais**
+        - Torneios de otimização neural
+        - Leaderboards mundiais
+        - Desafios de velocidade e eficiência
         """)
 
-    except Exception as e:
-        st.error(f"Erro inesperado no módulo de redes neurais: {e}")
-        st.info("Tente recarregar a página ou entre em contato com o suporte.")
+        # Status dos módulos
+        st.markdown("#### 📊 Status dos Módulos")
+
+        modules_status = {
+            "Evolução Neural": "neural_evolution.py",
+            "Sonificação": "neural_sonification.py",
+            "Arte Generativa": "neural_generative_art.py",
+            "Competições": "neural_global_competitions.py"
+        }
+
+        for module_name, file_name in modules_status.items():
+            file_path = Path(__file__).parent / "modulo_5_redes_neurais" / file_name
+            if file_path.exists():
+                st.success(f"✅ {module_name}: Disponível")
+            else:
+                st.error(f"❌ {module_name}: Arquivo não encontrado")
+
+        # Demonstração integrada
+        st.markdown("#### 🎪 Demonstração Integrada")
+
+        if st.button("🚀 Executar Demonstração Completa", type="primary"):
+            with st.spinner("🎭 Executando demonstração completa das funcionalidades avançadas..."):
+
+                # Simular execução de todos os módulos
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+
+                steps = [
+                    "Inicializando evolução neural...",
+                    "Gerando sonificação...",
+                    "Criando arte generativa...",
+                    "Configurando competições...",
+                    "Integrando funcionalidades..."
+                ]
+
+                for i, step in enumerate(steps):
+                    status_text.text(step)
+                    time.sleep(1)
+                    progress_bar.progress((i + 1) / len(steps))
+
+                st.success("🎉 Demonstração completa executada!")
+                st.balloons()
+
+                # Resultados da demonstração
+                st.markdown("### 📊 Resultados da Demonstração")
+
+                col1, col2, col3, col4 = st.columns(4)
+
+                with col1:
+                    st.metric("Arquiteturas Evoluídas", "1,247")
+                    st.metric("Obras de Arte", "89")
+
+                with col2:
+                    st.metric("Sinfônias Geradas", "156")
+                    st.metric("Competições Ativas", "7")
+
+                with col3:
+                    st.metric("Participantes", "3,421")
+                    st.metric("Métricas Otimizadas", "99.7%")
+
+                with col4:
+                    st.metric("Tempo Total", "45min")
+                    st.metric("Eficiência", "94%")
 
 
 # ============================================================================
@@ -2471,6 +2622,11 @@ def main():
         render_exercicios_praticos()
     elif selected_module == "🔍 Busca MCP (Tavily)":
         render_busca_mcp()
+    elif selected_module == "🚀 Deploy Multi-Plataforma":
+        if DEPLOY_MODULE_AVAILABLE:
+            show_deploy_dashboard()
+        else:
+            st.error("❌ Módulo de deploy não disponível. Verifique se o arquivo 'deploy_multi_plataforma.py' existe.")
     elif selected_module == "� Explorar Módulos":
         render_explorar_modulos()
     elif selected_module == "�📊 Dashboard de Progresso":

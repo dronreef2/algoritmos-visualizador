@@ -1,0 +1,35 @@
+# Algoritmos Visualizador - Streamlit Cloud Requirements
+# ===================================================
+# Versão otimizada para deploy no Streamlit Community Cloud
+# Recursos limitados: ~1GB RAM, CPU-only, timeout ~10-15min
+
+# Core Streamlit (versão estável)
+streamlit>=1.32.0
+
+# Data Science Essentials
+numpy>=1.24.0
+pandas>=2.0.0
+matplotlib>=3.7.0
+plotly>=5.15.0
+seaborn>=0.12.0
+scipy>=1.10.0
+
+# PyTorch CPU-Only (crítico para funcionalidades avançadas)
+torch>=2.0.0+cpu
+torchvision>=0.15.0+cpu
+torchaudio>=2.0.0
+
+# Utilitários leves
+requests>=2.31.0
+pillow>=10.0.0
+
+# Para integração MCP (leve)
+tavily-python>=0.3.0
+
+# Cache e performance
+psutil>=5.9.0  # Para monitoramento de recursos
+
+# Nota: GitPython e PyGithub removidos para reduzir tamanho
+# Nota: Jupyter removido (não suportado no Streamlit Cloud)
+# Nota: OpenPyXL removido para reduzir dependências</content>
+<parameter name="filePath">/workspaces/algoritmos-visualizador/requirements_streamlit_cloud.txt
