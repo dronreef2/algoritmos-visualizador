@@ -273,7 +273,8 @@ class ExperimentRunner:
             self.lab.save_experiment(experiment)
 
             # Resultados
-            st.success(".1f"            st.balloons()
+            st.success(f"✅ Experimento concluído! Acurácia final: {final_accuracy:.1%} em {training_time:.1f}s")
+            st.balloons()
 
             # Gráficos
             col1, col2 = st.columns(2)

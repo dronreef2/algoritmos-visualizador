@@ -337,7 +337,8 @@ class NeuralNetworkTrainer:
                 final_accuracy = accuracies[-1]
 
                 # Resultados
-                st.success(".1f"                st.balloons()
+                st.success(f"✅ Treinamento finalizado! Acurácia final: {final_accuracy:.1%} em {training_time:.1f}s")
+                st.balloons()
 
                 # Pontuação baseada na performance
                 points = 200  # Base por treinar
