@@ -11,6 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Check Streamlit Cloud App
+      run: |
+        echo "🔍 Verificando disponibilidade da aplicação no Streamlit Cloud..."
+        response=$(curl -s -o /dev/null -w "%{http_code}" --max-redirs 3 -L --connect-timeout 10 https://algoritmos-visualizador.streamlit.app/)
+
+        if [ $response -eq 200 ] || [ $response -eq 301 ] || [ $response -eq 302 ] || [ $response -eq 303 ]; then
+          echo "✅ Streamlit App está online (HTTP $response)"
+          echo "APP_STATUS=online" >> $GITHUB_ENV
+        elif [ $response -eq 503 ]; then
+          echo "⚠️ Streamlit App em manutenção (HTTP $response)"
+          echo "APP_STATUS=maintenance" >> $GITHUB_ENV
+        elif [ $response -eq 000 ]; then
+          echo "❌ Streamlit App inacessível (conexão falhou)"
+          echo "APP_STATUS=offline" >> $GITHUB_ENV
+        else
+          echo "❌ Streamlit App com problemas (HTTP $response)"
+          echo "APP_STATUS=error" >> $GITHUB_ENV
+          exit 1
+        fi
+
     - name: Check GitHub Actions Status
       run: |
         echo "🔍 Verificando status do GitHub Actions..."
@@ -21,13 +41,21 @@ jobs:
       run: |
         echo "📋 RELATÓRIO DIÁRIO - $(date +'%Y-%m-%d')"
         echo "=================================="
+
+        # Status da aplicação baseado na verificação
+        if [ "${APP_STATUS}" = "online" ]; then
+          echo "✅ Streamlit App: Online e funcionando"
+        elif [ "${APP_STATUS}" = "maintenance" ]; then
+          echo "⚠️ Streamlit App: Em manutenção"
+        elif [ "${APP_STATUS}" = "offline" ]; then
+          echo "❌ Streamlit App: Inacessível"
+        else
+          echo "❓ Streamlit App: Status desconhecido"
+        fi
+
         echo "✅ GitHub Actions: Funcionando"
         echo "✅ Monitoramento: Ativo"
         echo "🔄 Próxima verificação: $(date -d '+1 day' +'%Y-%m-%d 09:00 UTC')"
         echo ""
-        echo "💡 Nota: Verificação de disponibilidade da aplicação"
-        echo "   removida pois o app não está sempre online."
-        echo "   Para monitoramento completo, hospede em:"
-        echo "   - Streamlit Cloud (recomendado)"
-        echo "   - AWS/Heroku/Vercel"
-        echo "   - Ou configure servidor dedicado"
+        echo "🌐 URL da Aplicação: https://algoritmos-visualizador.streamlit.app"
+        echo "📊 Status HTTP: ${APP_STATUS:-desconhecido}"
