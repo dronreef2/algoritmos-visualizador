@@ -15,259 +15,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout código
       uses: actions/checkout@v4
-
+    
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
-
+        python-version: '3.11'
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests pandas plotly
-
-    - name: Advanced Health Check
+        pip install requests
+    
+    - name: Executar Monitoramento Completo
       run: |
-        echo "🔍 Executando verificação avançada de saúde..."
-        python -c "
-        import requests
-        import time
-        import json
-        from datetime import datetime
-
-        app_url = 'https://algoritmos-visualizador.streamlit.app'
-
-        # Health check básico
-        try:
-            start = time.time()
-            response = requests.get(app_url, timeout=30)
-            response_time = time.time() - start
-
-            health_data = {
-                'timestamp': datetime.now().isoformat(),
-                'status_code': response.status_code,
-                'response_time': round(response_time, 2),
-                'is_up': response.status_code == 200
-            }
-
-            print(f'✅ Health Check: HTTP {response.status_code} - {response_time:.2f}s')
-
-        except Exception as e:
-            health_data = {
-                'timestamp': datetime.now().isoformat(),
-                'status_code': None,
-                'response_time': None,
-                'is_up': False,
-                'error': str(e)
-            }
-            print(f'❌ Health Check falhou: {e}')
-
-        # Salva resultado
-        with open('health_check.json', 'w') as f:
-            json.dump(health_data, f, indent=2)
-
-        # Define status para próximos steps
-        if health_data['is_up']:
-            print('APP_STATUS=online')
-            with open('app_status.txt', 'w') as f:
-                f.write('online')
-        else:
-            print('APP_STATUS=offline')
-            with open('app_status.txt', 'w') as f:
-                f.write('offline')
-        "
-
-    - name: Module Availability Check
-      run: |
-        echo "📚 Verificando disponibilidade dos módulos..."
-        python -c "
-        import requests
-        import json
-
-        app_url = 'https://algoritmos-visualizador.streamlit.app'
-        modules = ['1', '2', '3', '4', '5']  # Módulos 1-5
-        results = {}
-
-        for module in modules:
-            try:
-                response = requests.get(f'{app_url}/?module={module}', timeout=15)
-                results[f'module_{module}'] = {
-                    'status': response.status_code,
-                    'available': response.status_code == 200
-                }
-                print(f'📖 Módulo {module}: {\"✅\" if response.status_code == 200 else \"❌\"} (HTTP {response.status_code})')
-            except Exception as e:
-                results[f'module_{module}'] = {
-                    'status': None,
-                    'available': False,
-                    'error': str(e)
-                }
-                print(f'📖 Módulo {module}: ❌ Erro - {e}')
-
-        with open('modules_check.json', 'w') as f:
-            json.dump(results, f, indent=2)
-
-        available_count = sum(1 for r in results.values() if r['available'])
-        print(f'📊 Módulos disponíveis: {available_count}/{len(modules)}')
-        "
-
-    - name: Performance Analysis
-      run: |
-        echo "⚡ Analisando performance..."
-        python -c "
-        import json
-        import time
-
-        # Simula múltiplas requisições para análise de performance
-        import requests
-
-        app_url = 'https://algoritmos-visualizador.streamlit.app'
-        times = []
-
-        for i in range(3):  # 3 requisições de teste
-            try:
-                start = time.time()
-                response = requests.get(app_url, timeout=20)
-                elapsed = time.time() - start
-                times.append(elapsed)
-                print(f'📈 Teste {i+1}: {elapsed:.2f}s')
-                time.sleep(1)  # Pequena pausa entre testes
-            except Exception as e:
-                print(f'📈 Teste {i+1}: ❌ Falhou - {e}')
-                times.append(None)
-
-        # Calcula métricas
-        valid_times = [t for t in times if t is not None]
-        if valid_times:
-            avg_time = sum(valid_times) / len(valid_times)
-            min_time = min(valid_times)
-            max_time = max(valid_times)
-
-            perf_data = {
-                'average_response_time': round(avg_time, 2),
-                'min_response_time': round(min_time, 2),
-                'max_response_time': round(max_time, 2),
-                'success_rate': len(valid_times) / len(times)
-            }
-
-            print(f'📊 Performance: Média {avg_time:.2f}s, Min {min_time:.2f}s, Max {max_time:.2f}s')
-
-            with open('performance.json', 'w') as f:
-                json.dump(perf_data, f, indent=2)
-        "
-
-    - name: Generate Comprehensive Report
-      run: |
-        echo "📋 Gerando relatório abrangente..."
-        python -c "
-        import json
-        from datetime import datetime
-
-        # Carrega dados das verificações anteriores
-        try:
-            with open('health_check.json', 'r') as f:
-                health = json.load(f)
-        except:
-            health = {'error': 'Health check data not found'}
-
-        try:
-            with open('modules_check.json', 'r') as f:
-                modules = json.load(f)
-        except:
-            modules = {'error': 'Modules check data not found'}
-
-        try:
-            with open('performance.json', 'r') as f:
-                performance = json.load(f)
-        except:
-            performance = {'error': 'Performance data not found'}
-
-        # Gera relatório
-        report = {
-            'timestamp': datetime.now().isoformat(),
-            'app_url': 'https://algoritmos-visualizador.streamlit.app',
-            'health_check': health,
-            'modules_check': modules,
-            'performance': performance,
-            'overall_status': 'HEALTHY' if health.get('is_up', False) else 'UNHEALTHY'
-        }
-
-        # Análise de recomendações
-        recommendations = []
-
-        if health.get('response_time', 0) > 10:
-            recommendations.append('⚠️ Alto tempo de resposta detectado - considere otimizar cache')
-        elif health.get('response_time', 0) > 5:
-            recommendations.append('ℹ️ Tempo de resposta moderado - monitorar tendência')
-
-        available_modules = sum(1 for m in modules.values() if isinstance(m, dict) and m.get('available', False))
-        total_modules = len([m for m in modules.keys() if m.startswith('module_')])
-
-        if available_modules < total_modules:
-            recommendations.append(f'⚠️ {total_modules - available_modules} módulo(s) com problema')
-
-        if not recommendations:
-            recommendations.append('✅ Todos os sistemas funcionando normalmente')
-
-        report['recommendations'] = recommendations
-
-        # Salva relatório
-        with open('deploy_report.json', 'w') as f:
-            json.dump(report, f, indent=2)
-
-        # Print resumo
-        print('� === RELATÓRIO DE MONITORAMENTO ===')
-        print(f'🕐 {report[\"timestamp\"]}')
-        print(f'🌐 App: {report[\"app_url\"]}')
-        print(f'📊 Status: {report[\"overall_status\"]}')
-        print(f'⚡ Tempo resposta: {health.get(\"response_time\", \"N/A\")}s')
-        print(f'📚 Módulos OK: {available_modules}/{total_modules}')
-        print()
-        print('💡 Recomendações:')
-        for rec in recommendations:
-            print(f'   {rec}')
-        "
-
-    - name: Upload Report as Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: deploy-report-${{ github.run_number }}
-        path: |
-          deploy_report.json
-          health_check.json
-          modules_check.json
-          performance.json
-
-    - name: Create Issue on Failure
+        echo "🔍 Iniciando monitoramento automático..."
+        python monitor.py
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
+    
+    - name: Verificação de Fallback - Streamlit App
       if: failure()
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.issues.create({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            title: '🚨 Deploy Monitoring Alert - App Unhealthy',
-            body: 'O monitoramento automático detectou problemas na aplicação Streamlit Cloud. Verifique os logs e artefatos do workflow para mais detalhes.',
-            labels: ['bug', 'deploy', 'monitoring']
-          })
-
-    - name: Success Notification
-      if: success()
       run: |
-        echo "✅ Monitoramento concluído com sucesso!"
-        echo "📊 Relatório gerado e artefatos salvos"
-        if [ "$APP_STATUS" = "offline" ]; then
-          echo "❌ Streamlit App: Inacessível"
+        echo "🔄 Executando verificação de fallback..."
+        response=$(curl -s -o /dev/null -w "%{http_code}" -L --connect-timeout 10 --max-time 30 https://algoritmos-visualizador.streamlit.app/ || echo "000")
+        echo "📊 Response code: $response"
+        if [ "$response" = "200" ]; then
+          echo "✅ Streamlit App está online (HTTP $response)"
+        elif [ "$response" = "000" ]; then
+          echo "⚠️ Streamlit App: Problema de conectividade (não pode resolver DNS ou conectar)"
         else
-          echo "❓ Streamlit App: Status desconhecido"
+          echo "⚠️ Streamlit App: Resposta inesperada (HTTP $response)"
         fi
-
-        echo "✅ GitHub Actions: Funcionando"
-        echo "✅ Monitoramento: Ativo"
+        echo "ℹ️ Nota: Este é um fallback - o monitoramento principal usa retry logic"
+    
+    - name: Generate Daily Report
+      if: always()
+      run: |
+        echo "📋 RELATÓRIO DIÁRIO - $(date +'%Y-%m-%d')"
+        echo "=================================="
+        echo "✅ Monitoramento automático executado"
         echo "🔄 Próxima verificação: $(date -d '+1 day' +'%Y-%m-%d 09:00 UTC')"
-        echo ""
-        echo "🌐 URL da Aplicação: https://algoritmos-visualizador.streamlit.app"
-        echo "📊 Status HTTP: ${APP_STATUS:-desconhecido}"
-        echo "📊 Status HTTP: ${APP_STATUS:-desconhecido}"
+        echo "📊 Para detalhes completos, consulte os logs acima"
