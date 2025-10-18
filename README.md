@@ -1,28 +1,282 @@
-https://algoritmos-visualizador.streamlit.app/
-
-https://github.com/algorithm-visualizer/algorithm-visualizer
-
-# 🧮 Algoritmos Visualizador - Streamlit + MCP Integration
+# 🎯 Algoritmos Visualizador - Aplicação Integrada Completa
 
 [![Python CI](https://github.com/dronreef2/algoritmos-visualizador/actions/workflows/python-ci.yml/badge.svg)](https://github.com/dronreef2/algoritmos-visualizador/actions/workflows/python-ci.yml)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://algoritmos-visualizador.streamlit.app/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
-Uma aplicação web interativa para visualização e análise de algoritmos, integrada com Model Context Protocol (MCP) para análise avançada com AI.
+## 🚀 **APLICAÇÃO INTEGRADA COMPLETA - VERSÃO 2.0**
 
-## 🎉 **STATUS ATUAL: PROJETO COMPLETO - TODOS OS MÓDULOS IMPLEMENTADOS!**
-
-✅ **Módulo 1: Fundamentos** - Busca binária, dois ponteiros, janela deslizante  
-✅ **Módulo 2: Estruturas de Dados** - Heap, Trie, Union-Find, Segment Tree, LRU Cache  
-✅ **Módulo 3: Programação Dinâmica** - Metodologia 3 passos, Fibonacci, Knapsack, LCS  
-✅ **Módulo 4: Entrevistas Técnicas** - Sistema completo de simulação com feedback  
-✅ **Streamlit Apps** - Interface web com Player/Renderer architecture  
-✅ **Sistema de Testes** - Demonstrações e testes integrados  
-✅ **Pronto para uso em produção!**
+Uma plataforma abrangente e integr```
+algoritmos-visualizador/
+├── 📁 mcp-server-tavily/          # 🔍 Servidor MCP para buscas web
+│   ├── src/                       # Código fonte do servidor
+│   ├── .env                       # ⚙️ Configuração da API
+│   ├── run_server.sh             # 🚀 Script de inicialização
+│   └── pyproject.toml             # 📦 Dependências
+├── 📁 modulo_1_fundamentos/       # ✅ Fundamentos completos
+├── 📁 modulo_2_estruturas_dados/  # 🏗️ Estruturas avançadas
+├── 📁 modulo_3_programacao_dinamica/ # 🎯 Programação dinâmica
+├── 📁 modulo_4_entrevistas/       # 💼 Sistema de entrevistas
+├── 📁 streamlit_apps/             # 🌐 Aplicações web
+├── 🔧 mcp_tavily_integration.py   # 🔗 Integração MCP
+├── 📚 exemplo_integracao_mcp.py   # 💡 Exemplos de uso
+├── ⚙️ mcp_config.py               # 🔧 Utilitários de configuração
+├── 🚀 cache_inteligente.py        # 🆕 Sistema de cache inteligente ⭐ NOVO!
+├── 📊 demo_cache_inteligente.py   # 🎯 Demonstração do cache ⭐ NOVO!
+├── 📖 MCP_TAVILY_README.md        # 📋 Documentação completa
+```ado de algoritmos e estruturas de dados, combinando todos os módulos em uma experiência unificada com visualizações interativas, exercícios práticos e integração com IA.
 
 ---
 
-## 🌟 Funcionalidades Principais
+## � **FUNCIONALIDADES COMPLETAMENTE INTEGRADAS**
+
+### ✅ **Módulos de Aprendizado Completos**
+- **📚 Módulo 1: Fundamentos** - Busca binária, dois ponteiros, janela deslizante, backtracking
+- **🏗️ Módulo 2: Estruturas de Dados** - Heap, Trie, Union-Find, Segment Tree
+- **🎯 Módulo 3: Programação Dinâmica** - Metodologia 3 passos, Knapsack, LCS
+- **💼 Módulo 4: Entrevistas Técnicas** - Simulação completa com feedback
+
+### 🎯 **Sistema de Aprendizado Contextualizado**
+- **🗺️ Mapa Visual de Aprendizado** - Grafo interativo conectando conceitos
+- **🚀 Jornadas Temáticas** - Percursos estruturados por tema
+- **📚 Conceitos Interativos** - Exploração profunda com múltiplas perspectivas
+- **📊 Acompanhamento de Progresso** - Métricas e recomendações personalizadas
+
+### 🎯 **Exercícios Práticos Interativos**
+- **📝 Múltipla Escolha** - Validação automática com feedback imediato
+- **🔍 Análise de Complexidade** - Exercícios práticos de Big O
+- **🐛 Debugging de Código** - Identificação e correção de bugs
+- **🏆 Sistema de Conquistas** - Gamificação do aprendizado
+
+### 🤖 **Busca Inteligente com MCP (Tavily)**
+- **🔍 Busca Contextual** - Encontre explicações usando API real do Tavily
+- **🧠 Respostas com IA** - Geração automática de respostas contextualizadas
+- **📊 Resultados Personalizados** - Controle de profundidade e quantidade
+- **⚡ Busca Avançada** - Suporte a buscas `basic` e `advanced`
+
+### 📊 **Visualizações Interativas Avançadas**
+- **🎨 Gráficos Matplotlib/Plotly** - Animações passo a passo
+- **🎬 Demonstrações em Tempo Real** - Veja algoritmos funcionando
+- **📈 Análise de Performance** - Comparação de complexidades
+- **🔍 Exploração Detalhada** - Zoom e navegação interativa
+
+### 📊 **Dashboard de Progresso Completo**
+- **📈 Métricas de Aprendizado** - Acompanhamento detalhado
+- **🏆 Sistema de Conquistas** - Desbloqueie achievements
+- **📊 Estatísticas Avançadas** - Análise de performance
+- **💡 Recomendações** - Sugestões personalizadas
+
+---
+
+## 🎮 **COMO USAR A APLICAÇÃO INTEGRADA**
+
+### 🚀 **Execução Rápida**
+```bash
+# Execute a aplicação integrada completa
+streamlit run app_integrada.py
+
+# Ou execute módulos específicos
+streamlit run streamlit_apps/main_app.py
+```
+
+### 🧭 **Navegação Principal**
+1. **🏠 Home** - Visão geral e destaques
+2. **📚 Módulos 1-4** - Aprendizado estruturado
+3. **🎯 Aprendizado Contextualizado** - Jornadas temáticas
+4. **🎯 Exercícios Práticos** - Prática interativa
+5. **🔍 Busca MCP** - Consultas com IA
+6. **📊 Dashboard** - Acompanhamento de progresso
+7. **🏆 Conquistas** - Sistema de gamificação
+
+---
+
+## 🏗️ **ARQUITETURA DA APLICAÇÃO INTEGRADA**
+
+```
+app_integrada.py (🎯 PRINCIPAL)
+├── 🎨 Interface Moderna (CSS Customizado)
+├── 🧭 Sistema de Navegação Unificado
+├── 📚 Módulos de Aprendizado
+│   ├── 🔍 Busca Binária & Algoritmos
+│   ├── 🏗️ Estruturas de Dados
+│   ├── 🎯 Programação Dinâmica
+│   └── 💼 Simulação de Entrevistas
+├── 🎯 Aprendizado Contextualizado
+│   ├── 🗺️ Mapa Visual
+│   ├── 🚀 Jornadas Temáticas
+│   └── 📊 Progresso
+├── 🎯 Exercícios Práticos
+│   ├── 📝 Tipos de Exercício
+│   ├── ✅ Validação Automática
+│   └── 🏆 Conquistas
+├── 🤖 Integração MCP
+│   ├── 🔍 Busca Tavily
+│   └── 🧠 Respostas IA
+└── 📊 Dashboard & Analytics
+    ├── 📈 Métricas
+    ├── 📊 Visualizações
+    └── 💡 Recomendações
+```
+
+---
+
+## 📦 **DEPENDÊNCIAS E INSTALAÇÃO**
+
+### 🔧 **Dependências do Sistema**
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 libxml2-dev libxslt-dev curl git
+```
+
+### 🐍 **Dependências Python**
+```bash
+pip install -r requirements.txt
+pip install -r requirements_mcp.txt
+```
+
+### 🤖 **Configuração MCP (Opcional)**
+```bash
+# Configure a chave da API Tavily
+cp mcp-server-tavily/.env.example mcp-server-tavily/.env
+# Edite .env e adicione sua chave: TAVILY_API_KEY=your_key_here
+```
+
+---
+
+## 🎯 **EXPERIÊNCIA DE APRENDIZADO**
+
+### 📚 **Percurso Recomendado**
+1. **Comece pelo Home** - Entenda a plataforma
+2. **Explore os Módulos** - Aprenda conceitos fundamentais
+3. **Pratique com Exercícios** - Aplique o conhecimento
+4. **Use a Busca MCP** - Tire dúvidas com IA
+5. **Acompanhe o Progresso** - Veja suas conquistas
+
+### 🎮 **Funcionalidades Interativas**
+- **Visualizações Animadas** - Veja algoritmos em ação
+- **Exercícios Validados** - Feedback imediato
+- **Busca Inteligente** - Consultas contextuais
+- **Sistema de Conquistas** - Motivação gamificada
+- **Dashboard Analítico** - Acompanhamento detalhado
+
+---
+
+## 🚀 **DEPLOYMENT E PRODUÇÃO**
+
+### 🌐 **Streamlit Sharing**
+```bash
+# A aplicação está pronta para deploy
+# Arquivos de configuração incluídos:
+# - packages.txt (dependências do sistema)
+# - requirements.txt (dependências Python)
+# - .streamlit/config.toml (configurações Streamlit)
+```
+
+### 🐳 **Docker (Opcional)**
+```dockerfile
+FROM python:3.9-slim
+
+COPY . /app
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \\
+    libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1
+
+RUN pip install -r requirements.txt
+
+EXPOSE 8501
+CMD ["streamlit", "run", "app_integrada.py"]
+```
+
+---
+
+## 📊 **MÉTRICAS E MONITORAMENTO**
+
+### 📈 **Indicadores de Uso**
+- **Módulos Completados** - Progresso por módulo
+- **Exercícios Resolvidos** - Taxa de acerto
+- **Tempo de Estudo** - Engajamento do usuário
+- **Conquistas Desbloqueadas** - Gamificação
+
+### 🔍 **Analytics Integrados**
+- **Dashboard de Progresso** - Visualizações interativas
+- **Sistema de Recomendações** - Sugestões personalizadas
+- **Análise de Performance** - Métricas de aprendizado
+- **Feedback Automático** - Avaliação de exercícios
+
+---
+
+## 🤝 **CONTRIBUIÇÃO E DESENVOLVIMENTO**
+
+### 🛠️ **Estrutura do Projeto**
+```
+algoritmos-visualizador/
+├── app_integrada.py           # 🎯 Aplicação principal integrada
+├── streamlit_apps/            # 📱 Aplicações Streamlit modulares
+├── modulo_1_fundamentos/      # 🔍 Algoritmos fundamentais
+├── modulo_2_estruturas_dados/ # 🏗️ Estruturas de dados
+├── modulo_3_programacao_dinamica/ # 🎯 Programação dinâmica
+├── modulo_4_entrevistas/      # 💼 Simulação de entrevistas
+├── aprendizado_contextual_ui.py # 🎯 Sistema contextualizado
+├── exercicios_praticos_ui.py  # 🎯 Exercícios interativos
+├── mcp_tavily_integration.py  # 🤖 Integração MCP
+└── sistema_*.py              # 🧠 Sistemas core
+```
+
+### 🎯 **Áreas de Desenvolvimento**
+- [ ] **Integração com Mais APIs** - Expandir busca inteligente
+- [ ] **Sistema de Usuários** - Perfis e histórico persistente
+- [ ] **Modo Offline** - Funcionalidades sem internet
+- [ ] **Mobile Responsivo** - Otimização para dispositivos móveis
+- [ ] **Multi-idioma** - Suporte a português e inglês
+
+---
+
+## 📄 **LICENÇA E CRÉDITOS**
+
+**Licença:** MIT License
+**Autor:** GitHub Copilot
+**Data:** 2025
+**Versão:** 2.0 - Aplicação Integrada Completa
+
+### 🙏 **Agradecimentos**
+- **Streamlit** - Framework web interativo
+- **Tavily API** - Busca inteligente com IA
+- **Matplotlib/Plotly** - Visualizações científicas
+- **Python Community** - Ecossistema rico e colaborativo
+
+---
+
+## 🎉 **COMECE AGORA!**
+
+```bash
+# Execute a aplicação integrada
+streamlit run app_integrada.py
+
+# Acesse: http://localhost:8501
+```
+
+**🎯 Explore, aprenda e domine algoritmos e estruturas de dados com nossa plataforma integrada completa!**
+
+---
+
+*Desenvolvido com ❤️ para a comunidade de desenvolvedores e estudantes de algoritmos.*
+
+### 🎯 Sistema de Aprendizado Contextualizado ⭐ **NOVO!**
+- **Jornadas Temáticas**: Percursos estruturados por tema com objetivos claros
+- **Mapa Visual de Aprendizado**: Grafo interativo mostrando conexões entre conceitos
+- **Contexto Histórico**: Entenda quando e por que os algoritmos foram criados
+- **Aplicações Reais**: Veja como os conceitos são usados no mundo da tecnologia
+- **Sistema de Progresso**: Acompanhe seu avanço com métricas e recomendações
+- **Exploração Interativa**: Mergulhe fundo em cada conceito com múltiplas perspectivas
+
+### 🤖 Busca Inteligente com MCP (Tavily) ⭐ **NOVO!**
+- **Busca Contextual:** Encontre explicações e exemplos na web usando API real do Tavily
+- **Respostas com IA:** Geração automática de respostas contextualizadas
+- **Busca Avançada:** Suporte a buscas `basic` e `advanced` com controle de profundidade
+- **Resultados Personalizados:** Controle do número máximo de resultados (1-10)
+- **Integração Completa:** Interface totalmente integrada no Streamlit
 
 ### 🔍 Visualização Interativa de Algoritmos
 - **Busca Binária:** Animação passo a passo com análise MCP
@@ -67,6 +321,15 @@ Uma aplicação web interativa para visualização e análise de algoritmos, int
 - **Benchmarks:** Testes de performance em tempo real
 - **🔍 Busca Web Integrada:** MCP Server Tavily para pesquisa contextual
 
+### 🚀 Sistema de Cache Inteligente ⭐ **NOVO!**
+- **Cache de Visualizações:** Gráficos matplotlib/plotly cacheados automaticamente
+- **Cache de Algoritmos:** Resultados de algoritmos computacionalmente intensos
+- **Cache MCP:** Consultas de busca web com cache inteligente
+- **Compressão Automática:** Dados grandes são comprimidos para economizar memória
+- **Métricas em Tempo Real:** Acompanhe hits, misses e performance
+- **Interface Integrada:** Controles no sidebar da aplicação principal
+- **TTL Configurável:** Tempo de vida customizável por tipo de cache
+
 ### 📊 Dashboard Completo
 - **Progresso de Estudo:** Acompanhamento de módulos
 - **Comparação de Performance:** Gráficos dinâmicos
@@ -109,17 +372,44 @@ python demo_completa.py
 python teste_integrado.py
 ```
 
-### 🔧 Módulos Individuais (NOVO!)
+### 🔧 Sistema de Cache Inteligente (NOVO!)
 ```bash
-# Módulo 2: Estruturas de Dados
-python modulo_2_estruturas_dados/estruturas_avancadas.py
-
-# Módulo 3: Programação Dinâmica
-python modulo_3_programacao_dinamica/metodologia_3_passos.py
-
-# Módulo 4: Entrevistas Técnicas
-python modulo_4_entrevistas/problem_playground.py
+# Executar demonstração completa do sistema de cache
+streamlit run demo_cache_inteligente.py
 ```
+
+#### 🎯 Funcionalidades do Cache
+- **Cache de Visualizações:** Gráficos complexos são gerados apenas uma vez
+- **Cache de Algoritmos:** Resultados computacionalmente intensos são armazenados
+- **Cache MCP:** Consultas de busca são cacheadas por 30 minutos
+- **Compressão:** Dados grandes são automaticamente comprimidos
+- **Métricas:** Acompanhe performance em tempo real no sidebar
+
+#### 💡 Como Usar Decoradores
+```python
+from cache_inteligente import cache_visualizacao, cache_algoritmo, cache_mcp
+
+@cache_visualizacao(ttl_seconds=1800)  # 30 minutos
+def criar_grafico_complexo(dados):
+    # Seu código de visualização aqui
+    return fig
+
+@cache_algoritmo(ttl_seconds=3600)  # 1 hora
+def algoritmo_intensivo(parametros):
+    # Seu algoritmo aqui
+    return resultado
+
+@cache_mcp(ttl_seconds=1800)  # 30 minutos
+def buscar_web(query):
+    # Sua consulta MCP aqui
+    return resultado
+```
+
+#### 📊 Monitoramento
+- **Taxa de Acerto:** Porcentagem de hits no cache
+- **Tempo Economizado:** Segundos salvos por cache hits
+- **Uso de Memória:** MB utilizados pelo cache
+- **Controle Total:** Botões para limpar cache e ver estatísticas
 
 ### Streamlit App (Interface Web Original)
 ```bash
@@ -327,3 +617,8 @@ algoritmos-visualizador/
 ├── ⚙️ mcp_config.py               # 🔧 Utilitários de configuração
 └── 📖 MCP_TAVILY_README.md        # 📋 Documentação completa
 ```
+
+Integração com o sistema de exercícios práticos
+Adição de cache inteligente para performance
+Expansão para outras linguagens de programação
+Interface web para exploração interativa

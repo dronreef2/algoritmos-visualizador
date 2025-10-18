@@ -5,13 +5,16 @@ Script de diagnóstico para testar os módulos educacionais
 
 import sys
 import os
-sys.path.append('/workspaces/algoritmos-visualizador')
+
+sys.path.append("/workspaces/algoritmos-visualizador")
+
 
 def testar_modulos():
     print("🔍 Iniciando diagnóstico dos módulos educacionais...")
 
     try:
         from modulos_integrados import modulos_integrados
+
         print("✅ Importação do módulo modulos_integrados: SUCESSO")
 
         # Testar carregamento de cada módulo
@@ -43,6 +46,7 @@ def testar_modulos():
 
     except Exception as e:
         print(f"❌ Erro geral: {e}")
+
 
 if __name__ == "__main__":
     testar_modulos()

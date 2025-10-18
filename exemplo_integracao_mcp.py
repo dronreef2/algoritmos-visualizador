@@ -6,9 +6,11 @@ Demonstra como usar o MCP Tavily para enriquecer o aprendizado
 
 import sys
 import os
-sys.path.append('/workspaces/algoritmos-visualizador')
+
+sys.path.append("/workspaces/algoritmos-visualizador")
 
 from mcp_tavily_integration import TavilySearchClient, buscar_web
+
 
 def buscar_explicacao_algoritmo(nome_algoritmo: str):
     """
@@ -25,6 +27,7 @@ def buscar_explicacao_algoritmo(nome_algoritmo: str):
 
     return resultado
 
+
 def demonstrar_busca_algoritmos():
     """
     Demonstra busca contextual para diferentes algoritmos
@@ -37,7 +40,7 @@ def demonstrar_busca_algoritmos():
         "árvore binária de busca",
         "algoritmo de Dijkstra",
         "programação dinâmica",
-        "algoritmo de ordenação quicksort"
+        "algoritmo de ordenação quicksort",
     ]
 
     for algoritmo in algoritmos:
@@ -50,18 +53,19 @@ def demonstrar_busca_algoritmos():
             print(f"✅ Encontrados {len(resultado['results'])} resultados")
 
             # Mostra os primeiros 2 resultados
-            for i, item in enumerate(resultado['results'][:2], 1):
+            for i, item in enumerate(resultado["results"][:2], 1):
                 print(f"{i}. 📄 {item.get('title', 'Título não disponível')}")
                 print(f"   🔗 {item.get('url', 'URL não disponível')}")
-                if 'snippet' in item:
+                if "snippet" in item:
                     # Limita o snippet a 100 caracteres
-                    snippet = item['snippet'][:100] + "..." if len(item['snippet']) > 100 else item['snippet']
+                    snippet = item["snippet"][:100] + "..." if len(item["snippet"]) > 100 else item["snippet"]
                     print(f"   📝 {snippet}")
                 print()
         else:
             print("❌ Nenhum resultado encontrado")
 
         print("-" * 40)
+
 
 def integrar_com_visualizador():
     """
@@ -99,6 +103,7 @@ def integrar_com_visualizador():
         print(f"⚠️ Módulo não disponível: {e}")
         print("   Execute este exemplo dentro do ambiente completo do projeto")
 
+
 def exemplo_pesquisa_interativa():
     """
     Exemplo de pesquisa interativa
@@ -109,7 +114,7 @@ def exemplo_pesquisa_interativa():
     while True:
         query = input("Digite o termo de busca (ou 'sair' para encerrar): ").strip()
 
-        if query.lower() in ['sair', 'exit', 'quit']:
+        if query.lower() in ["sair", "exit", "quit"]:
             break
 
         if not query:
@@ -124,13 +129,14 @@ def exemplo_pesquisa_interativa():
         elif "results" in resultado:
             print(f"✅ {len(resultado['results'])} resultados encontrados")
 
-            for i, item in enumerate(resultado['results'][:3], 1):
+            for i, item in enumerate(resultado["results"][:3], 1):
                 print(f"{i}. {item.get('title', 'Sem título')}")
                 print(f"   {item.get('url', 'Sem URL')}")
         else:
             print("❌ Nenhum resultado encontrado")
 
         print()
+
 
 if __name__ == "__main__":
     print("🚀 Exemplos de Integração MCP Tavily")

@@ -4,7 +4,7 @@ import sys
 import os
 
 # Adicionar o diretório atual ao path
-sys.path.append('.')
+sys.path.append(".")
 
 st.title("🧪 Teste Simplificado - Algoritmos Visualizador")
 
@@ -15,12 +15,14 @@ status_modulos = {}
 
 try:
     import modulos_integrados
+
     status_modulos["modulos_integrados"] = "✅ OK"
 except Exception as e:
     status_modulos["modulos_integrados"] = f"❌ Erro: {e}"
 
 try:
     from modulos_integrados import modulos_integrados
+
     status_modulos["instancia_modulos"] = "✅ OK"
 except Exception as e:
     status_modulos["instancia_modulos"] = f"❌ Erro: {e}"
@@ -30,7 +32,7 @@ modulos_para_testar = [
     ("modulo_1_fundamentos", "busca_binaria.py"),
     ("modulo_2_estruturas_dados", "algoritmos_ordenacao.py"),
     ("modulo_3_programacao_dinamica", "metodologia_3_passos.py"),
-    ("modulo_4_entrevistas", "interview_visualizer.py")
+    ("modulo_4_entrevistas", "interview_visualizer.py"),
 ]
 
 for pasta, arquivo in modulos_para_testar:
@@ -56,7 +58,7 @@ modulos = [
     "🎯 Módulo 1: Fundamentos",
     "📊 Módulo 2: Estruturas de Dados",
     "🧮 Módulo 3: Programação Dinâmica",
-    "🎤 Módulo 4: Entrevistas"
+    "🎤 Módulo 4: Entrevistas",
 ]
 
 for i, modulo in enumerate(modulos):
@@ -65,13 +67,13 @@ for i, modulo in enumerate(modulos):
         st.success(f"✅ Módulo {i+1} selecionado!")
 
 # Conteúdo principal baseado na seleção
-if 'selected_module' in st.session_state:
+if "selected_module" in st.session_state:
     modulo_id = st.session_state.selected_module
 
     st.header(f"Módulo {modulo_id + 1}")
 
     # Tentar carregar conteúdo usando modulos_integrados
-    if 'modulos_integrados' in globals():
+    if "modulos_integrados" in globals():
         try:
             conteudo = modulos_integrados.carregar_conteudo_modulo(modulo_id)
 

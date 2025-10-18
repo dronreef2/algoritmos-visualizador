@@ -20,6 +20,7 @@ import os
 try:
     import plotly.express as px
     import plotly.graph_objects as go
+
     PLOTLY_AVAILABLE = True
 except ImportError:
     PLOTLY_AVAILABLE = False
@@ -28,6 +29,7 @@ except ImportError:
 
 try:
     import streamlit.components.v1 as components
+
     COMPONENTS_AVAILABLE = True
 except ImportError:
     COMPONENTS_AVAILABLE = False
@@ -35,6 +37,7 @@ except ImportError:
 # Importar módulos educacionais integrados
 try:
     from modulos_integrados import modulos_integrados
+
     MODULOS_INTEGRADOS_AVAILABLE = True
 except ImportError:
     MODULOS_INTEGRADOS_AVAILABLE = False
@@ -47,14 +50,15 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Get Help': 'https://github.com/dronreef2/algoritmos-visualizador',
-        'Report a bug': 'https://github.com/dronreef2/algoritmos-visualizador/issues',
-        'About': 'Aplicação avançada de visualização de algoritmos com MCP Cloud Integration'
-    }
+        "Get Help": "https://github.com/dronreef2/algoritmos-visualizador",
+        "Report a bug": "https://github.com/dronreef2/algoritmos-visualizador/issues",
+        "About": "Aplicação avançada de visualização de algoritmos com MCP Cloud Integration",
+    },
 )
 
 # CSS ultra-moderno com animações e responsividade
-st.markdown("""
+st.markdown(
+    """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -153,11 +157,14 @@ st.markdown("""
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ==========================================
 # 🧠 MCP CLOUD INTEGRATION ULTRA-AVANÇADA
 # ==========================================
+
 
 class CloudMCPIntegration:
     """Integração ultra-avançada com MCP na nuvem"""
@@ -181,19 +188,15 @@ class CloudMCPIntegration:
     def cache_result(self, key: str, result: Any, ttl: int = 3600):
         """Cache inteligente com TTL"""
         cache_key = hashlib.md5(f"{key}:{self.session_id}".encode()).hexdigest()
-        self.cache[cache_key] = {
-            'data': result,
-            'timestamp': datetime.now(),
-            'ttl': ttl
-        }
+        self.cache[cache_key] = {"data": result, "timestamp": datetime.now(), "ttl": ttl}
 
     def get_cached_result(self, key: str) -> Optional[Any]:
         """Obtém resultado do cache se válido"""
         cache_key = hashlib.md5(f"{key}:{self.session_id}".encode()).hexdigest()
         if cache_key in self.cache:
             cached = self.cache[cache_key]
-            if datetime.now() - cached['timestamp'] < timedelta(seconds=cached['ttl']):
-                return cached['data']
+            if datetime.now() - cached["timestamp"] < timedelta(seconds=cached["ttl"]):
+                return cached["data"]
             else:
                 del self.cache[cache_key]
         return None
@@ -212,6 +215,7 @@ class CloudMCPIntegration:
     def get_room_participants(self, room_id: str) -> List[str]:
         """Obtém participantes da sala"""
         return self.collaboration_rooms.get(room_id, [])
+
 
 class UltraAdvancedMCPConnector:
     """Connector MCP ultra-avançado com funcionalidades cloud"""
@@ -232,7 +236,7 @@ class UltraAdvancedMCPConnector:
             "cloud_storage": self.cloud_storage,
             "webhook_manager": self.webhook_manager,
             "api_gateway": self.api_gateway,
-            "connectivity_diagnostic": self.connectivity_diagnostic
+            "connectivity_diagnostic": self.connectivity_diagnostic,
         }
         self.cloud_integration = CloudMCPIntegration()
 
@@ -252,14 +256,14 @@ class UltraAdvancedMCPConnector:
                 "space": self._calculate_space_complexity(algorithm_name, params),
                 "best_case": self._get_best_case(algorithm_name),
                 "worst_case": self._get_worst_case(algorithm_name),
-                "average_case": self._get_average_case(algorithm_name)
+                "average_case": self._get_average_case(algorithm_name),
             },
             "optimizations": self._generate_optimizations(algorithm_name, params),
             "performance_predictions": self._predict_performance(algorithm_name, params),
             "educational_insights": self._generate_insights(algorithm_name),
             "code_quality_score": np.random.uniform(85, 100),
             "maintainability_index": np.random.uniform(75, 95),
-            "test_coverage_suggestion": np.random.uniform(80, 100)
+            "test_coverage_suggestion": np.random.uniform(80, 100),
         }
 
         self.cloud_integration.cache_result(cache_key, analysis, 1800)  # 30 min cache
@@ -287,17 +291,19 @@ class UltraAdvancedMCPConnector:
                 times.append(base_time * time_variation)
                 memories.append(memory_usage * memory_variation)
 
-            results.append({
-                "input_size": size,
-                "avg_time_ms": np.mean(times),
-                "std_time_ms": np.std(times),
-                "min_time_ms": np.min(times),
-                "max_time_ms": np.max(times),
-                "avg_memory_kb": np.mean(memories),
-                "std_memory_kb": np.std(memories),
-                "performance_score": self._calculate_performance_score(algorithm_name, size, times),
-                "efficiency_rating": self._calculate_efficiency_rating(algorithm_name, size, memories)
-            })
+            results.append(
+                {
+                    "input_size": size,
+                    "avg_time_ms": np.mean(times),
+                    "std_time_ms": np.std(times),
+                    "min_time_ms": np.min(times),
+                    "max_time_ms": np.max(times),
+                    "avg_memory_kb": np.mean(memories),
+                    "std_memory_kb": np.std(memories),
+                    "performance_score": self._calculate_performance_score(algorithm_name, size, times),
+                    "efficiency_rating": self._calculate_efficiency_rating(algorithm_name, size, memories),
+                }
+            )
 
         return {
             "algorithm": algorithm_name,
@@ -307,9 +313,9 @@ class UltraAdvancedMCPConnector:
                 "best_performing_size": min(results, key=lambda x: x["avg_time_ms"])["input_size"],
                 "worst_performing_size": max(results, key=lambda x: x["avg_time_ms"])["input_size"],
                 "scalability_score": self._calculate_scalability(results),
-                "memory_efficiency": self._calculate_memory_efficiency(results)
+                "memory_efficiency": self._calculate_memory_efficiency(results),
             },
-            "recommendations": self._generate_performance_recommendations(results)
+            "recommendations": self._generate_performance_recommendations(results),
         }
 
     async def generate_code(self, algorithm_name: str, language: str, options: Dict[str, Any]) -> Dict[str, Any]:
@@ -351,12 +357,12 @@ class UltraAdvancedMCPConnector:
             "test_code": test_code,
             "documentation": docs,
             "metadata": {
-                "lines_of_code": len(code.split('\n')),
+                "lines_of_code": len(code.split("\n")),
                 "complexity_score": self._calculate_code_complexity(code),
                 "readability_score": np.random.uniform(80, 100),
-                "generated_at": datetime.now().isoformat()
+                "generated_at": datetime.now().isoformat(),
             },
-            "options_applied": options
+            "options_applied": options,
         }
 
     async def educational_assistant(self, topic: str, user_level: str, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -368,7 +374,7 @@ class UltraAdvancedMCPConnector:
             "exercises": self._generate_exercises(topic, user_level),
             "resources": self._get_resources(topic, user_level),
             "progress_tracking": self._track_progress(topic, context),
-            "adaptive_suggestions": self._generate_adaptive_suggestions(topic, user_level, context)
+            "adaptive_suggestions": self._generate_adaptive_suggestions(topic, user_level, context),
         }
 
     async def collaboration_tool(self, action: str, room_id: str, user_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -395,7 +401,7 @@ class UltraAdvancedMCPConnector:
             "current_value": self.cloud_integration.analytics.get(metric, 0),
             "trend": self._calculate_trend(metric, timeframe),
             "insights": self._generate_analytics_insights(metric),
-            "predictions": self._predict_future_values(metric)
+            "predictions": self._predict_future_values(metric),
         }
 
     async def ml_optimizer(self, algorithm_name: str, dataset: List[Any]) -> Dict[str, Any]:
@@ -405,7 +411,7 @@ class UltraAdvancedMCPConnector:
             "optimizations_found": self._ml_find_optimizations(algorithm_name, dataset),
             "performance_improvement": np.random.uniform(10, 50),
             "confidence_score": np.random.uniform(85, 98),
-            "implementation_suggestions": self._generate_ml_suggestions(algorithm_name)
+            "implementation_suggestions": self._generate_ml_suggestions(algorithm_name),
         }
 
     async def cloud_storage(self, action: str, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -429,7 +435,7 @@ class UltraAdvancedMCPConnector:
             "webhook_id": str(uuid.uuid4()),
             "status": "configured",
             "endpoints": webhook_data.get("endpoints", []),
-            "events": webhook_data.get("events", [])
+            "events": webhook_data.get("events", []),
         }
 
     async def api_gateway(self, request: Dict[str, Any]) -> Dict[str, Any]:
@@ -447,7 +453,7 @@ class UltraAdvancedMCPConnector:
                     return {
                         "error": "Autenticação necessária para esta operação",
                         "status_code": 401,
-                        "message": "Token de autenticação não encontrado. Configure GITHUB_TOKEN ou GITHUB_CODESPACE_TOKEN."
+                        "message": "Token de autenticação não encontrado. Configure GITHUB_TOKEN ou GITHUB_CODESPACE_TOKEN.",
                     }
 
             # Simular processamento da requisição
@@ -456,7 +462,7 @@ class UltraAdvancedMCPConnector:
                 "endpoint": endpoint,
                 "method": method,
                 "timestamp": datetime.now().isoformat(),
-                "status": "processed"
+                "status": "processed",
             }
 
             # Adicionar dados específicos se fornecidos
@@ -465,6 +471,7 @@ class UltraAdvancedMCPConnector:
 
             # Simular latência de rede realística
             import time
+
             time.sleep(np.random.uniform(0.01, 0.1))
 
             return response_data
@@ -474,7 +481,7 @@ class UltraAdvancedMCPConnector:
                 "error": f"Erro no processamento da requisição: {str(e)}",
                 "status_code": 500,
                 "request_id": str(uuid.uuid4()),
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
 
     async def connectivity_diagnostic(self) -> Dict[str, Any]:
@@ -484,12 +491,13 @@ class UltraAdvancedMCPConnector:
             "network_connectivity": {},
             "authentication_status": {},
             "service_availability": {},
-            "recommendations": []
+            "recommendations": [],
         }
 
         # Verificar conectividade básica
         try:
             import socket
+
             socket.create_connection(("8.8.8.8", 53), timeout=5)
             diagnostic_results["network_connectivity"]["internet"] = "✅ OK"
         except:
@@ -510,7 +518,7 @@ class UltraAdvancedMCPConnector:
         services_to_check = {
             "google_fonts": "https://fonts.googleapis.com",
             "visualgo": "https://visualgo.net",
-            "github_pages": "https://github.githubassets.com"
+            "github_pages": "https://github.githubassets.com",
         }
 
         for service_name, url in services_to_check.items():
@@ -551,23 +559,23 @@ class UltraAdvancedMCPConnector:
                     "worst_case": worst_case,
                     "average_case": average_case,
                     "tight_bound": time_complexity,
-                    "asymptotic_notation": self._get_asymptotic_notation(time_complexity)
+                    "asymptotic_notation": self._get_asymptotic_notation(time_complexity),
                 },
                 "space": {
                     "complexity": space_complexity,
                     "auxiliary_space": self._calculate_auxiliary_space(algorithm_name),
-                    "space_efficiency": self._calculate_space_efficiency(algorithm_name)
-                }
+                    "space_efficiency": self._calculate_space_efficiency(algorithm_name),
+                },
             },
             "performance_metrics": {
                 "scalability": self._assess_scalability(algorithm_name, params),
                 "efficiency_score": self._calculate_efficiency_score(algorithm_name),
                 "optimization_potential": self._assess_optimization_potential(algorithm_name),
-                "practical_complexity": practical_performance
+                "practical_complexity": practical_performance,
             },
             "mathematical_analysis": asymptotic_analysis,
             "recommendations": self._generate_complexity_recommendations(algorithm_name, params),
-            "comparison": self._compare_with_similar_algorithms(algorithm_name)
+            "comparison": self._compare_with_similar_algorithms(algorithm_name),
         }
 
         self.cloud_integration.cache_result(cache_key, result, 3600)  # 1h cache
@@ -598,12 +606,12 @@ class UltraAdvancedMCPConnector:
                 "execution_steps": execution_steps,
                 "data_flow": data_flow,
                 "performance_timeline": performance_timeline,
-                "interactive_charts": charts
+                "interactive_charts": charts,
             },
             "animation_data": self._generate_animation_data(algorithm_name, params),
             "step_by_step_analysis": self._create_step_by_step_analysis(algorithm_name, params),
             "performance_insights": self._extract_performance_insights(algorithm_name, params),
-            "educational_visualizations": self._create_educational_visualizations(algorithm_name)
+            "educational_visualizations": self._create_educational_visualizations(algorithm_name),
         }
 
         self.cloud_integration.cache_result(cache_key, result, 1800)  # 30 min cache
@@ -618,7 +626,7 @@ class UltraAdvancedMCPConnector:
             "bubble_sort": "O(n²)",
             "dijkstra": "O((V + E) log V)",
             "bfs": "O(V + E)",
-            "dfs": "O(V + E)"
+            "dfs": "O(V + E)",
         }
         return complexities.get(algorithm, "O(n)")
 
@@ -631,7 +639,7 @@ class UltraAdvancedMCPConnector:
             "bubble_sort": 1.0,
             "dijkstra": 0.05,
             "bfs": 0.02,
-            "dfs": 0.02
+            "dfs": 0.02,
         }
 
         base_time = base_times.get(algorithm, 0.01)
@@ -654,13 +662,21 @@ class UltraAdvancedMCPConnector:
     def _generate_optimizations(self, algorithm: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
         optimizations = {
             "bubble_sort": [
-                {"type": "algorithm_replacement", "suggestion": "Use quicksort or mergesort for better performance", "impact": "high"},
-                {"type": "early_termination", "suggestion": "Add flag to detect if array is already sorted", "impact": "medium"}
+                {
+                    "type": "algorithm_replacement",
+                    "suggestion": "Use quicksort or mergesort for better performance",
+                    "impact": "high",
+                },
+                {
+                    "type": "early_termination",
+                    "suggestion": "Add flag to detect if array is already sorted",
+                    "impact": "medium",
+                },
             ],
             "quick_sort": [
                 {"type": "pivot_selection", "suggestion": "Use median-of-three pivot selection", "impact": "medium"},
-                {"type": "hybrid_approach", "suggestion": "Switch to insertion sort for small subarrays", "impact": "low"}
-            ]
+                {"type": "hybrid_approach", "suggestion": "Switch to insertion sort for small subarrays", "impact": "low"},
+            ],
         }
         return optimizations.get(algorithm, [])
 
@@ -669,7 +685,7 @@ class UltraAdvancedMCPConnector:
             "predicted_time": self._simulate_execution_time(algorithm, params.get("input_size", 1000)),
             "predicted_memory": self._simulate_memory_usage(algorithm, params.get("input_size", 1000)),
             "scalability_prediction": "Good" if algorithm in ["quick_sort", "merge_sort"] else "Poor",
-            "bottlenecks": self._identify_bottlenecks(algorithm)
+            "bottlenecks": self._identify_bottlenecks(algorithm),
         }
 
     def _get_code_templates(self, algorithm: str, language: str) -> Dict[str, str]:
@@ -695,7 +711,7 @@ def binary_search(arr, target):
 
     return -1
 ''',
-                "javascript": '''
+                "javascript": """
 function binarySearch(arr, target) {
     let left = 0;
     let right = arr.length - 1;
@@ -714,7 +730,7 @@ function binarySearch(arr, target) {
 
     return -1;
 }
-'''
+""",
             }
         }
         return templates.get(algorithm, {})
@@ -722,8 +738,7 @@ function binarySearch(arr, target) {
     def _apply_optimizations(self, code: str, algorithm: str, language: str) -> str:
         # Aplicar otimizações específicas
         if algorithm == "binary_search" and language == "python":
-            code = code.replace("mid = (left + right) // 2",
-                              "mid = left + (right - left) // 2  # Avoid overflow")
+            code = code.replace("mid = (left + right) // 2", "mid = left + (right - left) // 2  # Avoid overflow")
         return code
 
     def _add_error_handling(self, code: str, language: str) -> str:
@@ -737,12 +752,12 @@ except Exception as e:
 
     def _add_logging(self, code: str, language: str) -> str:
         if language == "python":
-            return code.replace("def ", 'import logging\nlogging.basicConfig(level=logging.INFO)\n\ndef ')
+            return code.replace("def ", "import logging\nlogging.basicConfig(level=logging.INFO)\n\ndef ")
         return code
 
     def _generate_tests(self, algorithm: str, language: str) -> str:
         if language == "python":
-            return f'''
+            return f"""
 # Tests for {algorithm}
 def test_{algorithm}():
     # Test cases
@@ -752,18 +767,18 @@ def test_{algorithm}():
 
 if __name__ == "__main__":
     test_{algorithm}()
-'''
+"""
         return ""
 
     def _calculate_code_complexity(self, code: str) -> int:
-        lines = len(code.split('\n'))
+        lines = len(code.split("\n"))
         complexity = 1  # Base complexity
 
         # Count control structures
-        complexity += code.count('if ')
-        complexity += code.count('for ')
-        complexity += code.count('while ')
-        complexity += code.count('def ') * 2  # Functions are more complex
+        complexity += code.count("if ")
+        complexity += code.count("for ")
+        complexity += code.count("while ")
+        complexity += code.count("def ") * 2  # Functions are more complex
 
         return min(complexity, 10)  # Cap at 10
 
@@ -771,14 +786,14 @@ if __name__ == "__main__":
         return [
             {"step": 1, "title": f"Introdução a {topic}", "duration": "30 min", "difficulty": level},
             {"step": 2, "title": f"Implementação Básica", "duration": "45 min", "difficulty": level},
-            {"step": 3, "title": f"Otimizações Avançadas", "duration": "60 min", "difficulty": level}
+            {"step": 3, "title": f"Otimizações Avançadas", "duration": "60 min", "difficulty": level},
         ]
 
     def _generate_exercises(self, topic: str, level: str) -> List[Dict[str, Any]]:
         return [
             {"title": f"Exercício 1: {topic} Básico", "difficulty": level, "points": 10},
             {"title": f"Exercício 2: {topic} Intermediário", "difficulty": level, "points": 20},
-            {"title": f"Exercício 3: {topic} Avançado", "difficulty": level, "points": 30}
+            {"title": f"Exercício 3: {topic} Avançado", "difficulty": level, "points": 30},
         ]
 
     def _track_progress(self, topic: str, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -788,7 +803,11 @@ if __name__ == "__main__":
             "total_exercises": 10,
             "progress_percentage": (context.get("completed", 0) / 10) * 100,
             "time_spent": context.get("time_spent", 0),
-            "mastery_level": "beginner" if context.get("completed", 0) < 3 else "intermediate" if context.get("completed", 0) < 7 else "advanced"
+            "mastery_level": (
+                "beginner"
+                if context.get("completed", 0) < 3
+                else "intermediate" if context.get("completed", 0) < 7 else "advanced"
+            ),
         }
 
     def _calculate_trend(self, metric: str, timeframe: str) -> str:
@@ -799,27 +818,27 @@ if __name__ == "__main__":
         return [
             f"O uso de {metric} aumentou 15% na última semana",
             f"Os usuários avançados representam 60% do total",
-            f"A funcionalidade mais popular é a análise de algoritmos"
+            f"A funcionalidade mais popular é a análise de algoritmos",
         ]
 
     def _predict_future_values(self, metric: str) -> Dict[str, Any]:
         return {
             "next_week": self.cloud_integration.analytics.get(metric, 0) * 1.1,
             "next_month": self.cloud_integration.analytics.get(metric, 0) * 1.3,
-            "confidence": 85
+            "confidence": 85,
         }
 
     def _ml_find_optimizations(self, algorithm: str, dataset: List[Any]) -> List[Dict[str, Any]]:
         return [
             {"optimization": "Loop unrolling", "improvement": 15, "confidence": 90},
-            {"optimization": "Cache prefetching", "improvement": 25, "confidence": 85}
+            {"optimization": "Cache prefetching", "improvement": 25, "confidence": 85},
         ]
 
     def _identify_bottlenecks(self, algorithm: str) -> List[str]:
         bottlenecks = {
             "bubble_sort": ["Nested loops", "Unnecessary comparisons"],
             "quick_sort": ["Worst case pivot selection", "Recursion depth"],
-            "binary_search": ["Array access patterns"]
+            "binary_search": ["Array access patterns"],
         }
         return bottlenecks.get(algorithm, [])
 
@@ -832,7 +851,7 @@ if __name__ == "__main__":
             "bubble_sort": "O(1)",
             "dijkstra": "O(V)",
             "bfs": "O(V)",
-            "dfs": "O(V)"
+            "dfs": "O(V)",
         }
         return complexities.get(algorithm, "O(1)")
 
@@ -845,7 +864,7 @@ if __name__ == "__main__":
             "bubble_sort": "O(n)",
             "dijkstra": "O((V+E) log V)",
             "bfs": "O(V + E)",
-            "dfs": "O(V + E)"
+            "dfs": "O(V + E)",
         }
         return best_cases.get(algorithm, "O(n)")
 
@@ -858,7 +877,7 @@ if __name__ == "__main__":
             "bubble_sort": "O(n²)",
             "dijkstra": "O((V+E) log V)",
             "bfs": "O(V + E)",
-            "dfs": "O(V + E)"
+            "dfs": "O(V + E)",
         }
         return worst_cases.get(algorithm, "O(n²)")
 
@@ -871,7 +890,7 @@ if __name__ == "__main__":
             "bubble_sort": "O(n²)",
             "dijkstra": "O((V+E) log V)",
             "bfs": "O(V + E)",
-            "dfs": "O(V + E)"
+            "dfs": "O(V + E)",
         }
         return average_cases.get(algorithm, "O(n log n)")
 
@@ -882,7 +901,7 @@ if __name__ == "__main__":
             "theta_notation": self._calculate_theta_notation(algorithm),
             "omega_notation": self._calculate_omega_notation(algorithm),
             "amortized_analysis": self._calculate_amortized_complexity(algorithm),
-            "tight_bounds": self._calculate_tight_bounds(algorithm)
+            "tight_bounds": self._calculate_tight_bounds(algorithm),
         }
 
     def _estimate_practical_performance(self, algorithm: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -892,7 +911,7 @@ if __name__ == "__main__":
             "estimated_time": self._simulate_execution_time(algorithm, input_size),
             "memory_usage": self._simulate_memory_usage(algorithm, input_size),
             "cache_performance": self._estimate_cache_performance(algorithm, input_size),
-            "parallelization_potential": self._assess_parallelization(algorithm)
+            "parallelization_potential": self._assess_parallelization(algorithm),
         }
 
     def _calculate_auxiliary_space(self, algorithm: str) -> str:
@@ -904,7 +923,7 @@ if __name__ == "__main__":
             "bubble_sort": "O(1)",
             "dijkstra": "O(V)",
             "bfs": "O(V)",
-            "dfs": "O(V)"
+            "dfs": "O(V)",
         }
         return auxiliary.get(algorithm, "O(1)")
 
@@ -917,7 +936,7 @@ if __name__ == "__main__":
             "bubble_sort": 0.90,
             "dijkstra": 0.80,
             "bfs": 0.85,
-            "dfs": 0.85
+            "dfs": 0.85,
         }
         return efficiency_scores.get(algorithm, 0.8)
 
@@ -928,7 +947,7 @@ if __name__ == "__main__":
             "scalability_score": self._calculate_scalability_score(algorithm, input_size),
             "growth_rate": self._calculate_growth_rate(algorithm),
             "bottleneck_analysis": self._identify_bottlenecks(algorithm),
-            "optimization_suggestions": self._generate_scalability_suggestions(algorithm)
+            "optimization_suggestions": self._generate_scalability_suggestions(algorithm),
         }
 
     def _calculate_efficiency_score(self, algorithm: str) -> float:
@@ -940,7 +959,7 @@ if __name__ == "__main__":
             "bubble_sort": 0.60,
             "dijkstra": 0.82,
             "bfs": 0.87,
-            "dfs": 0.87
+            "dfs": 0.87,
         }
         return scores.get(algorithm, 0.75)
 
@@ -950,7 +969,7 @@ if __name__ == "__main__":
             "optimization_score": np.random.uniform(0.7, 0.95),
             "suggested_improvements": self._generate_optimization_suggestions(algorithm),
             "complexity_reduction": self._estimate_complexity_reduction(algorithm),
-            "performance_gain": np.random.uniform(10, 50)
+            "performance_gain": np.random.uniform(10, 50),
         }
 
     def _get_asymptotic_notation(self, complexity: str) -> str:
@@ -962,20 +981,24 @@ if __name__ == "__main__":
         recommendations = []
 
         if algorithm == "bubble_sort":
-            recommendations.append({
-                "type": "algorithm_replacement",
-                "recommendation": "Consider using quicksort or mergesort for better performance",
-                "impact": "high",
-                "complexity_improvement": "O(n²) → O(n log n)"
-            })
+            recommendations.append(
+                {
+                    "type": "algorithm_replacement",
+                    "recommendation": "Consider using quicksort or mergesort for better performance",
+                    "impact": "high",
+                    "complexity_improvement": "O(n²) → O(n log n)",
+                }
+            )
 
         if algorithm == "quick_sort":
-            recommendations.append({
-                "type": "optimization",
-                "recommendation": "Use median-of-three pivot selection to avoid worst-case scenarios",
-                "impact": "medium",
-                "complexity_improvement": "O(n²) worst case → O(n log n) guaranteed"
-            })
+            recommendations.append(
+                {
+                    "type": "optimization",
+                    "recommendation": "Use median-of-three pivot selection to avoid worst-case scenarios",
+                    "impact": "medium",
+                    "complexity_improvement": "O(n²) worst case → O(n log n) guaranteed",
+                }
+            )
 
         return recommendations
 
@@ -983,13 +1006,33 @@ if __name__ == "__main__":
         """Compara com algoritmos similares"""
         comparisons = {
             "bubble_sort": [
-                {"algorithm": "insertion_sort", "time_complexity": "O(n²)", "space_complexity": "O(1)", "advantage": "Better for small datasets"},
-                {"algorithm": "quick_sort", "time_complexity": "O(n log n)", "space_complexity": "O(log n)", "advantage": "Much faster for large datasets"}
+                {
+                    "algorithm": "insertion_sort",
+                    "time_complexity": "O(n²)",
+                    "space_complexity": "O(1)",
+                    "advantage": "Better for small datasets",
+                },
+                {
+                    "algorithm": "quick_sort",
+                    "time_complexity": "O(n log n)",
+                    "space_complexity": "O(log n)",
+                    "advantage": "Much faster for large datasets",
+                },
             ],
             "quick_sort": [
-                {"algorithm": "merge_sort", "time_complexity": "O(n log n)", "space_complexity": "O(n)", "advantage": "Stable sorting"},
-                {"algorithm": "heap_sort", "time_complexity": "O(n log n)", "space_complexity": "O(1)", "advantage": "In-place sorting"}
-            ]
+                {
+                    "algorithm": "merge_sort",
+                    "time_complexity": "O(n log n)",
+                    "space_complexity": "O(n)",
+                    "advantage": "Stable sorting",
+                },
+                {
+                    "algorithm": "heap_sort",
+                    "time_complexity": "O(n log n)",
+                    "space_complexity": "O(1)",
+                    "advantage": "In-place sorting",
+                },
+            ],
         }
         return comparisons.get(algorithm, [])
 
@@ -1004,14 +1047,14 @@ if __name__ == "__main__":
                 {"step": 2, "description": "Calculate middle index", "complexity": "O(1)"},
                 {"step": 3, "description": "Compare middle element with target", "complexity": "O(1)"},
                 {"step": 4, "description": "Update search range", "complexity": "O(1)"},
-                {"step": 5, "description": "Repeat until found or range empty", "complexity": "O(log n)"}
+                {"step": 5, "description": "Repeat until found or range empty", "complexity": "O(log n)"},
             ]
         elif algorithm == "quick_sort":
             steps = [
                 {"step": 1, "description": "Choose pivot element", "complexity": "O(1)"},
                 {"step": 2, "description": "Partition array around pivot", "complexity": "O(n)"},
                 {"step": 3, "description": "Recursively sort left subarray", "complexity": "T(n/2)"},
-                {"step": 4, "description": "Recursively sort right subarray", "complexity": "T(n/2)"}
+                {"step": 4, "description": "Recursively sort right subarray", "complexity": "T(n/2)"},
             ]
 
         return steps
@@ -1022,7 +1065,7 @@ if __name__ == "__main__":
             "input_data": params.get("input_data", []),
             "intermediate_states": self._generate_intermediate_states(algorithm, params),
             "output_data": self._generate_output_data(algorithm, params),
-            "data_dependencies": self._analyze_data_dependencies(algorithm)
+            "data_dependencies": self._analyze_data_dependencies(algorithm),
         }
 
     def _create_performance_timeline(self, algorithm: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -1031,12 +1074,14 @@ if __name__ == "__main__":
         input_size = params.get("input_size", 1000)
 
         for size in [input_size // 4, input_size // 2, input_size, input_size * 2]:
-            timeline.append({
-                "input_size": size,
-                "estimated_time": self._simulate_execution_time(algorithm, size),
-                "memory_usage": self._simulate_memory_usage(algorithm, size),
-                "timestamp": datetime.now().isoformat()
-            })
+            timeline.append(
+                {
+                    "input_size": size,
+                    "estimated_time": self._simulate_execution_time(algorithm, size),
+                    "memory_usage": self._simulate_memory_usage(algorithm, size),
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
 
         return timeline
 
@@ -1054,13 +1099,16 @@ if __name__ == "__main__":
                 "y": times,
                 "type": "scatter",
                 "mode": "lines+markers",
-                "name": f"{algorithm} Performance"
+                "name": f"{algorithm} Performance",
             },
             "complexity_analysis": {
-                "theoretical": [size * np.log2(size) if "log" in self._calculate_time_complexity(algorithm, params) else size**2 for size in input_sizes],
+                "theoretical": [
+                    size * np.log2(size) if "log" in self._calculate_time_complexity(algorithm, params) else size**2
+                    for size in input_sizes
+                ],
                 "practical": times,
-                "type": "comparison"
-            }
+                "type": "comparison",
+            },
         }
 
     def _generate_animation_data(self, algorithm: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -1071,12 +1119,7 @@ if __name__ == "__main__":
         if algorithm == "bubble_sort":
             for i in range(len(input_data)):
                 for j in range(len(input_data) - i - 1):
-                    frame = {
-                        "frame": len(frames),
-                        "data": input_data.copy(),
-                        "comparing": [j, j + 1],
-                        "swapped": False
-                    }
+                    frame = {"frame": len(frames), "data": input_data.copy(), "comparing": [j, j + 1], "swapped": False}
                     if input_data[j] > input_data[j + 1]:
                         input_data[j], input_data[j + 1] = input_data[j + 1], input_data[j]
                         frame["swapped"] = True
@@ -1093,7 +1136,7 @@ if __name__ == "__main__":
         insights = [
             f"Algorithm {algorithm} shows {'good' if 'log' in self._calculate_time_complexity(algorithm, params) else 'poor'} scalability",
             f"Space complexity is {self._calculate_space_complexity(algorithm, params)}",
-            f"Best suited for {'large datasets' if 'log' in self._calculate_time_complexity(algorithm, params) else 'small datasets'}"
+            f"Best suited for {'large datasets' if 'log' in self._calculate_time_complexity(algorithm, params) else 'small datasets'}",
         ]
         return insights
 
@@ -1103,7 +1146,7 @@ if __name__ == "__main__":
             "concept_map": self._generate_concept_map(algorithm),
             "flow_diagram": self._generate_flow_diagram(algorithm),
             "complexity_graph": self._generate_complexity_graph(algorithm),
-            "comparison_matrix": self._generate_comparison_matrix(algorithm)
+            "comparison_matrix": self._generate_comparison_matrix(algorithm),
         }
 
     # Métodos auxiliares adicionais
@@ -1113,7 +1156,7 @@ if __name__ == "__main__":
             "binary_search": "Θ(log n)",
             "quick_sort": "Θ(n log n) average",
             "merge_sort": "Θ(n log n)",
-            "bubble_sort": "Θ(n²)"
+            "bubble_sort": "Θ(n²)",
         }
         return theta_notations.get(algorithm, "Θ(n)")
 
@@ -1123,7 +1166,7 @@ if __name__ == "__main__":
             "binary_search": "Ω(1)",
             "quick_sort": "Ω(n log n)",
             "merge_sort": "Ω(n log n)",
-            "bubble_sort": "Ω(n)"
+            "bubble_sort": "Ω(n)",
         }
         return omega_notations.get(algorithm, "Ω(1)")
 
@@ -1133,7 +1176,7 @@ if __name__ == "__main__":
             "binary_search": "O(log n)",
             "quick_sort": "O(n log n)",
             "merge_sort": "O(n log n)",
-            "bubble_sort": "O(n²)"
+            "bubble_sort": "O(n²)",
         }
         return amortized.get(algorithm, "O(n)")
 
@@ -1150,7 +1193,7 @@ if __name__ == "__main__":
             "bubble_sort": 64,
             "dijkstra": size * 16,  # priority queue
             "bfs": size * 8,  # queue
-            "dfs": size * 8  # recursion stack
+            "dfs": size * 8,  # recursion stack
         }
         return base_memory.get(algorithm, 64)
 
@@ -1159,7 +1202,7 @@ if __name__ == "__main__":
         return {
             "cache_hits": np.random.uniform(0.8, 0.95),
             "cache_misses": np.random.uniform(0.05, 0.2),
-            "locality_score": np.random.uniform(0.7, 0.9)
+            "locality_score": np.random.uniform(0.7, 0.9),
         }
 
     def _assess_parallelization(self, algorithm: str) -> Dict[str, Any]:
@@ -1168,18 +1211,13 @@ if __name__ == "__main__":
             "binary_search": {"parallelizable": False, "reason": "Sequential search"},
             "quick_sort": {"parallelizable": True, "reason": "Divide and conquer"},
             "merge_sort": {"parallelizable": True, "reason": "Divide and conquer"},
-            "bubble_sort": {"parallelizable": False, "reason": "Sequential comparisons"}
+            "bubble_sort": {"parallelizable": False, "reason": "Sequential comparisons"},
         }
         return parallel_potential.get(algorithm, {"parallelizable": False, "reason": "Not analyzed"})
 
     def _calculate_scalability_score(self, algorithm: str, input_size: int) -> float:
         """Calcula score de escalabilidade"""
-        scores = {
-            "binary_search": 0.95,
-            "quick_sort": 0.88,
-            "merge_sort": 0.85,
-            "bubble_sort": 0.60
-        }
+        scores = {"binary_search": 0.95, "quick_sort": 0.88, "merge_sort": 0.85, "bubble_sort": 0.60}
         return scores.get(algorithm, 0.75)
 
     def _calculate_growth_rate(self, algorithm: str) -> str:
@@ -1188,7 +1226,7 @@ if __name__ == "__main__":
             "binary_search": "Logarithmic",
             "quick_sort": "Linearithmic",
             "merge_sort": "Linearithmic",
-            "bubble_sort": "Quadratic"
+            "bubble_sort": "Quadratic",
         }
         return rates.get(algorithm, "Linear")
 
@@ -1197,7 +1235,7 @@ if __name__ == "__main__":
         suggestions = {
             "bubble_sort": ["Use more efficient sorting algorithms", "Consider parallel processing"],
             "quick_sort": ["Implement hybrid approach for small arrays", "Use better pivot selection"],
-            "binary_search": ["Ensure data is sorted", "Consider interpolation search for uniform distributions"]
+            "binary_search": ["Ensure data is sorted", "Consider interpolation search for uniform distributions"],
         }
         return suggestions.get(algorithm, ["Analyze input characteristics", "Consider algorithm alternatives"])
 
@@ -1206,7 +1244,7 @@ if __name__ == "__main__":
         suggestions = {
             "bubble_sort": ["Add early termination", "Use cocktail sort variant"],
             "quick_sort": ["Use median-of-three pivot", "Implement hybrid with insertion sort"],
-            "binary_search": ["Use interpolation search", "Consider perfect hashing"]
+            "binary_search": ["Use interpolation search", "Consider perfect hashing"],
         }
         return suggestions.get(algorithm, ["Profile performance", "Analyze bottlenecks"])
 
@@ -1215,7 +1253,7 @@ if __name__ == "__main__":
         reductions = {
             "bubble_sort": "O(n²) → O(n log n)",
             "quick_sort": "O(n²) worst → O(n log n) guaranteed",
-            "binary_search": "Already optimal"
+            "binary_search": "Already optimal",
         }
         return reductions.get(algorithm, "Potential for optimization")
 
@@ -1271,7 +1309,7 @@ if __name__ == "__main__":
         return [
             "Use reinforcement learning for parameter optimization",
             "Implement neural networks for pattern recognition",
-            "Apply genetic algorithms for solution evolution"
+            "Apply genetic algorithms for solution evolution",
         ]
 
     def _generate_adaptive_suggestions(self, topic: str, level: str, context: Dict[str, Any]) -> List[str]:
@@ -1279,7 +1317,7 @@ if __name__ == "__main__":
         return [
             f"Based on your {level} level, focus on {topic} fundamentals",
             "Practice with small examples first",
-            "Gradually increase complexity"
+            "Gradually increase complexity",
         ]
 
     def _get_resources(self, topic: str, user_level: str) -> List[Dict[str, Any]]:
@@ -1287,55 +1325,180 @@ if __name__ == "__main__":
         resources = {
             "binary_search": {
                 "beginner": [
-                    {"type": "video", "title": "Binary Search Explained", "url": "https://example.com/binary-search", "duration": "10 min"},
-                    {"type": "article", "title": "Understanding Binary Search", "url": "https://example.com/binary-search-article", "difficulty": "beginner"},
-                    {"type": "interactive", "title": "Binary Search Visualizer", "url": "https://visualgo.net/en/binarysearch", "platform": "VisualGo"}
+                    {
+                        "type": "video",
+                        "title": "Binary Search Explained",
+                        "url": "https://example.com/binary-search",
+                        "duration": "10 min",
+                    },
+                    {
+                        "type": "article",
+                        "title": "Understanding Binary Search",
+                        "url": "https://example.com/binary-search-article",
+                        "difficulty": "beginner",
+                    },
+                    {
+                        "type": "interactive",
+                        "title": "Binary Search Visualizer",
+                        "url": "https://visualgo.net/en/binarysearch",
+                        "platform": "VisualGo",
+                    },
                 ],
                 "intermediate": [
-                    {"type": "video", "title": "Advanced Binary Search Techniques", "url": "https://example.com/advanced-binary", "duration": "15 min"},
-                    {"type": "problem", "title": "LeetCode Binary Search Problems", "url": "https://leetcode.com/problemset/binary-search", "count": 20},
-                    {"type": "book", "title": "Introduction to Algorithms - CLRS", "chapter": "Chapter 12", "pages": "795-805"}
+                    {
+                        "type": "video",
+                        "title": "Advanced Binary Search Techniques",
+                        "url": "https://example.com/advanced-binary",
+                        "duration": "15 min",
+                    },
+                    {
+                        "type": "problem",
+                        "title": "LeetCode Binary Search Problems",
+                        "url": "https://leetcode.com/problemset/binary-search",
+                        "count": 20,
+                    },
+                    {
+                        "type": "book",
+                        "title": "Introduction to Algorithms - CLRS",
+                        "chapter": "Chapter 12",
+                        "pages": "795-805",
+                    },
                 ],
                 "advanced": [
                     {"type": "paper", "title": "Optimal Binary Search Trees", "authors": "Knuth et al.", "year": 1971},
-                    {"type": "research", "title": "Binary Search in Practice", "url": "https://example.com/binary-research", "focus": "real-world applications"},
-                    {"type": "competition", "title": "Codeforces Binary Search Tag", "url": "https://codeforces.com/problemset?tags=binary+search", "difficulty": "expert"}
-                ]
+                    {
+                        "type": "research",
+                        "title": "Binary Search in Practice",
+                        "url": "https://example.com/binary-research",
+                        "focus": "real-world applications",
+                    },
+                    {
+                        "type": "competition",
+                        "title": "Codeforces Binary Search Tag",
+                        "url": "https://codeforces.com/problemset?tags=binary+search",
+                        "difficulty": "expert",
+                    },
+                ],
             },
             "sorting_algorithms": {
                 "beginner": [
-                    {"type": "video", "title": "Sorting Algorithms Overview", "url": "https://example.com/sorting-overview", "duration": "20 min"},
-                    {"type": "interactive", "title": "Sorting Visualizer", "url": "https://visualgo.net/en/sorting", "algorithms": ["bubble", "insertion", "selection"]},
-                    {"type": "tutorial", "title": "Step-by-Step Sorting Guide", "url": "https://example.com/sorting-guide", "language": "python"}
+                    {
+                        "type": "video",
+                        "title": "Sorting Algorithms Overview",
+                        "url": "https://example.com/sorting-overview",
+                        "duration": "20 min",
+                    },
+                    {
+                        "type": "interactive",
+                        "title": "Sorting Visualizer",
+                        "url": "https://visualgo.net/en/sorting",
+                        "algorithms": ["bubble", "insertion", "selection"],
+                    },
+                    {
+                        "type": "tutorial",
+                        "title": "Step-by-Step Sorting Guide",
+                        "url": "https://example.com/sorting-guide",
+                        "language": "python",
+                    },
                 ],
                 "intermediate": [
-                    {"type": "video", "title": "Quick Sort vs Merge Sort", "url": "https://example.com/quick-vs-merge", "duration": "25 min"},
-                    {"type": "practice", "title": "Sorting Algorithm Challenges", "url": "https://leetcode.com/problemset/sorting", "count": 30},
-                    {"type": "analysis", "title": "Time Complexity of Sorting", "url": "https://example.com/sorting-complexity", "focus": "big-o analysis"}
+                    {
+                        "type": "video",
+                        "title": "Quick Sort vs Merge Sort",
+                        "url": "https://example.com/quick-vs-merge",
+                        "duration": "25 min",
+                    },
+                    {
+                        "type": "practice",
+                        "title": "Sorting Algorithm Challenges",
+                        "url": "https://leetcode.com/problemset/sorting",
+                        "count": 30,
+                    },
+                    {
+                        "type": "analysis",
+                        "title": "Time Complexity of Sorting",
+                        "url": "https://example.com/sorting-complexity",
+                        "focus": "big-o analysis",
+                    },
                 ],
                 "advanced": [
-                    {"type": "research", "title": "Hybrid Sorting Algorithms", "url": "https://example.com/hybrid-sorting", "focus": "introsort, timsort"},
-                    {"type": "competition", "title": "Advanced Sorting Problems", "url": "https://codeforces.com/problemset?tags=sortings", "difficulty": "expert"},
-                    {"type": "paper", "title": "Engineering a Sort Function", "authors": "Bentley & McIlroy", "year": 1993}
-                ]
+                    {
+                        "type": "research",
+                        "title": "Hybrid Sorting Algorithms",
+                        "url": "https://example.com/hybrid-sorting",
+                        "focus": "introsort, timsort",
+                    },
+                    {
+                        "type": "competition",
+                        "title": "Advanced Sorting Problems",
+                        "url": "https://codeforces.com/problemset?tags=sortings",
+                        "difficulty": "expert",
+                    },
+                    {"type": "paper", "title": "Engineering a Sort Function", "authors": "Bentley & McIlroy", "year": 1993},
+                ],
             },
             "graph_algorithms": {
                 "beginner": [
-                    {"type": "video", "title": "Graph Theory Basics", "url": "https://example.com/graph-basics", "duration": "15 min"},
-                    {"type": "interactive", "title": "Graph Visualizer", "url": "https://visualgo.net/en/graphds", "algorithms": ["dfs", "bfs"]},
-                    {"type": "tutorial", "title": "Implementing Graphs in Python", "url": "https://example.com/graph-implementation", "language": "python"}
+                    {
+                        "type": "video",
+                        "title": "Graph Theory Basics",
+                        "url": "https://example.com/graph-basics",
+                        "duration": "15 min",
+                    },
+                    {
+                        "type": "interactive",
+                        "title": "Graph Visualizer",
+                        "url": "https://visualgo.net/en/graphds",
+                        "algorithms": ["dfs", "bfs"],
+                    },
+                    {
+                        "type": "tutorial",
+                        "title": "Implementing Graphs in Python",
+                        "url": "https://example.com/graph-implementation",
+                        "language": "python",
+                    },
                 ],
                 "intermediate": [
-                    {"type": "video", "title": "Dijkstra's Algorithm Deep Dive", "url": "https://example.com/dijkstra-deep", "duration": "30 min"},
-                    {"type": "practice", "title": "Graph Algorithm Problems", "url": "https://leetcode.com/problemset/graph", "count": 40},
-                    {"type": "analysis", "title": "Graph Algorithm Complexities", "url": "https://example.com/graph-complexity", "focus": "time and space analysis"}
+                    {
+                        "type": "video",
+                        "title": "Dijkstra's Algorithm Deep Dive",
+                        "url": "https://example.com/dijkstra-deep",
+                        "duration": "30 min",
+                    },
+                    {
+                        "type": "practice",
+                        "title": "Graph Algorithm Problems",
+                        "url": "https://leetcode.com/problemset/graph",
+                        "count": 40,
+                    },
+                    {
+                        "type": "analysis",
+                        "title": "Graph Algorithm Complexities",
+                        "url": "https://example.com/graph-complexity",
+                        "focus": "time and space analysis",
+                    },
                 ],
                 "advanced": [
-                    {"type": "research", "title": "Advanced Graph Algorithms", "url": "https://example.com/advanced-graphs", "focus": "flow networks, matching"},
-                    {"type": "competition", "title": "Graph Theory Competitions", "url": "https://codeforces.com/problemset?tags=graphs", "difficulty": "expert"},
-                    {"type": "paper", "title": "Graph Algorithms in Practice", "authors": "Tarjan et al.", "focus": "real-world applications"}
-                ]
-            }
+                    {
+                        "type": "research",
+                        "title": "Advanced Graph Algorithms",
+                        "url": "https://example.com/advanced-graphs",
+                        "focus": "flow networks, matching",
+                    },
+                    {
+                        "type": "competition",
+                        "title": "Graph Theory Competitions",
+                        "url": "https://codeforces.com/problemset?tags=graphs",
+                        "difficulty": "expert",
+                    },
+                    {
+                        "type": "paper",
+                        "title": "Graph Algorithms in Practice",
+                        "authors": "Tarjan et al.",
+                        "focus": "real-world applications",
+                    },
+                ],
+            },
         }
 
         # Retorna recursos baseados no tópico e nível
@@ -1345,9 +1508,24 @@ if __name__ == "__main__":
         # Adiciona recursos gerais se não houver específicos
         if not level_resources:
             level_resources = [
-                {"type": "general", "title": f"Introduction to {topic}", "url": f"https://example.com/{topic}", "level": user_level},
-                {"type": "practice", "title": f"{topic} Practice Problems", "url": f"https://leetcode.com/problemset/{topic}", "count": 15},
-                {"type": "documentation", "title": f"{topic} Documentation", "url": f"https://en.wikipedia.org/wiki/{topic}", "language": "english"}
+                {
+                    "type": "general",
+                    "title": f"Introduction to {topic}",
+                    "url": f"https://example.com/{topic}",
+                    "level": user_level,
+                },
+                {
+                    "type": "practice",
+                    "title": f"{topic} Practice Problems",
+                    "url": f"https://leetcode.com/problemset/{topic}",
+                    "count": 15,
+                },
+                {
+                    "type": "documentation",
+                    "title": f"{topic} Documentation",
+                    "url": f"https://en.wikipedia.org/wiki/{topic}",
+                    "language": "english",
+                },
             ]
 
         return level_resources
@@ -1360,60 +1538,63 @@ if __name__ == "__main__":
                 "Requires the array to be sorted beforehand, which can be a preprocessing step",
                 "Excellent for large datasets where linear search would be too slow",
                 "The logarithmic time complexity makes it scale very well with input size",
-                "Commonly used in databases and search engines for efficient lookups"
+                "Commonly used in databases and search engines for efficient lookups",
             ],
             "quick_sort": [
                 "Quick sort has excellent average case performance of O(n log n)",
                 "Worst case can be O(n²) if pivot selection is poor",
                 "In-place sorting algorithm that uses minimal extra space",
                 "Widely used in practice due to its speed and low overhead",
-                "The choice of pivot significantly affects performance"
+                "The choice of pivot significantly affects performance",
             ],
             "merge_sort": [
                 "Merge sort guarantees O(n log n) time complexity in all cases",
                 "Stable sorting algorithm that preserves the relative order of equal elements",
                 "Requires O(n) additional space for the merge operation",
                 "Excellent for sorting linked lists and external sorting",
-                "Divide and conquer approach makes it suitable for parallel processing"
+                "Divide and conquer approach makes it suitable for parallel processing",
             ],
             "bubble_sort": [
                 "Simple to understand and implement, making it great for educational purposes",
                 "O(n²) time complexity makes it inefficient for large datasets",
                 "In-place sorting algorithm that uses constant extra space",
                 "Best case O(n) when the array is already sorted",
-                "Not recommended for production use due to poor performance"
+                "Not recommended for production use due to poor performance",
             ],
             "dijkstra": [
                 "Finds the shortest path from a source node to all other nodes in a graph",
                 "Works with non-negative edge weights",
                 "Uses a priority queue to always expand the closest node",
                 "Time complexity depends on the priority queue implementation",
-                "Fundamental algorithm for network routing and pathfinding"
+                "Fundamental algorithm for network routing and pathfinding",
             ],
             "bfs": [
                 "Explores nodes level by level, guaranteeing shortest path in unweighted graphs",
                 "Uses a queue data structure for implementation",
                 "Time complexity is O(V + E) where V is vertices and E is edges",
                 "Can be used to find connected components and shortest paths",
-                "Memory usage can be high for dense graphs"
+                "Memory usage can be high for dense graphs",
             ],
             "dfs": [
                 "Explores as far as possible along each branch before backtracking",
                 "Uses a stack (or recursion) for implementation",
                 "Time complexity is O(V + E) for adjacency list representation",
                 "Useful for topological sorting and finding connected components",
-                "Can get stuck in deep recursion for large graphs"
-            ]
+                "Can get stuck in deep recursion for large graphs",
+            ],
         }
 
         # Retorna insights específicos do algoritmo ou insights gerais
-        algorithm_insights = insights.get(algorithm_name, [
-            f"{algorithm_name} is a fundamental algorithm in computer science",
-            "Understanding its time and space complexity is crucial for performance analysis",
-            "Consider the problem constraints when choosing this algorithm",
-            "Practice implementing it in different programming languages",
-            "Study its applications in real-world scenarios"
-        ])
+        algorithm_insights = insights.get(
+            algorithm_name,
+            [
+                f"{algorithm_name} is a fundamental algorithm in computer science",
+                "Understanding its time and space complexity is crucial for performance analysis",
+                "Consider the problem constraints when choosing this algorithm",
+                "Practice implementing it in different programming languages",
+                "Study its applications in real-world scenarios",
+            ],
+        )
 
         return algorithm_insights
 
@@ -1436,9 +1617,9 @@ if __name__ == "__main__":
                         "hints": [
                             "Compare elementos adjacentes",
                             "Troque se estiverem fora de ordem",
-                            "Repita até que nenhum troca seja necessária"
+                            "Repita até que nenhum troca seja necessária",
                         ],
-                        "algorithm": "bubble_sort"
+                        "algorithm": "bubble_sort",
                     },
                     {
                         "id": "sort_basic_2",
@@ -1451,10 +1632,10 @@ if __name__ == "__main__":
                             "Bubble Sort - O(n²)",
                             "Quick Sort - O(n log n)",
                             "Selection Sort - O(n²)",
-                            "Insertion Sort - O(n²)"
+                            "Insertion Sort - O(n²)",
                         ],
                         "correct_answer": 1,
-                        "explanation": "Quick Sort tem complexidade O(n log n) em média, sendo mais eficiente para arrays grandes"
+                        "explanation": "Quick Sort tem complexidade O(n log n) em média, sendo mais eficiente para arrays grandes",
                     },
                     {
                         "id": "sort_basic_3",
@@ -1468,9 +1649,9 @@ if __name__ == "__main__":
                         "hints": [
                             "Compare strings lexicograficamente",
                             "Use o método de ordenação que preferir",
-                            "Verifique se a ordenação está correta"
-                        ]
-                    }
+                            "Verifique se a ordenação está correta",
+                        ],
+                    },
                 ]
             elif level == "intermediate":
                 exercises = [
@@ -1485,13 +1666,13 @@ if __name__ == "__main__":
                         "expected_answer": {
                             "step1": [[8, 3, 1, 7], [4, 2, 9, 5, 6]],
                             "step2": [[8, 3], [1, 7], [4, 2], [9, 5, 6]],
-                            "step3": [[8], [3], [1], [7], [4], [2], [9], [5], [6]]
+                            "step3": [[8], [3], [1], [7], [4], [2], [9], [5], [6]],
                         },
                         "hints": [
                             "Divida o array ao meio recursivamente",
                             "Continue até ter arrays de tamanho 1",
-                            "Cada divisão reduz o problema pela metade"
-                        ]
+                            "Cada divisão reduz o problema pela metade",
+                        ],
                     },
                     {
                         "id": "sort_intermediate_2",
@@ -1505,10 +1686,10 @@ if __name__ == "__main__":
                             "Primeiro elemento (3)",
                             "Último elemento (6)",
                             "Elemento do meio (4)",
-                            "Elemento mediano dos três primeiros (3, 7, 1) = 3"
+                            "Elemento mediano dos três primeiros (3, 7, 1) = 3",
                         ],
                         "correct_answer": 2,
-                        "explanation": "O elemento do meio (4) é uma boa escolha pois está próximo da mediana e evita casos extremos"
+                        "explanation": "O elemento do meio (4) é uma boa escolha pois está próximo da mediana e evita casos extremos",
                     },
                     {
                         "id": "sort_intermediate_3",
@@ -1523,9 +1704,9 @@ if __name__ == "__main__":
                         "hints": [
                             "Considere a complexidade no pior caso",
                             "Algoritmos O(n log n) são geralmente melhores",
-                            "O(n²) algoritmos são adequados apenas para arrays pequenos"
-                        ]
-                    }
+                            "O(n²) algoritmos são adequados apenas para arrays pequenos",
+                        ],
+                    },
                 ]
             elif level == "advanced":
                 exercises = [
@@ -1541,8 +1722,8 @@ if __name__ == "__main__":
                         "hints": [
                             "Considere diferentes tamanhos de arrays",
                             "Pense em dados parcialmente ordenados",
-                            "Avalie estabilidade e uso de memória"
-                        ]
+                            "Avalie estabilidade e uso de memória",
+                        ],
                     },
                     {
                         "id": "sort_advanced_2",
@@ -1555,10 +1736,10 @@ if __name__ == "__main__":
                             "Array com valores em um intervalo pequeno",
                             "Array com muitos valores duplicados",
                             "Array com valores não-negativos conhecidos",
-                            "Array com valores muito dispersos"
+                            "Array com valores muito dispersos",
                         ],
                         "correct_scenarios": [0, 1, 2],
-                        "explanation": "Counting Sort é eficiente quando os valores estão em um intervalo limitado e são não-negativos, permitindo O(n + k) complexidade"
+                        "explanation": "Counting Sort é eficiente quando os valores estão em um intervalo limitado e são não-negativos, permitindo O(n + k) complexidade",
                     },
                     {
                         "id": "sort_advanced_3",
@@ -1571,15 +1752,15 @@ if __name__ == "__main__":
                             "Usar mediana de três para seleção de pivot",
                             "Implementar particionamento in-place",
                             "Adicionar limite para recursão (usar Insertion Sort para arrays pequenos)",
-                            "Garantir estabilidade quando possível"
+                            "Garantir estabilidade quando possível",
                         ],
                         "test_cases": [
                             {"input": [3, 1, 4, 1, 5, 9, 2, 6], "expected": [1, 1, 2, 3, 4, 5, 6, 9]},
                             {"input": [10, 7, 8, 9, 1, 5], "expected": [1, 5, 7, 8, 9, 10]},
                             {"input": [1], "expected": [1]},
-                            {"input": [], "expected": []}
-                        ]
-                    }
+                            {"input": [], "expected": []},
+                        ],
+                    },
                 ]
 
         return exercises
@@ -1597,42 +1778,67 @@ if __name__ == "__main__":
         elif exercise_type == "string_sort":
             # Verificar ordenação de strings
             is_correct = user_answer == expected_answer
-            feedback = "✅ Correto! Strings ordenadas alfabeticamente." if is_correct else "❌ Incorreto. Verifique a ordem alfabética."
+            feedback = (
+                "✅ Correto! Strings ordenadas alfabeticamente."
+                if is_correct
+                else "❌ Incorreto. Verifique a ordem alfabética."
+            )
 
         elif exercise_type == "multiple_choice":
             # Verificar resposta múltipla escolha
             correct_index = exercise_data.get("correct_answer", 0)
             is_correct = user_answer == correct_index
-            feedback = exercise_data.get("explanation", "Resposta verificada.") if is_correct else "❌ Incorreto. Tente novamente."
+            feedback = (
+                exercise_data.get("explanation", "Resposta verificada.") if is_correct else "❌ Incorreto. Tente novamente."
+            )
 
         elif exercise_type == "merge_sort_divide":
             # Verificar divisão do Merge Sort
             is_correct = self._verify_merge_sort_steps(user_answer, expected_answer)
-            feedback = "✅ Correto! Divisão do Merge Sort perfeita." if is_correct else "❌ Incorreto. Verifique as etapas de divisão."
+            feedback = (
+                "✅ Correto! Divisão do Merge Sort perfeita."
+                if is_correct
+                else "❌ Incorreto. Verifique as etapas de divisão."
+            )
 
         elif exercise_type == "pivot_selection":
             # Verificar seleção de pivot
             correct_index = exercise_data.get("correct_answer", 0)
             is_correct = user_answer == correct_index
-            feedback = exercise_data.get("explanation", "Pivot selecionado corretamente.") if is_correct else "❌ Pivot não ideal. Considere outras opções."
+            feedback = (
+                exercise_data.get("explanation", "Pivot selecionado corretamente.")
+                if is_correct
+                else "❌ Pivot não ideal. Considere outras opções."
+            )
 
         elif exercise_type == "complexity_ordering":
             # Verificar ordenação por complexidade
             is_correct = user_answer == expected_answer
-            feedback = "✅ Correto! Algoritmos ordenados por complexidade." if is_correct else "❌ Incorreto. Reveja as complexidades."
+            feedback = (
+                "✅ Correto! Algoritmos ordenados por complexidade."
+                if is_correct
+                else "❌ Incorreto. Reveja as complexidades."
+            )
 
         elif exercise_type == "algorithm_analysis":
             # Verificar análise de algoritmo (resposta textual)
             user_text = str(user_answer).lower()
             expected_text = str(expected_answer).lower()
-            is_correct = any(keyword in user_text for keyword in ["insertion", "merge", "eficiente", "eficiency", "small", "large", "natural"])
+            is_correct = any(
+                keyword in user_text
+                for keyword in ["insertion", "merge", "eficiente", "eficiency", "small", "large", "natural"]
+            )
             feedback = "✅ Análise correta!" if is_correct else "❌ Análise precisa ser mais detalhada."
 
         elif exercise_type == "application_analysis":
             # Verificar análise de aplicações
             correct_scenarios = exercise_data.get("correct_scenarios", [])
             is_correct = user_answer == correct_scenarios
-            feedback = exercise_data.get("explanation", "Cenários identificados corretamente.") if is_correct else "❌ Cenários incorretos. Reveja as aplicações."
+            feedback = (
+                exercise_data.get("explanation", "Cenários identificados corretamente.")
+                if is_correct
+                else "❌ Cenários incorretos. Reveja as aplicações."
+            )
 
         elif exercise_type == "code_implementation":
             # Verificar implementação de código (básico)
@@ -1647,7 +1853,7 @@ if __name__ == "__main__":
             "is_correct": is_correct,
             "feedback": feedback,
             "points_earned": exercise_data.get("points", 0) if is_correct else 0,
-            "max_points": exercise_data.get("points", 0)
+            "max_points": exercise_data.get("points", 0),
         }
 
     def _verify_merge_sort_steps(self, user_steps: Dict[str, Any], expected_steps: Dict[str, Any]) -> bool:
@@ -1710,13 +1916,15 @@ See the code example above for usage instructions.
             "total_exercises": len(exercises),
             "estimated_time": len(exercises) * 15,  # 15 minutos por exercício
             "difficulty_distribution": self._calculate_difficulty_distribution(exercises),
-            "learning_objectives": self._get_learning_objectives(topic, level)
+            "learning_objectives": self._get_learning_objectives(topic, level),
         }
 
         self.cloud_integration.cache_result(cache_key, result, 3600)  # 1h cache
         return result
 
-    async def verify_exercise_answer(self, exercise_id: str, user_answer: Any, exercise_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def verify_exercise_answer(
+        self, exercise_id: str, user_answer: Any, exercise_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Verifica a resposta do usuário para um exercício"""
         cache_key = f"verification:{exercise_id}:{hash(str(user_answer))}"
         cached = self.cloud_integration.get_cached_result(cache_key)
@@ -1731,7 +1939,7 @@ See the code example above for usage instructions.
             "time_taken": np.random.uniform(30, 300),  # segundos
             "attempts": 1,
             "hints_used": 0,
-            "learning_progress": self._calculate_learning_progress(exercise_data, verification["is_correct"])
+            "learning_progress": self._calculate_learning_progress(exercise_data, verification["is_correct"]),
         }
 
         self.cloud_integration.cache_result(cache_key, verification, 1800)  # 30 min cache
@@ -1752,18 +1960,18 @@ See the code example above for usage instructions.
                 "beginner": [
                     "Compreender conceitos básicos de ordenação",
                     "Implementar algoritmos simples de ordenação",
-                    "Analisar complexidade de algoritmos básicos"
+                    "Analisar complexidade de algoritmos básicos",
                 ],
                 "intermediate": [
                     "Comparar diferentes algoritmos de ordenação",
                     "Otimizar implementações de algoritmos",
-                    "Aplicar algoritmos em cenários reais"
+                    "Aplicar algoritmos em cenários reais",
                 ],
                 "advanced": [
                     "Analisar algoritmos híbridos de ordenação",
                     "Implementar otimizações avançadas",
-                    "Resolver problemas complexos de ordenação"
-                ]
+                    "Resolver problemas complexos de ordenação",
+                ],
             }
         }
         return objectives.get(topic, {}).get(level, [])
@@ -1774,13 +1982,15 @@ See the code example above for usage instructions.
             "skill_improved": exercise_data.get("algorithm", "unknown"),
             "confidence_increase": 0.1 if is_correct else 0.05,
             "next_recommended_level": "intermediate" if is_correct else "beginner",
-            "mastery_percentage": np.random.uniform(0.6, 0.9) if is_correct else np.random.uniform(0.3, 0.6)
+            "mastery_percentage": np.random.uniform(0.6, 0.9) if is_correct else np.random.uniform(0.3, 0.6),
         }
+
 
 # Inicializar MCP Ultra-Avançado
 @st.cache_resource
 def init_ultra_mcp():
     return UltraAdvancedMCPConnector()
+
 
 ultra_mcp = init_ultra_mcp()
 
@@ -1812,13 +2022,13 @@ with col5:
     if st.button("⚙️ Config", key="config"):
         st.session_state.show_config = True
 
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Sistema de autenticação e sessão
-if 'user_id' not in st.session_state:
+if "user_id" not in st.session_state:
     st.session_state.user_id = str(uuid.uuid4())
 
-if 'session_data' not in st.session_state:
+if "session_data" not in st.session_state:
     st.session_state.session_data = {}
 
 user_id = st.session_state.user_id
@@ -1884,7 +2094,7 @@ modules_sidebar = [
     "🎯 Módulo 1: Fundamentos",
     "📊 Módulo 2: Estruturas de Dados",
     "🧮 Módulo 3: Programação Dinâmica",
-    "🎤 Módulo 4: Entrevistas"
+    "🎤 Módulo 4: Entrevistas",
 ]
 
 for i, module_name in enumerate(modules_sidebar):
@@ -1892,9 +2102,9 @@ for i, module_name in enumerate(modules_sidebar):
         st.session_state.selected_module = i
         st.session_state.show_module_content = True
         # Limpar outras seleções
-        if 'selected_tool' in st.session_state:
+        if "selected_tool" in st.session_state:
             del st.session_state.selected_tool
-        if 'show_tool_interface' in st.session_state:
+        if "show_tool_interface" in st.session_state:
             del st.session_state.show_tool_interface
 
 # Configurações avançadas
@@ -1903,12 +2113,15 @@ st.sidebar.markdown("### ⚙️ Configurações Avançadas")
 # Modo noturno
 dark_mode = st.sidebar.checkbox("🌙 Modo Noturno", value=False)
 if dark_mode:
-    st.markdown("""
+    st.markdown(
+        """
     <style>
     .main { background-color: #1e1e1e; color: white; }
     .glass-card { background: rgba(30, 30, 30, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
 # Cache inteligente
 enable_cache = st.sidebar.checkbox("🧠 Cache Inteligente", value=True)
@@ -1934,7 +2147,9 @@ if st.sidebar.button("📈 Ver Métricas"):
 # ==========================================
 
 # Dashboard principal com métricas avançadas
-if ('selected_tool' not in st.session_state or st.session_state.selected_tool == "dashboard") and 'show_module_content' not in st.session_state:
+if (
+    "selected_tool" not in st.session_state or st.session_state.selected_tool == "dashboard"
+) and "show_module_content" not in st.session_state:
 
     st.header("🎯 Dashboard Ultra-Avançado")
 
@@ -1942,40 +2157,52 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
     metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
 
     with metric_col1:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card pulse">
             <h2>🚀 25+</h2>
             <p>Algoritmos Implementados</p>
             <small>✅ Todos funcionais</small>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with metric_col2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h2>🧠 12</h2>
             <p>MCP Tools Ativos</p>
             <small>⚡ IA integrada</small>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with metric_col3:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h2>📚 4</h2>
             <p>Módulos Educacionais</p>
             <small>� Completos</small>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with metric_col4:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="metric-card">
             <h2>👥 1.2K</h2>
             <p>Usuários Ativos</p>
             <small>📈 Crescendo</small>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     # Cards de funcionalidades principais
     st.markdown("### 🌟 Funcionalidades Ultra-Avançadas")
@@ -1983,7 +2210,8 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
     feature_col1, feature_col2, feature_col3 = st.columns(3)
 
     with feature_col1:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="glass-card">
             <h3>🧠 IA + MCP Integration</h3>
             <p>Análise inteligente de algoritmos com machine learning</p>
@@ -1994,10 +2222,13 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
                 <li>✅ Performance prediction</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with feature_col2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="glass-card">
             <h3>📚 Módulos Educacionais</h3>
             <p>Conteúdo completo dos 4 módulos de algoritmos</p>
@@ -2008,10 +2239,13 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
                 <li>✅ Preparação para Entrevistas</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     with feature_col3:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="glass-card">
             <h3>☁️ Cloud Ultra-Power</h3>
             <p>Infraestrutura na nuvem com auto-scaling</p>
@@ -2022,7 +2256,9 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
                 <li>✅ API Gateway integrado</li>
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
     # Seção de módulos educacionais
     st.markdown("### 📚 Módulos Educacionais Disponíveis")
@@ -2033,30 +2269,30 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
         ("🎯 Módulo 1", "Fundamentos", "Busca Binária, Dois Ponteiros, Backtracking"),
         ("📊 Módulo 2", "Estruturas de Dados", "Ordenação, Grafos, Algoritmos Avançados"),
         ("🧮 Módulo 3", "Programação Dinâmica", "Metodologia 3 Passos"),
-        ("🎤 Módulo 4", "Entrevistas", "Problemas, Visualizador, Playground")
+        ("🎤 Módulo 4", "Entrevistas", "Problemas, Visualizador, Playground"),
     ]
 
     for i, (icon, title, description) in enumerate(modules):
         with [module_col1, module_col2, module_col3, module_col4][i]:
             if st.button(f"{icon}\n{title}\n{description}", key=f"module_{i}"):
                 # Limpar possíveis conflitos de estado
-                if 'selected_tool' in st.session_state:
+                if "selected_tool" in st.session_state:
                     del st.session_state.selected_tool
-                if 'show_tool_interface' in st.session_state:
+                if "show_tool_interface" in st.session_state:
                     del st.session_state.show_tool_interface
-                if 'show_algorithm_detail' in st.session_state:
+                if "show_algorithm_detail" in st.session_state:
                     del st.session_state.show_algorithm_detail
-                if 'current_exercises' in st.session_state:
+                if "current_exercises" in st.session_state:
                     del st.session_state.current_exercises
-                if 'exercise_index' in st.session_state:
+                if "exercise_index" in st.session_state:
                     del st.session_state.exercise_index
-                if 'exercise_scores' in st.session_state:
+                if "exercise_scores" in st.session_state:
                     del st.session_state.exercise_scores
-                if 'module_exercises' in st.session_state:
+                if "module_exercises" in st.session_state:
                     del st.session_state.module_exercises
-                if 'module_exercise_index' in st.session_state:
+                if "module_exercise_index" in st.session_state:
                     del st.session_state.module_exercise_index
-                if 'module_scores' in st.session_state:
+                if "module_scores" in st.session_state:
                     del st.session_state.module_scores
 
                 # Definir estado do módulo explicitamente
@@ -2075,22 +2311,26 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
 
     if PLOTLY_AVAILABLE:
         # Dados simulados de progresso
-        progress_data = pd.DataFrame({
-            'Componente': ['Algoritmos', 'Módulos', 'MCP Tools', 'Cloud Integration', 'IA Features', 'Colaboração'],
-            'Progresso': [100, 100, 95, 98, 90, 85],
-            'Usuários Ativos': [1200, 1100, 1050, 950, 800, 700]
-        })
+        progress_data = pd.DataFrame(
+            {
+                "Componente": ["Algoritmos", "Módulos", "MCP Tools", "Cloud Integration", "IA Features", "Colaboração"],
+                "Progresso": [100, 100, 95, 98, 90, 85],
+                "Usuários Ativos": [1200, 1100, 1050, 950, 800, 700],
+            }
+        )
 
-        fig = px.bar(progress_data, x='Componente', y='Progresso',
-                    title="Status dos Componentes do Sistema",
-                    color='Progresso',
-                    color_continuous_scale='Viridis',
-                    hover_data=['Usuários Ativos'])
+        fig = px.bar(
+            progress_data,
+            x="Componente",
+            y="Progresso",
+            title="Status dos Componentes do Sistema",
+            color="Progresso",
+            color_continuous_scale="Viridis",
+            hover_data=["Usuários Ativos"],
+        )
 
         fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='white' if dark_mode else 'black'
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font_color="white" if dark_mode else "black"
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -2104,7 +2344,7 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
         ("🔍 Busca Binária", "O(log n)", "⭐⭐⭐⭐⭐"),
         ("⚡ Quick Sort", "O(n log n)", "⭐⭐⭐⭐⭐"),
         ("🌳 Dijkstra", "O((V+E)log V)", "⭐⭐⭐⭐⭐"),
-        ("🧠 Merge Sort", "O(n log n)", "⭐⭐⭐⭐⭐")
+        ("🧠 Merge Sort", "O(n log n)", "⭐⭐⭐⭐⭐"),
     ]
 
     for i, (name, complexity, rating) in enumerate(algorithms):
@@ -2114,7 +2354,7 @@ if ('selected_tool' not in st.session_state or st.session_state.selected_tool ==
                 st.session_state.show_algorithm_detail = True
 
 # Interface de ferramentas MCP
-elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_interface:
+elif "show_tool_interface" in st.session_state and st.session_state.show_tool_interface:
     selected_tool = st.session_state.selected_tool
 
     st.header(f"🔧 {selected_tool.replace('_', ' ').title()}")
@@ -2126,10 +2366,10 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
         col1, col2 = st.columns([1, 2])
 
         with col1:
-            algorithm = st.selectbox("Algoritmo:", [
-                "binary_search", "quick_sort", "merge_sort", "bubble_sort",
-                "dijkstra", "bfs", "dfs", "insertion_sort"
-            ])
+            algorithm = st.selectbox(
+                "Algoritmo:",
+                ["binary_search", "quick_sort", "merge_sort", "bubble_sort", "dijkstra", "bfs", "dfs", "insertion_sort"],
+            )
 
             input_size = st.slider("Tamanho da entrada:", 10, 10000, 1000)
             analyze_button = st.button("🚀 Analisar", type="primary")
@@ -2137,10 +2377,9 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
         with col2:
             if analyze_button:
                 with st.spinner("🔄 Analisando com IA..."):
-                    result = asyncio.run(ultra_mcp.analyze_algorithm(algorithm, {
-                        "input_size": input_size,
-                        "user_id": user_id
-                    }))
+                    result = asyncio.run(
+                        ultra_mcp.analyze_algorithm(algorithm, {"input_size": input_size, "user_id": user_id})
+                    )
 
                     # Exibir resultados
                     st.success("✅ Análise completa!")
@@ -2149,9 +2388,9 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
                     metric1, metric2, metric3 = st.columns(3)
 
                     with metric1:
-                        st.metric("⏱️ Complexidade Temporal", result['complexity']['time'])
+                        st.metric("⏱️ Complexidade Temporal", result["complexity"]["time"])
                     with metric2:
-                        st.metric("💾 Complexidade Espacial", result['complexity']['space'])
+                        st.metric("💾 Complexidade Espacial", result["complexity"]["space"])
                     with metric3:
                         st.metric("🎯 Score de Qualidade", ".1f")
 
@@ -2160,9 +2399,9 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
                         st.json(result)
 
                     # Sugestões de otimização
-                    if result['optimizations']:
+                    if result["optimizations"]:
                         st.markdown("### 💡 Sugestões de Otimização")
-                        for opt in result['optimizations']:
+                        for opt in result["optimizations"]:
                             st.info(f"**{opt['type'].title()}:** {opt['suggestion']} (Impacto: {opt['impact']})")
 
     elif selected_tool == "performance_tester":
@@ -2171,13 +2410,9 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
         col1, col2 = st.columns([1, 2])
 
         with col1:
-            algorithm = st.selectbox("Algoritmo para teste:", [
-                "binary_search", "quick_sort", "merge_sort", "bubble_sort"
-            ])
+            algorithm = st.selectbox("Algoritmo para teste:", ["binary_search", "quick_sort", "merge_sort", "bubble_sort"])
 
-            input_sizes = st.multiselect("Tamanhos de entrada:",
-                                       [100, 500, 1000, 5000, 10000],
-                                       default=[100, 1000, 10000])
+            input_sizes = st.multiselect("Tamanhos de entrada:", [100, 500, 1000, 5000, 10000], default=[100, 1000, 10000])
 
             iterations = st.slider("Iterações:", 10, 100, 50)
 
@@ -2186,25 +2421,24 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
         with col2:
             if test_button:
                 with st.spinner("🔬 Executando testes de performance..."):
-                    result = asyncio.run(ultra_mcp.performance_test(algorithm, {
-                        "input_sizes": input_sizes,
-                        "iterations": iterations
-                    }))
+                    result = asyncio.run(
+                        ultra_mcp.performance_test(algorithm, {"input_sizes": input_sizes, "iterations": iterations})
+                    )
 
                     st.success("✅ Testes concluídos!")
 
                     # Gráfico de resultados
                     if PLOTLY_AVAILABLE:
-                        df_results = pd.DataFrame(result['results'])
+                        df_results = pd.DataFrame(result["results"])
 
-                        fig = px.line(df_results, x='input_size', y='avg_time_ms',
-                                    title=f'Performance: {algorithm}',
-                                    markers=True)
+                        fig = px.line(
+                            df_results, x="input_size", y="avg_time_ms", title=f"Performance: {algorithm}", markers=True
+                        )
                         st.plotly_chart(fig, use_container_width=True)
 
                     # Estatísticas
                     st.markdown("### 📊 Estatísticas do Teste")
-                    summary = result['summary']
+                    summary = result["summary"]
                     st.json(summary)
 
     elif selected_tool == "code_generator":
@@ -2236,7 +2470,7 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
                         "add_logging": add_logging,
                         "add_type_hints": add_type_hints,
                         "add_tests": add_tests,
-                        "add_documentation": add_documentation
+                        "add_documentation": add_documentation,
                     }
 
                     result = asyncio.run(ultra_mcp.generate_code(algorithm, language, options))
@@ -2269,19 +2503,19 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
         with tab1:
             st.markdown("#### 🛣️ Plano de Estudo Personalizado")
 
-            topic = st.selectbox("Tópico:", [
-                "binary_search", "sorting_algorithms", "graph_algorithms",
-                "dynamic_programming", "greedy_algorithms"
-            ], key="study_topic")
+            topic = st.selectbox(
+                "Tópico:",
+                ["binary_search", "sorting_algorithms", "graph_algorithms", "dynamic_programming", "greedy_algorithms"],
+                key="study_topic",
+            )
 
             level = st.selectbox("Seu nível:", ["beginner", "intermediate", "advanced"], key="study_level")
 
             if st.button("🎯 Gerar Plano de Estudo", key="generate_plan"):
                 with st.spinner("🧠 Criando plano personalizado..."):
-                    result = asyncio.run(ultra_mcp.educational_assistant(topic, level, {
-                        "user_id": user_id,
-                        "completed_exercises": 5
-                    }))
+                    result = asyncio.run(
+                        ultra_mcp.educational_assistant(topic, level, {"user_id": user_id, "completed_exercises": 5})
+                    )
 
                     st.success("✅ Plano gerado!")
 
@@ -2298,17 +2532,19 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
         with tab2:
             st.markdown("#### 🎯 Exercícios Interativos")
 
-            exercise_topic = st.selectbox("Tópico dos exercícios:", [
-                "sorting_algorithms", "binary_search", "graph_algorithms"
-            ], key="exercise_topic")
+            exercise_topic = st.selectbox(
+                "Tópico dos exercícios:", ["sorting_algorithms", "binary_search", "graph_algorithms"], key="exercise_topic"
+            )
 
-            exercise_level = st.selectbox("Nível dos exercícios:", ["beginner", "intermediate", "advanced"], key="exercise_level")
+            exercise_level = st.selectbox(
+                "Nível dos exercícios:", ["beginner", "intermediate", "advanced"], key="exercise_level"
+            )
 
             if st.button("🎮 Gerar Exercícios", key="generate_exercises"):
                 with st.spinner("🎯 Gerando exercícios interativos..."):
-                    result = asyncio.run(ultra_mcp.generate_interactive_exercises(exercise_topic, exercise_level, {
-                        "user_id": user_id
-                    }))
+                    result = asyncio.run(
+                        ultra_mcp.generate_interactive_exercises(exercise_topic, exercise_level, {"user_id": user_id})
+                    )
 
                     st.success(f"✅ {result['total_exercises']} exercícios gerados!")
 
@@ -2346,9 +2582,9 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
                                     user_array = [int(x.strip()) for x in user_answer.split(",")]
 
                                 if st.button("✅ Verificar Resposta", key=f"check_{current_idx}"):
-                                    verification = asyncio.run(ultra_mcp.verify_exercise_answer(
-                                        exercise["id"], user_array, exercise
-                                    ))
+                                    verification = asyncio.run(
+                                        ultra_mcp.verify_exercise_answer(exercise["id"], user_array, exercise)
+                                    )
 
                                     if verification["is_correct"]:
                                         st.success(f"🎉 {verification['feedback']}")
@@ -2373,9 +2609,9 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
 
                         if st.button("✅ Verificar Resposta", key=f"check_{current_idx}"):
                             choice_index = options.index(user_choice) if user_choice in options else -1
-                            verification = asyncio.run(ultra_mcp.verify_exercise_answer(
-                                exercise["id"], choice_index, exercise
-                            ))
+                            verification = asyncio.run(
+                                ultra_mcp.verify_exercise_answer(exercise["id"], choice_index, exercise)
+                            )
 
                             if verification["is_correct"]:
                                 st.success(f"🎉 {verification['feedback']}")
@@ -2400,9 +2636,9 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
                                     user_array = [x.strip().strip("'\"") for x in user_answer.split(",")]
 
                                 if st.button("✅ Verificar Resposta", key=f"check_{current_idx}"):
-                                    verification = asyncio.run(ultra_mcp.verify_exercise_answer(
-                                        exercise["id"], user_array, exercise
-                                    ))
+                                    verification = asyncio.run(
+                                        ultra_mcp.verify_exercise_answer(exercise["id"], user_array, exercise)
+                                    )
 
                                     if verification["is_correct"]:
                                         st.success(f"🎉 {verification['feedback']}")
@@ -2462,7 +2698,7 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
             progress_data = {
                 "sorting_algorithms": {"beginner": 85, "intermediate": 60, "advanced": 30},
                 "binary_search": {"beginner": 95, "intermediate": 70, "advanced": 40},
-                "graph_algorithms": {"beginner": 70, "intermediate": 45, "advanced": 20}
+                "graph_algorithms": {"beginner": 70, "intermediate": 45, "advanced": 20},
             }
 
             for topic, levels in progress_data.items():
@@ -2589,7 +2825,11 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
 
                 if github_codespace_token:
                     st.success("✅ GITHUB_CODESPACE_TOKEN configurado")
-                    masked_token = github_codespace_token[:8] + "..." + github_codespace_token[-4:] if len(github_codespace_token) > 12 else "***"
+                    masked_token = (
+                        github_codespace_token[:8] + "..." + github_codespace_token[-4:]
+                        if len(github_codespace_token) > 12
+                        else "***"
+                    )
                     st.code(f"Token: {masked_token}")
                 else:
                     st.warning("⚠️ GITHUB_CODESPACE_TOKEN não encontrado")
@@ -2602,6 +2842,7 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
                 st.markdown("#### 🌐 Teste de Conectividade de Rede")
                 try:
                     import socket
+
                     socket.create_connection(("8.8.8.8", 53), timeout=5)
                     st.success("✅ Conectividade com internet OK")
                 except Exception as e:
@@ -2618,7 +2859,11 @@ elif 'show_tool_interface' in st.session_state and st.session_state.show_tool_in
 # 📚 INTERFACE DOS MÓDULOS EDUCACIONAIS
 # ==========================================
 
-elif 'show_module_content' in st.session_state and st.session_state.show_module_content and 'selected_module' in st.session_state:
+elif (
+    "show_module_content" in st.session_state
+    and st.session_state.show_module_content
+    and "selected_module" in st.session_state
+):
     selected_module = st.session_state.selected_module
 
     # Verificar se o módulo selecionado é válido
@@ -2634,26 +2879,26 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
                 "title": "🎯 Módulo 1: Fundamentos do Pensamento Algorítmico",
                 "description": "Dominar as técnicas algorítmicas essenciais que servem como blocos de construção para problemas mais complexos",
                 "algorithms": ["Busca Binária", "Dois Ponteiros", "Janela Deslizante", "Backtracking", "BFS"],
-                "folder": "modulo_1_fundamentos"
+                "folder": "modulo_1_fundamentos",
             },
             {
                 "title": "📊 Módulo 2: Estruturas de Dados e Algoritmos Avançados",
                 "description": "Dominar algoritmos de ordenação com visualização passo a passo e implementar algoritmos de grafos fundamentais",
                 "algorithms": ["Bubble Sort", "Quick Sort", "Merge Sort", "Heap Sort", "Dijkstra", "BFS", "DFS"],
-                "folder": "modulo_2_estruturas_dados"
+                "folder": "modulo_2_estruturas_dados",
             },
             {
                 "title": "🧮 Módulo 3: Programação Dinâmica",
                 "description": "Metodologia 3 Passos para resolver problemas de programação dinâmica",
                 "algorithms": ["Metodologia 3 Passos"],
-                "folder": "modulo_3_programacao_dinamica"
+                "folder": "modulo_3_programacao_dinamica",
             },
             {
                 "title": "🎤 Módulo 4: Preparação para Entrevistas",
                 "description": "Problemas práticos, visualizador interativo e playground para preparação de entrevistas técnicas",
                 "algorithms": ["Problemas de Entrevista", "Visualizador", "Playground"],
-                "folder": "modulo_4_entrevistas"
-            }
+                "folder": "modulo_4_entrevistas",
+            },
         ]
 
         module = module_info[selected_module]
@@ -2713,7 +2958,9 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
 
                     # Limitar a 5 arquivos por vez para performance
                     if len(arquivos_para_mostrar) > 5:
-                        st.info(f"📁 Mostrando 5 de {len(arquivos_para_mostrar)} arquivos. Use o botão 'Carregar Mais' para ver todos.")
+                        st.info(
+                            f"📁 Mostrando 5 de {len(arquivos_para_mostrar)} arquivos. Use o botão 'Carregar Mais' para ver todos."
+                        )
 
                         # Mostrar apenas os primeiros 5 inicialmente
                         arquivos_para_mostrar = arquivos_para_mostrar[:5]
@@ -2733,27 +2980,27 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
                                     st.metric("📏 Tamanho", f"{len(info['conteudo'])} chars")
                                 with col_info2:
                                     # Mostrar preview das primeiras linhas
-                                    linhas = info["conteudo"].split('\n')[:10]
-                                    preview = '\n'.join(linhas)
+                                    linhas = info["conteudo"].split("\n")[:10]
+                                    preview = "\n".join(linhas)
                                     if len(info["conteudo"]) > 1000:
                                         st.info("📄 Arquivo grande - mostrando preview das primeiras 10 linhas")
-                                    st.code(preview, language='python')
+                                    st.code(preview, language="python")
 
                                 # Botão para mostrar código completo (apenas se não for muito grande)
                                 if len(info["conteudo"]) <= 50000:  # 50KB limite
                                     if st.button(f"📖 Mostrar Código Completo", key=f"show_full_{arquivo}_{selected_module}"):
-                                        st.code(info["conteudo"], language='python')
+                                        st.code(info["conteudo"], language="python")
                                 else:
-                                    st.warning(f"📄 Arquivo muito grande ({len(info['conteudo'])} caracteres). Use um editor externo para visualizar.")
+                                    st.warning(
+                                        f"📄 Arquivo muito grande ({len(info['conteudo'])} caracteres). Use um editor externo para visualizar."
+                                    )
 
                                 # Botão para executar (se aplicável)
                                 col1, col2 = st.columns([1, 4])
                                 with col1:
                                     if st.button(f"▶️ Executar", key=f"exec_{arquivo}_{selected_module}"):
                                         with st.spinner(f"Executando {arquivo}..."):
-                                            resultado = modulos_integrados.executar_codigo_modulo(
-                                                selected_module, arquivo
-                                            )
+                                            resultado = modulos_integrados.executar_codigo_modulo(selected_module, arquivo)
 
                                             if "erro" in resultado:
                                                 st.error(f"Erro na execução: {resultado['erro']}")
@@ -2784,11 +3031,13 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
             if st.button("🎮 Gerar Exercícios", key="generate_module_exercises"):
                 with st.spinner("🎯 Gerando exercícios..."):
                     # Usar o sistema de exercícios existente
-                    result = asyncio.run(ultra_mcp.generate_interactive_exercises(
-                        "sorting_algorithms" if "Ordenação" in exercise_type else "graph_algorithms",
-                        difficulty,
-                        {"user_id": user_id}
-                    ))
+                    result = asyncio.run(
+                        ultra_mcp.generate_interactive_exercises(
+                            "sorting_algorithms" if "Ordenação" in exercise_type else "graph_algorithms",
+                            difficulty,
+                            {"user_id": user_id},
+                        )
+                    )
 
                     if result and "exercises" in result:
                         st.session_state.module_exercises = result["exercises"]
@@ -2827,9 +3076,9 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
                                     user_array = [int(x.strip()) for x in user_answer.split(",")]
 
                                 if st.button("✅ Verificar Resposta", key=f"module_check_{current_idx}"):
-                                    verification = asyncio.run(ultra_mcp.verify_exercise_answer(
-                                        exercise["id"], user_array, exercise
-                                    ))
+                                    verification = asyncio.run(
+                                        ultra_mcp.verify_exercise_answer(exercise["id"], user_array, exercise)
+                                    )
 
                                     if verification["is_correct"]:
                                         st.success(f"🎉 {verification['feedback']}")
@@ -2853,9 +3102,9 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
 
                         if st.button("✅ Verificar Resposta", key=f"module_check_{current_idx}"):
                             choice_index = options.index(user_choice) if user_choice in options else -1
-                            verification = asyncio.run(ultra_mcp.verify_exercise_answer(
-                                exercise["id"], choice_index, exercise
-                            ))
+                            verification = asyncio.run(
+                                ultra_mcp.verify_exercise_answer(exercise["id"], choice_index, exercise)
+                            )
 
                             if verification["is_correct"]:
                                 st.success(f"🎉 {verification['feedback']}")
@@ -2922,9 +3171,9 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
 
                             col1, col2, col3 = st.columns(3)
                             with col1:
-                                st.metric("⏱️ Complexidade Temporal", analysis['complexity']['time'])
+                                st.metric("⏱️ Complexidade Temporal", analysis["complexity"]["time"])
                             with col2:
-                                st.metric("💾 Complexidade Espacial", analysis['complexity']['space'])
+                                st.metric("💾 Complexidade Espacial", analysis["complexity"]["space"])
                             with col3:
                                 st.metric("🎯 Score de Qualidade", ".1f")
 
@@ -2943,7 +3192,7 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
                 "Módulo 1": {"concluido": 85, "exercicios": 45, "tempo_estudado": "12h 30min"},
                 "Módulo 2": {"concluido": 70, "exercicios": 32, "tempo_estudado": "8h 15min"},
                 "Módulo 3": {"concluido": 60, "exercicios": 18, "tempo_estudado": "5h 45min"},
-                "Módulo 4": {"concluido": 40, "exercicios": 12, "tempo_estudado": "3h 20min"}
+                "Módulo 4": {"concluido": 40, "exercicios": 12, "tempo_estudado": "3h 20min"},
             }
 
             current_module_name = f"Módulo {selected_module + 1}"
@@ -2954,12 +3203,12 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
                 with col1:
                     st.metric("✅ Concluído", f"{progress['concluido']}%")
                 with col2:
-                    st.metric("🎯 Exercícios", progress['exercicios'])
+                    st.metric("🎯 Exercícios", progress["exercicios"])
                 with col3:
-                    st.metric("⏱️ Tempo Estudado", progress['tempo_estudado'])
+                    st.metric("⏱️ Tempo Estudado", progress["tempo_estudado"])
 
                 # Barra de progresso
-                st.progress(progress['concluido'] / 100)
+                st.progress(progress["concluido"] / 100)
             else:
                 st.info("Dados de progresso serão carregados em breve.")
 
@@ -2970,25 +3219,26 @@ elif 'show_module_content' in st.session_state and st.session_state.show_module_
         st.rerun()
 
 # Interface de algoritmos detalhada
-elif 'show_algorithm_detail' in st.session_state and st.session_state.show_algorithm_detail:
+elif "show_algorithm_detail" in st.session_state and st.session_state.show_algorithm_detail:
     algorithm = st.session_state.selected_algorithm
 
     st.header(f"🎯 {algorithm}")
 
     # Análise automática do algoritmo
     with st.spinner("🔄 Analisando algoritmo..."):
-        analysis = asyncio.run(ultra_mcp.analyze_algorithm(
-            algorithm.lower().replace(" ", "_").replace("🔍", "").replace("⚡", "").replace("🌳", ""),
-            {"input_size": 1000}
-        ))
+        analysis = asyncio.run(
+            ultra_mcp.analyze_algorithm(
+                algorithm.lower().replace(" ", "_").replace("🔍", "").replace("⚡", "").replace("🌳", ""), {"input_size": 1000}
+            )
+        )
 
     # Exibir análise
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("⏱️ Tempo", analysis['complexity']['time'])
+        st.metric("⏱️ Tempo", analysis["complexity"]["time"])
     with col2:
-        st.metric("💾 Espaço", analysis['complexity']['space'])
+        st.metric("💾 Espaço", analysis["complexity"]["space"])
     with col3:
         st.metric("🎯 Qualidade", ".1f")
 
@@ -3006,7 +3256,7 @@ elif 'show_algorithm_detail' in st.session_state and st.session_state.show_algor
         st.rerun()
 
 # Modais e overlays
-if 'show_collaboration' in st.session_state and st.session_state.show_collaboration:
+if "show_collaboration" in st.session_state and st.session_state.show_collaboration:
     with st.sidebar:
         st.markdown("### 👥 Colaboração Ativa")
         st.markdown("**Sala atual:** algoritmos-2025")
@@ -3015,7 +3265,7 @@ if 'show_collaboration' in st.session_state and st.session_state.show_collaborat
         if st.button("❌ Fechar Colaboração"):
             del st.session_state.show_collaboration
 
-if 'show_analytics' in st.session_state and st.session_state.show_analytics:
+if "show_analytics" in st.session_state and st.session_state.show_analytics:
     with st.expander("📊 Analytics do Sistema", expanded=True):
         col1, col2, col3, col4 = st.columns(4)
 
@@ -3031,7 +3281,7 @@ if 'show_analytics' in st.session_state and st.session_state.show_analytics:
         if st.button("❌ Fechar Analytics"):
             del st.session_state.show_analytics
 
-if 'show_config' in st.session_state and st.session_state.show_config:
+if "show_config" in st.session_state and st.session_state.show_config:
     with st.expander("⚙️ Configurações Avançadas", expanded=True):
         st.markdown("### 🔧 Configurações do Sistema")
 
@@ -3077,10 +3327,13 @@ with footer_col4:
     st.markdown("**👥 Colaboração**")
     st.markdown("Tempo real")
 
-st.markdown("""
+st.markdown(
+    """
 <div style='text-align: center; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white; margin-top: 2rem;'>
     <h3>🎉 Sistema Ultra-Avançado Totalmente Integrado</h3>
     <p>MCP Cloud + IA + Colaboração + Analytics em Tempo Real</p>
     <p><strong>Status:</strong> ✅ 100% Funcional | 🚀 Pronto para Produção</p>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)

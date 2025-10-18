@@ -11,6 +11,7 @@ import json
 from datetime import datetime
 import subprocess
 
+
 def check_network_connectivity():
     """Verifica conectividade básica de rede"""
     print("🌐 Verificando conectividade de rede...")
@@ -36,6 +37,7 @@ def check_network_connectivity():
         print(f"   ❌ Resolução DNS: Falha - {e}")
 
     return results
+
 
 def check_authentication_tokens():
     """Verifica tokens de autenticação disponíveis"""
@@ -64,9 +66,12 @@ def check_authentication_tokens():
         print("   ❌ GITHUB_CODESPACE_TOKEN: Não encontrado")
 
     # Verificar outras variáveis de autenticação
-    other_auth_vars = [var for var in os.environ.keys()
-                      if any(term in var.lower() for term in ['key', 'secret', 'auth', 'token'])
-                      and var not in ['GITHUB_TOKEN', 'GITHUB_CODESPACE_TOKEN']]
+    other_auth_vars = [
+        var
+        for var in os.environ.keys()
+        if any(term in var.lower() for term in ["key", "secret", "auth", "token"])
+        and var not in ["GITHUB_TOKEN", "GITHUB_CODESPACE_TOKEN"]
+    ]
 
     if other_auth_vars:
         results["other_auth_vars"] = other_auth_vars
@@ -76,17 +81,14 @@ def check_authentication_tokens():
 
     return results
 
+
 def check_service_availability():
     """Verifica disponibilidade de serviços externos"""
     print("\\n🔗 Verificando disponibilidade de serviços...")
 
     results = {}
 
-    services = {
-        "fonts.googleapis.com": 443,
-        "visualgo.net": 80,
-        "github.githubassets.com": 443
-    }
+    services = {"fonts.googleapis.com": 443, "visualgo.net": 80, "github.githubassets.com": 443}
 
     for service, port in services.items():
         try:
@@ -99,15 +101,14 @@ def check_service_availability():
 
     return results
 
+
 def check_python_imports():
     """Verifica imports do Python necessários"""
     print("\\n🐍 Verificando imports do Python...")
 
     results = {}
 
-    required_modules = [
-        'streamlit', 'numpy', 'pandas', 'asyncio', 'plotly'
-    ]
+    required_modules = ["streamlit", "numpy", "pandas", "asyncio", "plotly"]
 
     for module in required_modules:
         try:
@@ -119,6 +120,7 @@ def check_python_imports():
             print(f"   ❌ {module}: Falha - {e}")
 
     return results
+
 
 def generate_recommendations(network, auth, services, imports):
     """Gera recomendações baseadas nos resultados dos testes"""
@@ -155,6 +157,7 @@ def generate_recommendations(network, auth, services, imports):
 
     return recommendations
 
+
 def main():
     """Função principal do diagnóstico"""
     print("🚀 Iniciando diagnóstico de conectividade e autenticação")
@@ -167,9 +170,7 @@ def main():
     import_results = check_python_imports()
 
     # Gerar recomendações
-    recommendations = generate_recommendations(
-        network_results, auth_results, service_results, import_results
-    )
+    recommendations = generate_recommendations(network_results, auth_results, service_results, import_results)
 
     # Resumo final
     print("\\n" + "=" * 60)
@@ -182,7 +183,7 @@ def main():
         "services": service_results,
         "imports": import_results,
         "recommendations": recommendations,
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
 
     # Contar status
@@ -224,7 +225,7 @@ def main():
     # Salvar relatório
     report_file = f"diagnostico_conectividade_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     try:
-        with open(report_file, 'w', encoding='utf-8') as f:
+        with open(report_file, "w", encoding="utf-8") as f:
             json.dump(all_results, f, indent=2, ensure_ascii=False)
         print(f"\\n📄 Relatório salvo em: {report_file}")
     except Exception as e:
@@ -232,6 +233,7 @@ def main():
 
     print("\\n🎯 Diagnóstico concluído!")
     return all_results
+
 
 if __name__ == "__main__":
     main()

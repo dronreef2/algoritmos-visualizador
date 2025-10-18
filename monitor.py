@@ -46,6 +46,7 @@ def check_streamlit_app():
     return False
 
 
+
 def check_github_actions():
     """Verifica status do GitHub Actions (via GitHub CLI se disponível)"""
     try:

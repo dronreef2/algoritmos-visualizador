@@ -1,15 +1,19 @@
-name: Monitoramento Automático
+name: Monitoramento Inteligente
 
 on:
   schedule:
-    # Executa diariamente às 9:00 UTC (6:00 BRT)
-    - cron: '0 9 * * *'
+    # Executa a cada 6 horas para monitoramento frequente
+    - cron: '0 */6 * * *'
   workflow_dispatch: # Permite execução manual
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/monitoramento.yml'
 
 jobs:
   health-check:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout código
       uses: actions/checkout@v4

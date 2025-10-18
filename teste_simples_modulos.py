@@ -6,20 +6,18 @@ Versão simplificada do aplicativo Streamlit para testar módulos
 import streamlit as st
 import sys
 import os
-sys.path.append('/workspaces/algoritmos-visualizador')
+
+sys.path.append("/workspaces/algoritmos-visualizador")
 
 # Configuração básica
-st.set_page_config(
-    page_title="Teste Módulos",
-    page_icon="🧪",
-    layout="wide"
-)
+st.set_page_config(page_title="Teste Módulos", page_icon="🧪", layout="wide")
 
 st.title("🧪 Teste dos Módulos Educacionais")
 
 # Testar importação
 try:
     from modulos_integrados import modulos_integrados
+
     st.success("✅ Módulos integrados importados com sucesso!")
 
     # Testar carregamento de módulos
@@ -59,9 +57,9 @@ try:
                                 else:
                                     # Preview limitado
                                     conteudo_arquivo = info.get("conteudo", "")
-                                    linhas = conteudo_arquivo.split('\n')[:5]  # Apenas 5 primeiras linhas
-                                    preview = '\n'.join(linhas)
-                                    st.code(preview, language='python')
+                                    linhas = conteudo_arquivo.split("\n")[:5]  # Apenas 5 primeiras linhas
+                                    preview = "\n".join(linhas)
+                                    st.code(preview, language="python")
 
                                     if len(conteudo_arquivo) > 1000:
                                         st.info(f"Arquivo tem {len(conteudo_arquivo)} caracteres. Preview limitado.")

@@ -136,7 +136,9 @@ dmypy.json
 !.vscode/extensions.json
 
 # Streamlit
-.streamlit/
+.streamlit/secrets.toml
+!.streamlit/config.toml
+!.streamlit/secrets.toml.example
 
 # Project specific
 logs/
@@ -153,3 +155,6 @@ temp/
 ehthumbs.db
 Thumbs.db
 /__pycache__/
+
+# Streamlit secrets
+.streamlit/secrets.toml
